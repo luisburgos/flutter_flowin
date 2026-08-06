@@ -127,24 +127,29 @@ lefthook run pre-push
 
 [`CHANGELOG.md`](CHANGELOG.md) is **generated, not hand-edited**. It is built
 from [Conventional Commit][conventional_commits_link] subjects by
-[conventional-changelog][conventional_changelog_link] using the `angular`
-preset, the same setup the sibling Flutter apps use.
+[conventional-changelog][conventional_changelog_link].
 
-Regenerate the newest release section after tagging a version:
+First-time setup, then regenerate the newest release section after tagging a
+version:
 
 ```sh
+npm install        # once, to fetch the changelog tooling
 npm run changelog
 ```
 
-The script is declared in [`package.json`](package.json) and needs
-`conventional-changelog-cli` available (globally, or via `npx`, which the
-command resolves automatically).
+Unlike the sibling Flutter apps, which use the stock `angular` preset, this
+package extends `conventionalcommits` via
+[`changelog.config.js`](changelog.config.js) so that `docs`, `test`, `build`,
+`ci`, `refactor`, and `chore` get their own sections instead of being dropped.
+The apps only surface `feat` / `fix` / `perf` / `revert`, which suits release
+notes for end users. This package is consumed by those apps, so tooling and
+documentation work is worth recording too. Only `style` is hidden.
 
-Two consequences worth knowing:
+Two notes:
 
-- Only `feat`, `fix`, `perf`, and `revert` commits appear. The preset omits
-  `chore`, `docs`, `test`, `build`, and `ci`, so a release made up entirely of
-  those produces an empty section. That is expected, not a failure.
+- The tooling is a real `devDependency` rather than an `npx` one-off, because
+  the config file has to `require` the preset and `npx`'s isolated install
+  directory is not on that resolution path. `node_modules/` is gitignored.
 - The file is excluded from the spell-check gate in both CI and the pre-push
   hook, because it holds verbatim commit subjects rather than authored prose.
 
