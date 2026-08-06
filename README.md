@@ -10,21 +10,37 @@ Flowin Design UI flutter package
 
 **❗ In order to start using Flutter Flowin you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
 
-Install via `flutter pub add`:
+**❗ This project pins its Flutter SDK with [FVM][fvm_link], so you also need FVM installed — see [fvm.app][fvm_link]. Run every Flutter/Dart command through `fvm` (e.g. `fvm flutter test`) so you use the pinned SDK rather than whatever is first on your `PATH`.**
 
-```sh
-dart pub add flutter_flowin
+This package is not published to pub.dev (`publish_to: none`), so depend on it
+by git reference:
+
+```yaml
+dependencies:
+  flutter_flowin:
+    git:
+      url: https://github.com/luisburgos/flutter_flowin.git
+      ref: 0.1.0
+```
+
+Or by path, when working on the package and a consuming app side by side:
+
+```yaml
+dependencies:
+  flutter_flowin:
+    path: ../flutter_flowin
 ```
 
 ---
 
 ## Features ✨
 
-- **ThemeExtension-based theming** — light and dark theme variants with custom color and spacing tokens via `ThemeExtension<T>`
-- **Custom color tokens** — semantic colors for success, warning, and info states via `AppColors`
-- **Spacing scale** — consistent spacing tokens from xxs to xxlg via `AppSpacing`
-- **BuildContext extensions** — shorthand `context.appColors` and `context.appSpacing`
-- **Example widget** — `AppButton` composing Material's `FilledButton` and `OutlinedButton` with app-specific sizing
+- **Framework-first theming** — colors map onto `ColorScheme`, typography onto `TextTheme`, and component appearance onto Material component themes, so native widgets are styled without per-instance overrides
+- **`FlowinTokens` theme extension** — the tokens Material does not model (spacing scale, semantic status colors, base shadow, default icon size) ride on `ThemeData` via `ThemeExtension<T>`
+- **Light and dark themes** — `FlowinTheme.light` and `FlowinTheme.dark` build both from one token set, with brightness-appropriate semantic colors and shadows
+- **Design foundations** — primitive tokens for colors, typography, spacing, radius, borders, shadows, icons, and icon sizing, plus an accessible-color helper for contrast-safe pairings
+- **BuildContext extensions** — `context.flowinTokens`, `context.spacing`, `context.semanticColors`, alongside `context.theme`, `context.colorScheme`, and `context.textTheme`
+- **Component library** — buttons, inputs, color pickers, chips and chip groups, tabs, app bars, cards, and action sheets
 
 ## Usage 🚀
 
@@ -34,31 +50,46 @@ Wrap your app with the theme:
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: FlowinTheme.light,
+      darkTheme: FlowinTheme.dark,
       home: const MyHomePage(),
     );
   }
 }
 ```
 
-Use widgets and tokens in your app:
+Use widgets in your app:
 
 ```dart
-AppButton(
+FlowinButton.filled(
   onPressed: () {},
-  child: const Text('Click me'),
+  label: 'Click me',
 );
 ```
 
-Access custom tokens via context extensions:
+Access tokens via context extensions:
 
 ```dart
-final colors = context.appColors;
-final spacing = context.appSpacing;
+final spacing = context.spacing.md;              // 16
+final success = context.semanticColors.success;
+final shadow = context.flowinTokens.shadow;
+```
+
+---
+
+## Showcase 🖼️
+
+The [`showcase/`](showcase) app is a runnable gallery of every component —
+buttons, inputs, color pickers, chips, tabs, app bars, cards, and action
+sheets — grouped by area, with a live light/dark toggle:
+
+```sh
+cd showcase && fvm flutter run
 ```
 
 ---
