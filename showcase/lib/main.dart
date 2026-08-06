@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/pages/buttons_page.dart';
 import 'package:flowin_showcase/pages/cards_page.dart';
 import 'package:flowin_showcase/pages/chips_page.dart';
@@ -177,11 +178,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           FlowinTabItem(label: 'Examples'),
         ],
       ),
-      body: TabBarView(
-        controller: _tabs,
+      body: Column(
         children: [
-          _EntryList(entries: componentEntries),
-          _EntryList(entries: exampleEntries),
+          Expanded(
+            child: TabBarView(
+              controller: _tabs,
+              children: [
+                _EntryList(entries: componentEntries),
+                _EntryList(entries: exampleEntries),
+              ],
+            ),
+          ),
+          // Below the tabs rather than inside them: the version belongs to the
+          // app, not to either list, and a bug filed from any page should be
+          // able to quote it.
+          const SafeArea(top: false, child: AppVersionLabel()),
         ],
       ),
     );
