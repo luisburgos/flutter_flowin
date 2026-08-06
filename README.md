@@ -10,21 +10,35 @@ Flowin Design UI flutter package
 
 **❗ In order to start using Flutter Flowin you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
 
-Install via `flutter pub add`:
+This package is not published to pub.dev (`publish_to: none`), so depend on it
+by git reference:
 
-```sh
-dart pub add flutter_flowin
+```yaml
+dependencies:
+  flutter_flowin:
+    git:
+      url: https://github.com/luisburgos/flutter_flowin.git
+      ref: 0.1.0
+```
+
+Or by path, when working on the package and a consuming app side by side:
+
+```yaml
+dependencies:
+  flutter_flowin:
+    path: ../flutter_flowin
 ```
 
 ---
 
 ## Features ✨
 
-- **ThemeExtension-based theming** — light and dark theme variants with custom color and spacing tokens via `ThemeExtension<T>`
-- **Custom color tokens** — semantic colors for success, warning, and info states via `AppColors`
-- **Spacing scale** — consistent spacing tokens from xxs to xxlg via `AppSpacing`
-- **BuildContext extensions** — shorthand `context.appColors` and `context.appSpacing`
-- **Example widget** — `AppButton` composing Material's `FilledButton` and `OutlinedButton` with app-specific sizing
+- **Framework-first theming** — colors map onto `ColorScheme`, typography onto `TextTheme`, and component appearance onto Material component themes, so native widgets are styled without per-instance overrides
+- **`FlowinTokens` theme extension** — the tokens Material does not model (spacing scale, semantic status colors, base shadow, default icon size) ride on `ThemeData` via `ThemeExtension<T>`
+- **Light and dark themes** — `FlowinTheme.light` and `FlowinTheme.dark` build both from one token set, with brightness-appropriate semantic colors and shadows
+- **Design foundations** — primitive tokens for colors, typography, spacing, radius, borders, shadows, icons, and icon sizing, plus an accessible-color helper for contrast-safe pairings
+- **BuildContext extensions** — `context.flowinTokens`, `context.spacing`, `context.semanticColors`, alongside `context.theme`, `context.colorScheme`, and `context.textTheme`
+- **Component library** — buttons, inputs, color pickers, chips and chip groups, tabs, app bars, cards, and action sheets
 
 ## Usage 🚀
 
@@ -34,32 +48,75 @@ Wrap your app with the theme:
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: FlowinTheme.light,
+      darkTheme: FlowinTheme.dark,
       home: const MyHomePage(),
     );
   }
 }
 ```
 
-Use widgets and tokens in your app:
+Use widgets in your app:
 
 ```dart
-AppButton(
+FlowinButton.filled(
   onPressed: () {},
-  child: const Text('Click me'),
+  label: 'Click me',
 );
 ```
 
-Access custom tokens via context extensions:
+Access tokens via context extensions:
 
 ```dart
-final colors = context.appColors;
-final spacing = context.appSpacing;
+final spacing = context.spacing.md;              // 16
+final success = context.semanticColors.success;
+final shadow = context.flowinTokens.shadow;
 ```
+
+---
+
+## Components 🧱
+
+Every component below has a page in the [`showcase/`](showcase) app — a runnable
+gallery grouped by area, with a live light/dark toggle:
+
+```sh
+cd showcase && fvm flutter run
+```
+
+**Buttons & actions**
+
+- `FlowinButton` — primary/secondary button over Material's filled and outlined variants
+- `FlowinIconButton` — icon-only action
+- `FlowinItemButton` — full-width list-row action
+- `FlowinActionSheet` — modal sheet, with `FlowinActionSheetHeader` and `FlowinActionSheetFooter`
+
+**Inputs**
+
+- `FlowinTextField` — styled text input
+- `FlowinInputField` — input wrapper with decoration and states
+- `FlowinLabeledTextField` — labeled input pairing
+- `FlowinColorPickerField` — color selection field
+- `FlowinInlineColorPicker` — inline color swatch picker
+- `FlowinColorRadialButton` — radial color swatch button
+
+**Navigation**
+
+- `FlowinAppBar` — app bar styled from tokens
+- `FlowinTabAppBar` — app bar with an integrated tab strip
+- `FlowinTabs` / `FlowinTabItem` — tab bar and its items
+
+**Grouping & layout**
+
+- `FlowinCard` — surface container, with `FlowinCardBorderRadius` presets
+- `FlowinChip` — selectable chip
+- `FlowinChipGroup` / `FlowinChipGroupController` — chip set with selection state
+- `FlowinChipGroupViewPager` / `FlowinChipGroupViewPage` — chip group driving a paged view
 
 ---
 
