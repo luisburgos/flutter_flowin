@@ -52,3 +52,6 @@ showcase/.dart_tool/
 showcase/ios/Pods/
 showcase/ios/.symlinks/
 showcase/ios/Flutter/ephemeral/
+
+# Node tooling for the changelog generator (see package.json).
+node_modules/

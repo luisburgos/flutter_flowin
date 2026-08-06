@@ -123,6 +123,38 @@ lefthook run pre-push
 
 ---
 
+## Changelog 📓
+
+[`CHANGELOG.md`](CHANGELOG.md) is **generated, not hand-edited**. It is built
+from [Conventional Commit][conventional_commits_link] subjects by
+[conventional-changelog][conventional_changelog_link].
+
+First-time setup, then regenerate the newest release section after tagging a
+version:
+
+```sh
+npm install        # once, to fetch the changelog tooling
+npm run changelog
+```
+
+Unlike the sibling Flutter apps, which use the stock `angular` preset, this
+package extends `conventionalcommits` via
+[`changelog.config.js`](changelog.config.js) so that `docs`, `test`, `build`,
+`ci`, `refactor`, and `chore` get their own sections instead of being dropped.
+The apps only surface `feat` / `fix` / `perf` / `revert`, which suits release
+notes for end users. This package is consumed by those apps, so tooling and
+documentation work is worth recording too. Only `style` is hidden.
+
+Two notes:
+
+- The tooling is a real `devDependency` rather than an `npx` one-off, because
+  the config file has to `require` the preset and `npx`'s isolated install
+  directory is not on that resolution path. `node_modules/` is gitignored.
+- The file is excluded from the spell-check gate in both CI and the pre-push
+  hook, because it holds verbatim commit subjects rather than authored prose.
+
+---
+
 ## Running Tests 🧪
 
 For first time users, install the [very_good_cli][very_good_cli_link]:
@@ -147,6 +179,8 @@ genhtml coverage/lcov.info -o coverage/
 open coverage/index.html
 ```
 
+[conventional_changelog_link]: https://github.com/conventional-changelog/conventional-changelog
+[conventional_commits_link]: https://www.conventionalcommits.org
 [cspell_link]: https://cspell.org
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
 [fvm_link]: https://fvm.app
