@@ -41,6 +41,20 @@ void main() {
     });
   });
 
+  group('showcase pubspec', () {
+    test('declares the same version as the package', () {
+      String versionIn(String path) => RegExp(
+        r'^version:\s*(\S+)',
+        multiLine: true,
+      ).firstMatch(File(path).readAsStringSync())!.group(1)!;
+
+      // The showcase is versioned in lockstep with the design system it
+      // catalogues: a screenshot or bug report naming one names the other.
+      // Nothing enforces that in the tooling, so it is asserted here.
+      expect(versionIn('pubspec.yaml'), versionIn('../pubspec.yaml'));
+    });
+  });
+
   group('AppVersionInfo.display', () {
     test('prefixes the version and parenthesises the build number', () {
       const info = AppVersionInfo(version: '0.1.0', buildNumber: '1');

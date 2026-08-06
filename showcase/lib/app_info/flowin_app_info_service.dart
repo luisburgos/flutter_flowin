@@ -9,8 +9,11 @@ import 'package:flowin_showcase/app_info/i_app_info_service.dart';
 /// fails when these drift, so the duplication cannot rot silently.
 ///
 /// Deliberately **not** `package_info_plus`, which the sibling apps use: that
-/// reports the *host application's* version — here the showcase shell's
-/// `1.0.0+1` — and the number a bug report needs is the design system's.
+/// reports whatever the *host application* declares, and the number a bug
+/// report needs is the design system's. The showcase currently declares the
+/// same version, so the two agree today — but they agree by convention, not by
+/// construction, and nothing stops the shell from being versioned separately.
+/// Reading the package's own version keeps the label correct either way.
 const flowinVersion = '0.1.0';
 
 /// The design system's build number, mirroring the `+<build>` suffix in the
