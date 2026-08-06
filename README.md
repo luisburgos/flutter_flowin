@@ -123,6 +123,33 @@ lefthook run pre-push
 
 ---
 
+## Changelog 📓
+
+[`CHANGELOG.md`](CHANGELOG.md) is **generated, not hand-edited**. It is built
+from [Conventional Commit][conventional_commits_link] subjects by
+[conventional-changelog][conventional_changelog_link] using the `angular`
+preset, the same setup the sibling Flutter apps use.
+
+Regenerate the newest release section after tagging a version:
+
+```sh
+npm run changelog
+```
+
+The script is declared in [`package.json`](package.json) and needs
+`conventional-changelog-cli` available (globally, or via `npx`, which the
+command resolves automatically).
+
+Two consequences worth knowing:
+
+- Only `feat`, `fix`, `perf`, and `revert` commits appear. The preset omits
+  `chore`, `docs`, `test`, `build`, and `ci`, so a release made up entirely of
+  those produces an empty section. That is expected, not a failure.
+- The file is excluded from the spell-check gate in both CI and the pre-push
+  hook, because it holds verbatim commit subjects rather than authored prose.
+
+---
+
 ## Running Tests 🧪
 
 For first time users, install the [very_good_cli][very_good_cli_link]:
@@ -147,6 +174,8 @@ genhtml coverage/lcov.info -o coverage/
 open coverage/index.html
 ```
 
+[conventional_changelog_link]: https://github.com/conventional-changelog/conventional-changelog
+[conventional_commits_link]: https://www.conventionalcommits.org
 [cspell_link]: https://cspell.org
 [flutter_install_link]: https://docs.flutter.dev/get-started/install
 [fvm_link]: https://fvm.app

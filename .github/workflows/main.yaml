@@ -15,10 +15,16 @@ jobs:
       pull-requests: read
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
+  # CHANGELOG.md is auto-generated from git history by conventional-changelog,
+  # so it carries verbatim commit subjects (including any historical typos)
+  # rather than authored prose. Spell-gating it would fail the build on words
+  # nobody can edit without rewriting history.
   spell-check:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
     with:
-      includes: "**/*.md"
+      includes: |
+        **/*.md
+        !CHANGELOG.md
       modified_files_only: false
 
   # .fvmrc is the single source of truth for the SDK version: it is what the
