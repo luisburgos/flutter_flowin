@@ -1,0 +1,22 @@
+name: flowin_showcase
+description: "A demo app showcasing the flutter_flowin component library."
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+  flutter: ^3.41.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_flowin:
+    path: ..
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true
