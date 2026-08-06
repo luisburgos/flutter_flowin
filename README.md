@@ -10,6 +10,8 @@ Flowin Design UI flutter package
 
 **❗ In order to start using Flutter Flowin you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
 
+**❗ This project pins its Flutter SDK with [FVM][fvm_link], so you also need FVM installed — see [fvm.app][fvm_link]. Run every Flutter/Dart command through `fvm` (e.g. `fvm flutter test`) so you use the pinned SDK rather than whatever is first on your `PATH`.**
+
 This package is not published to pub.dev (`publish_to: none`), so depend on it
 by git reference:
 
@@ -80,43 +82,15 @@ final shadow = context.flowinTokens.shadow;
 
 ---
 
-## Components 🧱
+## Showcase 🖼️
 
-Every component below has a page in the [`showcase/`](showcase) app — a runnable
-gallery grouped by area, with a live light/dark toggle:
+The [`showcase/`](showcase) app is a runnable gallery of every component —
+buttons, inputs, color pickers, chips, tabs, app bars, cards, and action
+sheets — grouped by area, with a live light/dark toggle:
 
 ```sh
 cd showcase && fvm flutter run
 ```
-
-**Buttons & actions**
-
-- `FlowinButton` — primary/secondary button over Material's filled and outlined variants
-- `FlowinIconButton` — icon-only action
-- `FlowinItemButton` — full-width list-row action
-- `FlowinActionSheet` — modal sheet, with `FlowinActionSheetHeader` and `FlowinActionSheetFooter`
-
-**Inputs**
-
-- `FlowinTextField` — styled text input
-- `FlowinInputField` — input wrapper with decoration and states
-- `FlowinLabeledTextField` — labeled input pairing
-- `FlowinColorPickerField` — color selection field
-- `FlowinInlineColorPicker` — inline color swatch picker
-- `FlowinColorRadialButton` — radial color swatch button
-
-**Navigation**
-
-- `FlowinAppBar` — app bar styled from tokens
-- `FlowinTabAppBar` — app bar with an integrated tab strip
-- `FlowinTabs` / `FlowinTabItem` — tab bar and its items
-
-**Grouping & layout**
-
-- `FlowinCard` — surface container, with `FlowinCardBorderRadius` presets
-- `FlowinChip` — selectable chip
-- `FlowinChipGroup` / `FlowinChipGroupController` — chip set with selection state
-- `FlowinChipGroupViewPager` / `FlowinChipGroupViewPage` — chip group driving a paged view
 
 ---
 
