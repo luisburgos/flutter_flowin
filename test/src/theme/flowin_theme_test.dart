@@ -195,6 +195,25 @@ void main() {
         final context = tester.element(find.byType(SizedBox));
         expect(Theme.of(context).colorScheme.brightness, Brightness.dark);
       });
+
+      testWidgets('binds the shadow role to the base shadow colour', (
+        tester,
+      ) async {
+        // The scheme's shadow role and the shadow actually rendered from the
+        // FlowinTokens extension must agree. They drifted once: the role said
+        // neutral700 while the rendered shadow said black, and nothing caught
+        // it because no widget reads colorScheme.shadow — so the wrong value
+        // sat dormant, waiting for the first consumer to reach for the
+        // idiomatic Material path.
+        expect(
+          FlowinTheme.dark.colorScheme.shadow,
+          FlowinDesignShadows.shadow100Dark.color,
+        );
+        expect(
+          FlowinTheme.light.colorScheme.shadow,
+          FlowinDesignShadows.shadow100.color,
+        );
+      });
     });
   });
 }
