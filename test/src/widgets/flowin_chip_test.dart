@@ -6,6 +6,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/helpers.dart';
 
+/// The [ShapeDecoration] the chip actually paints.
+///
+/// Reading `ChipTheme.of(context)` back would only prove the theme holds what
+/// was put in it; the chip's fill and shape are painted by the [Ink] the
+/// framework's chip builds from the resolved theme, so that is what a
+/// theme-only-styling assertion has to look at.
+ShapeDecoration _paintedChipDecoration(WidgetTester tester, {int index = 0}) {
+  final ink = tester.widgetList<Ink>(
+    find.descendant(of: find.byType(ChoiceChip), matching: find.byType(Ink)),
+  ).elementAt(index);
+  return ink.decoration! as ShapeDecoration;
+}
+
+/// The [TextStyle] the label's paragraph is actually rendered with.
+TextStyle _renderedLabelStyle(WidgetTester tester, String label) {
+  return tester
+      .widget<RichText>(
+        find.descendant(of: find.text(label), matching: find.byType(RichText)),
+      )
+      .text
+      .style!;
+}
+
 void main() {
   group('FlowinChip', () {
     testWidgets('renders its label', (tester) async {
@@ -187,6 +210,63 @@ void main() {
           ChipTheme.of(tester.element(find.byType(ChoiceChip))).side?.color,
           customBorder,
         );
+      },
+    );
+
+    testWidgets(
+      'pill shape comes from the theme, not the widget (theme-only styling)',
+      (tester) async {
+        // The chip must not resolve its own shape: a widget-level default
+        // would keep rendering a stadium here and silently ignore a design
+        // system that re-shapes every chip. Asserted on the ShapeDecoration
+        // the chip actually paints, not on the ChipThemeData it read.
+        final theme = FlowinTheme.light.copyWith(
+          chipTheme: FlowinTheme.light.chipTheme.copyWith(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+            ),
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinChip(label: Text('Tag'), onSelected: (_) {}),
+          theme: theme,
+        );
+
+        final decoration = _paintedChipDecoration(tester);
+        expect(
+          decoration.shape,
+          isA<RoundedRectangleBorder>().having(
+            (shape) => shape.borderRadius,
+            'borderRadius',
+            const BorderRadius.all(Radius.circular(3)),
+          ),
+        );
+      },
+    );
+
+    testWidgets(
+      'label style comes from the theme, not the widget (theme-only styling)',
+      (tester) async {
+        // Guards the label typography binding: the chip passes the label
+        // through untouched and lets the theme style it, so a hardcoded
+        // TextStyle in build() would strand every consumer's type ramp.
+        // Asserted on the paragraph that renders, not on the theme object.
+        const customStyle = TextStyle(fontSize: 27, letterSpacing: 4);
+        final theme = FlowinTheme.light.copyWith(
+          chipTheme: FlowinTheme.light.chipTheme.copyWith(
+            labelStyle: customStyle,
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinChip(label: Text('Tag'), onSelected: (_) {}),
+          theme: theme,
+        );
+
+        final rendered = _renderedLabelStyle(tester, 'Tag');
+        expect(rendered.fontSize, 27);
+        expect(rendered.letterSpacing, 4);
       },
     );
 

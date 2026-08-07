@@ -249,5 +249,74 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      'no tap overlay is painted over the swatch while pressed',
+      (tester) async {
+        // The contract demands this proof and warns that a structural test
+        // cannot supply it: the overlay is painted by the material layer, so
+        // it appears in no widget and in no painter call. Without this test
+        // the three transparent-overlay lines in the widget are unguarded —
+        // deleting them breaks nothing else in the suite.
+        //
+        // The highlight is drawn as a rect into the swatch's OWN Material
+        // (not the app's), and it fades in: sample it late enough to have
+        // risen above zero. Suppressed it stays fully transparent; left to
+        // the platform it reaches a visible grey.
+        await tester.pumpApp(
+          FlowinColorRadialButton(color: Colors.blue, onTap: () {}),
+        );
+
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byType(FlowinColorRadialButton)),
+        );
+        // Hold the press — the highlight exists only while the pointer is
+        // down — and let the fade run most of its course.
+        await tester.pump(const Duration(milliseconds: 500));
+
+        final overlays = <Color>[];
+        try {
+          expect(
+            tester.renderObject(
+              find.descendant(
+                of: find.byType(FlowinColorRadialButton),
+                matching: find.byType(Material),
+              ),
+            ),
+            paints
+              ..something((symbol, args) {
+                if (symbol == #drawRect) {
+                  overlays.addAll(args.whereType<Paint>().map((p) => p.color));
+                }
+                return false;
+              }),
+          );
+        } on TestFailure {
+          // `something` returning false always throws; the tally is the point.
+        }
+
+        expect(
+          overlays,
+          isNotEmpty,
+          reason: 'the press painted no overlay layer at all — no InkWell?',
+        );
+        // Two rects are drawn: an opaque black one that fills the clipped
+        // ink area in every state, and the highlight itself. Only the
+        // highlight carries a tint, so the tell is the COLOUR rather than the
+        // alpha — suppressed it is pure black, left to the platform it is the
+        // theme's grey (0.7373) fading in.
+        for (final overlay in overlays) {
+          expect(
+            overlay.r == 0 && overlay.g == 0 && overlay.b == 0,
+            isTrue,
+            reason: 'a tinted tap overlay was painted over the swatch: '
+                '$overlay',
+          );
+        }
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+      },
+    );
   });
 }

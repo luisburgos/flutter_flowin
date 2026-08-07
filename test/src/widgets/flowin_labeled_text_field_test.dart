@@ -69,5 +69,44 @@ void main() {
       final expected = FlowinTheme.light.textTheme.labelMedium;
       expect(text.style?.fontSize, expected?.fontSize);
     });
+
+    testWidgets(
+      'field chrome comes from the text-field theme, not this widget '
+      '(theme-only styling)',
+      (tester) async {
+        // This widget composes a label onto a FlowinTextField and must add
+        // presentation only — the fill and border belong to the composed
+        // field, which draws them from inputDecorationTheme. Overriding that
+        // theme alone must move the chrome; if this widget ever starts
+        // decorating the field itself, the override stops reaching it and this
+        // fails.
+        const customFill = Color(0xFF0A0B0C);
+        const customBorder = Color(0xFFAABBCC);
+        final theme = FlowinTheme.light.copyWith(
+          inputDecorationTheme: FlowinTheme.light.inputDecorationTheme.copyWith(
+            fillColor: customFill,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: customBorder),
+              borderRadius: BorderRadius.circular(9),
+            ),
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinLabeledTextField(label: 'Email'),
+          theme: theme,
+        );
+
+        // InputDecorator holds the decoration the framework resolved against
+        // the theme — the shape actually painted, not what the widget passed.
+        final decoration = tester
+            .widget<InputDecorator>(find.byType(InputDecorator))
+            .decoration;
+        expect(decoration.fillColor, customFill);
+        final border = decoration.enabledBorder! as OutlineInputBorder;
+        expect(border.borderSide.color, customBorder);
+        expect(border.borderRadius, BorderRadius.circular(9));
+      },
+    );
   });
 }
