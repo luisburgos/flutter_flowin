@@ -84,7 +84,13 @@ class FlowinChipGroupViewPager extends StatefulWidget {
   /// The page-transition curve when a chip is tapped.
   final Curve animateCurve;
 
-  /// The page-view scroll physics.
+  /// The scroll physics for **both** of this component's scrollers — the page
+  /// view and the chip row.
+  ///
+  /// The two sit one above the other and scroll the same axis, so letting them
+  /// differ would put two horizontal scrollers with different feel on the same
+  /// screen. One knob governs both; the chip row accepts its own physics for
+  /// standalone use, and this forwards to it.
   final ScrollPhysics? pagePhysics;
 
   /// An optional external page controller (controlled mode). When null, the
@@ -178,6 +184,7 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
                 horizontal: FlowinDesignSpace.space300,
               ),
           chipSpacing: widget.chipSpacing ?? FlowinDesignSpace.space200,
+          physics: widget.pagePhysics,
           chipRunSpacing: widget.chipRunSpacing,
           wrapAlignment: widget.chipWrapAlignment,
         ),

@@ -71,6 +71,7 @@ class FlowinChipGroup extends StatefulWidget {
       horizontal: FlowinDesignSpace.space300,
     ),
     this.chipSpacing = FlowinDesignSpace.space200,
+    this.physics = const BouncingScrollPhysics(),
     this.chipRunSpacing,
     this.wrapAlignment = WrapAlignment.start,
     super.key,
@@ -85,6 +86,16 @@ class FlowinChipGroup extends StatefulWidget {
   /// The initial selected index when uncontrolled (ignored if [controller]
   /// is provided).
   final int? initialSelectedIndex;
+
+  /// The scroll physics for the horizontal run.
+  ///
+  /// Defaults to bouncing rather than the platform's own physics: the run is a
+  /// short strip of chips inside a page, not a page-length list, and a chip
+  /// that stops dead at the edge reads as broken next to the rest of the app.
+  /// Stated here as a parameter — rather than welded in — so a composing
+  /// component can keep its own scrollers consistent with this one; the chip
+  /// group view pager does exactly that.
+  final ScrollPhysics? physics;
 
   /// The variant used for unselected chips.
   final FlowinChipVariant unselectedVariant;
@@ -236,7 +247,7 @@ class _FlowinChipGroupState extends State<FlowinChipGroup> {
       child: ListView.separated(
         padding: widget.padding,
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
+        physics: widget.physics,
         itemCount: widget.labels.length,
         separatorBuilder: (_, _) => SizedBox(width: widget.chipSpacing),
         itemBuilder: (_, index) => Center(child: _buildChip(index)),
