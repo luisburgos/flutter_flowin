@@ -1125,8 +1125,10 @@ void main() {
       expect(card.margin, oracleSheetMargin);
       expect(card.backgroundColor, scheme.surface);
       expect(card.padding!.vertical, oracleSheetBottomPadding);
-      expect(card.borderRadius.topLeft, oracleSheetRadius);
-      expect(card.borderRadius.bottomRight, oracleSheetRadius);
+      // The sheet pins its own radius rather than inheriting the card's
+      // theme-resolved one, so this is non-null by construction.
+      expect(card.borderRadius!.topLeft, oracleSheetRadius);
+      expect(card.borderRadius!.bottomRight, oracleSheetRadius);
     });
 
     testWidgets(

@@ -68,7 +68,7 @@ class FlowinCard extends StatelessWidget {
   /// {@macro flowin_card}
   const FlowinCard({
     required this.child,
-    this.borderRadius = const FlowinCardBorderRadius.medium(),
+    this.borderRadius,
     this.borderSide = BorderSide.none,
     this.clipChild = false,
     this.resolveForeground = true,
@@ -84,8 +84,13 @@ class FlowinCard extends StatelessWidget {
   /// The card's content.
   final Widget child;
 
-  /// The per-corner radii. Defaults to [FlowinCardBorderRadius.medium].
-  final FlowinCardBorderRadius borderRadius;
+  /// The per-corner radii.
+  ///
+  /// When null the radius is resolved from the theme's `cardTheme.shape`, so
+  /// changing that slot once moves every card. Pass a value to override a
+  /// single card. Falls back to [FlowinCardBorderRadius.medium] only when the
+  /// theme carries no card shape at all.
+  final FlowinCardBorderRadius? borderRadius;
 
   /// An optional border drawn around the card.
   final BorderSide borderSide;
@@ -140,9 +145,30 @@ class FlowinCard extends StatelessWidget {
   /// all in that case, and when the fill is transparent.
   final Color? foregroundColor;
 
+  /// The corner radii carried by the theme's card slot.
+  ///
+  /// The slot holds a platform shape rather than Flowin's per-corner value, so
+  /// its radii are read back out. Anything that is not a rounded rectangle
+  /// (a stadium, a circle) has no per-corner radius to read, so the Flowin
+  /// default stands in.
+  FlowinCardBorderRadius _themeBorderRadius(BuildContext context) {
+    final shape = Theme.of(context).cardTheme.shape;
+    if (shape is! RoundedRectangleBorder) {
+      return const FlowinCardBorderRadius.medium();
+    }
+    final radius = shape.borderRadius.resolve(Directionality.of(context));
+    return FlowinCardBorderRadius(
+      topLeft: radius.topLeft.x,
+      topRight: radius.topRight.x,
+      bottomLeft: radius.bottomLeft.x,
+      bottomRight: radius.bottomRight.x,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final smoothRadius = borderRadius.toSmoothBorderRadius();
+    final smoothRadius = (borderRadius ?? _themeBorderRadius(context))
+        .toSmoothBorderRadius();
     final effectiveBackgroundColor =
         backgroundColor ??
         Theme.of(context).cardTheme.color ??

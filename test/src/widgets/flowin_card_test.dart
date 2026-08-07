@@ -35,6 +35,81 @@ void main() {
       },
     );
 
+    testWidgets(
+      'corner radius comes from the theme cardTheme shape, not the widget '
+      '(theme-only styling)',
+      (tester) async {
+        // The regression this guards: the card used to take its radius from a
+        // compile-time constructor default and never read cardTheme.shape, so
+        // overriding the slot changed nothing. Both values were 16, so no
+        // value check could see it — only an override can.
+        const overriddenRadius = 4.0;
+        await tester.pumpApp(
+          FlowinCard(child: const Text('Body')),
+          theme: FlowinTheme.light.copyWith(
+            cardTheme: FlowinTheme.light.cardTheme.copyWith(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(overriddenRadius),
+              ),
+            ),
+          ),
+        );
+
+        final shape =
+            (_cardContainer(tester).decoration! as ShapeDecoration).shape
+                as SmoothRectangleBorder;
+        expect(shape.borderRadius.topLeft.cornerRadius, overriddenRadius);
+      },
+    );
+
+    testWidgets(
+      'fill comes from the theme cardTheme color (theme-only styling)',
+      (tester) async {
+        // Distinct from the default-value test above, which renders under the
+        // same theme it reads its expectation from and so would still pass if
+        // the fill were hardcoded. This one overrides the slot with a colour
+        // the design system does not contain.
+        const overriddenFill = Color(0xFF00FF00);
+        await tester.pumpApp(
+          FlowinCard(child: const Text('Body')),
+          theme: FlowinTheme.light.copyWith(
+            cardTheme: FlowinTheme.light.cardTheme.copyWith(
+              color: overriddenFill,
+            ),
+          ),
+        );
+
+        final decoration =
+            _cardContainer(tester).decoration! as ShapeDecoration;
+        expect(decoration.color, overriddenFill);
+      },
+    );
+
+    testWidgets(
+      'an explicit borderRadius still overrides the theme shape',
+      (tester) async {
+        const perCallRadius = 2.0;
+        await tester.pumpApp(
+          FlowinCard(
+            borderRadius: const FlowinCardBorderRadius.all(perCallRadius),
+            child: const Text('Body'),
+          ),
+          theme: FlowinTheme.light.copyWith(
+            cardTheme: FlowinTheme.light.cardTheme.copyWith(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+          ),
+        );
+
+        final shape =
+            (_cardContainer(tester).decoration! as ShapeDecoration).shape
+                as SmoothRectangleBorder;
+        expect(shape.borderRadius.topLeft.cornerRadius, perCallRadius);
+      },
+    );
+
     testWidgets('explicit backgroundColor overrides the theme default', (
       tester,
     ) async {
