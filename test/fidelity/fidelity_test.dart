@@ -394,6 +394,29 @@ void main() {
         expect(specItemButtonIconSize, isNot(oracleItemButtonIconSize));
       },
     );
+
+    testWidgets(
+      'the row min height is the {size.control.md} token, not a loose literal',
+      (tester) async {
+        // Same guard as the icon size above, for the same reason: the widget
+        // spells 56 out because enum getters are not const-evaluable, so the
+        // literal needs a pin tying it back to the token it stands for.
+        // Without this, a spec change to the control scale would leave the
+        // row's height silently behind.
+        await tester.pumpApp(
+          FlowinItemButton(onPressed: () {}, label: 'Row'),
+        );
+
+        final minHeight = tester
+            .widget<FilledButton>(find.byType(FilledButton))
+            .style!
+            .minimumSize!
+            .resolve({})!
+            .height;
+
+        expect(minHeight, FlowinDesignControlSize.md.value);
+      },
+    );
   });
 
   group('fidelity: FlowinChip', () {

@@ -34,10 +34,13 @@ enum FlowinButtonSize {
   static const FlowinButtonSize defaultSize = FlowinButtonSize.sm;
 
   /// The minimum height for this size.
-  double get minHeight => switch (this) {
-    xs => 32,
-    sm => 40,
-    md => 56,
+  double get minHeight => controlSize.value;
+
+  /// The control-height token paired with this button size.
+  FlowinDesignControlSize get controlSize => switch (this) {
+    xs => FlowinDesignControlSize.xs,
+    sm => FlowinDesignControlSize.sm,
+    md => FlowinDesignControlSize.md,
   };
 
   /// The content padding for this size (inside the button).

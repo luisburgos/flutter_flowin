@@ -25,7 +25,12 @@ enum FlowinItemButtonVariant {
 /// The uniform inner padding of a [FlowinItemButton] (all sides).
 const double _kItemButtonPadding = FlowinDesignSpace.space400;
 
-/// The minimum height of a [FlowinItemButton] — production's md fixedSize.
+/// The minimum height of a [FlowinItemButton] — the `md` step of the control
+/// scale ([FlowinDesignControlSize.md], 56), production's md fixedSize.
+///
+/// Spelled as a literal for the same reason as [_kItemButtonIconSize]: Dart
+/// cannot evaluate an enum getter in a `const` expression. The assertion in
+/// the fidelity suite pins the two together.
 const double _kItemButtonMinHeight = 56;
 
 /// The leading icon size — the `md` step of the icon scale

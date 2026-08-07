@@ -4,6 +4,7 @@ library;
 export 'accessible_color.dart';
 export 'borders.dart';
 export 'colors.dart';
+export 'control_size.dart';
 export 'icon_size.dart';
 export 'icons.dart';
 export 'radius.dart';
