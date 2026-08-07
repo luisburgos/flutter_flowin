@@ -158,9 +158,8 @@ class FlowinItemButton extends StatelessWidget {
     //
     // The shape is pinned here rather than inherited. Every other Flowin
     // button is a pill (Material's StadiumBorder default), but a full-width
-    // row 56 tall would then have 28-radius ends — production renders it as a
-    // rounded rectangle at radius400 (fd_item_button.dart:65). A row reads as
-    // a surface, not as a pill.
+    // row 56 tall would then have 28-radius ends. A row reads as a surface,
+    // not as a pill, so it takes radius400.
     const style = ButtonStyle(
       alignment: Alignment.centerLeft,
       padding: WidgetStatePropertyAll(

@@ -39,11 +39,10 @@ class FlowinTheme {
     // rounded rectangle on anything taller than 32.
     //
     // Left to Material's own default rather than set here, because that
-    // default IS StadiumBorder. The legacy package set no shape either
-    // (fd_button.dart:161), so inheriting it is what production actually
-    // rendered. FlowinItemButton is the exception: it pins radius400 on its
-    // own ButtonStyle, because a full-width row reads as a surface, not a
-    // pill.
+    // default IS StadiumBorder, and the legacy package set no shape either —
+    // so inheriting it is what production actually rendered.
+    // FlowinItemButton is the exception: it pins radius400 on its own
+    // ButtonStyle, because a full-width row reads as a surface, not a pill.
     const buttonPadding = EdgeInsets.symmetric(
       horizontal: FlowinDesignSpace.space400,
       vertical: FlowinDesignSpace.space300,
@@ -111,8 +110,7 @@ class FlowinTheme {
           color: colorScheme.onSecondaryContainer,
         ),
         shape: const StadiumBorder(),
-        // Production chip content padding is uniform space400
-        // (fd_chip.dart:103).
+        // Production chip content padding is uniform space400.
         padding: const EdgeInsets.all(FlowinDesignSpace.space400),
         // Production has no extra label padding — Material would add 8 per
         // side on top of the content padding. See oracleChipBoxTolerance.

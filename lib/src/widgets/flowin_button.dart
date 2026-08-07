@@ -81,8 +81,8 @@ enum FlowinButtonSize {
   /// The outer padding for a `FlowinIconButton` of this size.
   ///
   /// **All sides**, not vertical-only: production's icon button wraps in
-  /// `EdgeInsets.all(size.padding)` (fd_icon_button.dart:74) while its regular
-  /// button uses `EdgeInsets.symmetric(vertical: …)`. Same step, different
+  /// `EdgeInsets.all(size.padding)` while its regular button uses
+  /// `EdgeInsets.symmetric(vertical: …)`. Same step, different
   /// geometry — the two are deliberately different, so they get separate
   /// members rather than one shared value.
   EdgeInsets get iconOuterPadding => EdgeInsets.all(_outerPaddingStep);

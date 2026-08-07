@@ -10,13 +10,11 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 /// — whatever is behind the swatch shows through it, the way the iOS color
 /// picker carves its selection ring.
 ///
-/// The transparent gap is what makes the ring self-sufficient. An earlier
-/// version painted the gap in a chosen color, which meant the gap had to
-/// contrast with the swatch or the ring vanished — a white swatch on a white
-/// surface painted white-on-white-on-white and read as unselected. Revealing
-/// the background instead removes the question: there is nothing to contrast
-/// against, because the separation comes from whatever the swatch happens to
-/// sit on. Callers therefore never need to compute a gap color.
+/// The transparent gap is what makes the ring self-sufficient: the separation
+/// comes from whatever the swatch sits on, so there is nothing to contrast
+/// against and **callers never supply a gap color**. Painting the gap instead
+/// would require it to contrast with the swatch — a white swatch on a white
+/// surface would read as unselected.
 ///
 /// The default sizes derive from Flowin space and border tokens. Use
 /// [FlowinColorRadialButton.gradient] for the "pick a custom color" affordance.
@@ -124,11 +122,10 @@ class FlowinColorRadialButton extends StatelessWidget {
             ),
           );
 
-    // Ink is suppressed. The Material paints its splash and highlight into the
-    // swatch's own bounds, and the gap is transparent now, so a tap tints
-    // whatever shows through the gap and reads as the just-picked colour
-    // dimming. The swatch IS the value it stands for, so a wash over it
-    // misreports that value; selection is already communicated by the ring.
+    // Ink is suppressed deliberately. The Material paints its splash and
+    // highlight into the swatch's own bounds, so a tap would wash the swatch
+    // in a tint — and the swatch IS the colour value it stands for, so a wash
+    // over it misreports that value. Selection is conveyed by the ring.
     return Material(
       color: Colors.transparent,
       shape: shape,

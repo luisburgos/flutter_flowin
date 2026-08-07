@@ -261,10 +261,9 @@ class FlowinActionSheetHeader extends StatelessWidget {
     // Whatever the row did not take drops into the block below it, so the
     // title stays adjacent to its subtitle either way.
     //
-    // The block used to be gated on `hasIcon`, which silently dropped the
-    // subtitle of an icon-less sheet — the subtitle was only ever rendered as
-    // a sibling of the demoted title. Gating on "is there anything to show"
-    // instead keeps the title/subtitle pairing intact in both arrangements.
+    // Gated on "is there anything to show" rather than on `hasIcon`: an
+    // icon-less sheet still has a subtitle to render, and gating on the icon
+    // would drop it.
     final belowRow = <Widget>[if (hasIcon) titleWidget, ?subtitleWidget];
 
     return Column(
