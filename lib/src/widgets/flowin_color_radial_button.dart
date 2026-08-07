@@ -76,14 +76,12 @@ class FlowinColorRadialButton extends StatelessWidget {
   /// Called when the swatch is tapped.
   final VoidCallback? onTap;
 
-  /// The decoration that fills the swatch, set only by [
-  /// FlowinColorRadialButton.gradient].
+  /// The decoration that fills the swatch, set only by the gradient
+  /// constructor.
   ///
-  /// Private because it is the fill *mechanism*, not a style layered on top:
-  /// when it is set the [color] payload is ignored and the swatch painter
-  /// never runs. Exposing it would let a caller replace the very thing the
-  /// component exists to display. Callers choose a fill by choosing a
-  /// constructor; [isGradient] reports which one was used.
+  /// Private because it selects the fill *mechanism* rather than styling one:
+  /// when set, [color] is ignored and the swatch painter does not run. Callers
+  /// choose a fill by choosing a constructor; [isGradient] reports which.
   final BoxDecoration? _outerCircleDecoration;
 
   /// Whether this swatch renders the custom-colour gradient sweep rather than

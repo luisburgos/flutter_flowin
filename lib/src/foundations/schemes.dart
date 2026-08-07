@@ -56,8 +56,9 @@ class FlowinDesignSchemes {
     inverseSurface: FlowinDesignColors.white,
     onInverseSurface: FlowinDesignColors.neutral800,
     // Black, not a dark neutral step: a shadow darkens what it falls on, and
-    // neutral700 on the neutral800 surface is one ramp step of separation.
-    // Must stay equal to shadow100Dark's colour — asserted in the theme test.
+    // neutral700 against the neutral800 surface is one ramp step of
+    // separation. Kept equal to shadow100Dark's colour; the theme test
+    // asserts the two match.
     shadow: FlowinDesignColors.black,
     primaryContainer: FlowinDesignColors.primary200,
     onPrimaryContainer: FlowinDesignColors.primary800,

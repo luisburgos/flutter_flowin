@@ -48,10 +48,9 @@ class FlowinTabItem extends StatelessWidget implements PreferredSizeWidget {
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        // Deliberately no style: the bar's tab theme supplies the label
+        // Deliberately unstyled: the bar's tab theme supplies the label
         // style, so a Flowin cell and a raw platform cell in the same bar
-        // render alike. This used to pin 14/w500 here, which outranked the
-        // theme and made the two disagree.
+        // render alike. A style set here would outrank the theme.
       ),
     );
 

@@ -92,9 +92,8 @@ class FlowinChipGroup extends StatefulWidget {
   /// Defaults to bouncing rather than the platform's own physics: the run is a
   /// short strip of chips inside a page, not a page-length list, and a chip
   /// that stops dead at the edge reads as broken next to the rest of the app.
-  /// Stated here as a parameter — rather than welded in — so a composing
-  /// component can keep its own scrollers consistent with this one; the chip
-  /// group view pager does exactly that.
+  /// A component embedding this alongside a scroller of its own should pass
+  /// the same physics to both.
   final ScrollPhysics? physics;
 
   /// The variant used for unselected chips.

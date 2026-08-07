@@ -78,11 +78,11 @@ class FlowinTheme {
         style: TextButton.styleFrom(
           padding: buttonPadding,
           textStyle: buttonTextStyle,
-          // Stated rather than inherited, matching the outlined sibling above.
-          // Material would default this to `primary`, which happens to equal
-          // `onSurface` under the placeholder greys — so the omission was
-          // invisible until a chromatic accent lands. The text ICON button
-          // deliberately does bind `primary`; see its contract.
+          // Stated rather than inherited, matching the outlined sibling.
+          // Material defaults this to `primary`, which currently resolves to
+          // the same value as `onSurface`, so leaving it unset renders
+          // correctly today and diverges once the brand accent is chromatic.
+          // FlowinIconButton's text variant binds `primary` deliberately.
           foregroundColor: colorScheme.onSurface,
         ),
       ),
@@ -162,9 +162,8 @@ class FlowinTheme {
           borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),
         // Stated rather than left to Material, which would tint the border
-        // with its own disabled colour. The spec keeps the subtle-border role
-        // unchanged when disabled in v1: a disabled field still reads as a
-        // field, and the platform's grey is not one of our roles.
+        // with its own disabled colour. The border role is unchanged when
+        // disabled: a disabled field still reads as a field.
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
           borderSide: BorderSide(color: colorScheme.outlineVariant),
