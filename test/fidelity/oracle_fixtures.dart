@@ -319,9 +319,26 @@ const flowinTabLabelPaddingPerSide = 4.0; // the chosen deviation
 /// the bar height and hardcode the 14/w500 label style (fd_tabs.dart).
 /// `FlowinTabs` is instead a thin, theme-driven `TabBar` composition: the tab
 /// widgets pass through unchanged and the label style comes from
-/// `tabBarTheme` (labelMedium = 14/w500, so the rendered result matches the
-/// oracle — see the 14/w500 assertion above).
+/// `tabBarTheme`.
+///
+/// This comment used to claim `labelMedium = 14/w500`, so the rendered result
+/// "matched the oracle". That was false — `labelMedium` is 14/**w600** — and
+/// the claim is why the divergence went unnoticed: the item hardcoded w500,
+/// which outranked the theme, so a Flowin cell rendered w500 while a raw
+/// `Tab` in the same bar rendered w600.
+///
+/// Resolved 2026-08-06 in favour of the type scale: the item no longer sets a
+/// style, so every cell in the bar renders `labelMedium` (w600). See
+/// [specTabLabelFontWeight].
 const oracleTabsRebuildTheirItems = true;
+
+/// ACCEPTED DEVIATION — tab label weight (decided 2026-08-06).
+///
+/// Production renders the tab label at [oracleTabLabelFontWeight] (w500) by
+/// hardcoding it per item. v1 binds the label to the type scale instead, so
+/// the weight reaches it through `tabBarTheme` and a Flowin cell and a raw
+/// platform cell in the same bar agree. That makes the shipped weight w600.
+const FontWeight specTabLabelFontWeight = FontWeight.w600;
 
 // ---------------------------------------------------------------------------
 // FDAppBar / FDTabAppBar — fd_app_bar.dart / fd_tab_app_bar.dart

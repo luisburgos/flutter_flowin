@@ -30,9 +30,8 @@ class FlowinColorRadialButton extends StatelessWidget {
     this.borderWidth = FlowinDesignBorders.extraBold,
     this.gapWidth = FlowinDesignBorders.bold,
     this.onTap,
-    this.outerCircleDecoration,
     super.key,
-  });
+  }) : _outerCircleDecoration = null;
 
   /// A swatch filled with a rainbow sweep gradient, for custom-color selection.
   const FlowinColorRadialButton.gradient({
@@ -43,7 +42,7 @@ class FlowinColorRadialButton extends StatelessWidget {
     this.gapWidth = FlowinDesignBorders.bold,
     this.onTap,
     super.key,
-  }) : outerCircleDecoration = const BoxDecoration(
+  }) : _outerCircleDecoration = const BoxDecoration(
          shape: BoxShape.circle,
          gradient: SweepGradient(
            colors: [
@@ -77,8 +76,19 @@ class FlowinColorRadialButton extends StatelessWidget {
   /// Called when the swatch is tapped.
   final VoidCallback? onTap;
 
-  /// An optional decoration for the outer circle (used by the gradient ctor).
-  final BoxDecoration? outerCircleDecoration;
+  /// The decoration that fills the swatch, set only by [
+  /// FlowinColorRadialButton.gradient].
+  ///
+  /// Private because it is the fill *mechanism*, not a style layered on top:
+  /// when it is set the [color] payload is ignored and the swatch painter
+  /// never runs. Exposing it would let a caller replace the very thing the
+  /// component exists to display. Callers choose a fill by choosing a
+  /// constructor; [isGradient] reports which one was used.
+  final BoxDecoration? _outerCircleDecoration;
+
+  /// Whether this swatch renders the custom-colour gradient sweep rather than
+  /// a solid [color].
+  bool get isGradient => _outerCircleDecoration != null;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +106,7 @@ class FlowinColorRadialButton extends StatelessWidget {
     // A gradient swatch keeps its DecoratedBox: the sweep gradient has to be
     // painted by the decoration, and it is clipped to the ring-plus-disc shape
     // when selected so the gap stays transparent there too.
-    final Widget swatch = outerCircleDecoration != null
+    final Widget swatch = _outerCircleDecoration != null
         ? ClipPath(
             clipper: selected
                 ? _RingClipper(
@@ -105,7 +115,7 @@ class FlowinColorRadialButton extends StatelessWidget {
                     innerSize: innerSize,
                   )
                 : const _CircleClipper(),
-            child: DecoratedBox(decoration: outerCircleDecoration!),
+            child: DecoratedBox(decoration: _outerCircleDecoration),
           )
         : CustomPaint(
             painter: _SwatchPainter(

@@ -730,17 +730,31 @@ void main() {
       },
     );
 
-    testWidgets('label renders 14 / w500 like production', (tester) async {
-      await tester.pumpApp(
-        const FlowinTabItem(label: 'Tab', icon: Icon(Icons.circle)),
-      );
-      final style = tester
-          .renderObject<RenderParagraph>(find.text('Tab'))
-          .text
-          .style!;
-      expect(style.fontSize, oracleTabLabelFontSize);
-      expect(style.fontWeight, oracleTabLabelFontWeight);
-    });
+    testWidgets(
+      'ACCEPTED DEVIATION: the label weight is the type scale (w600), not '
+      "production's hardcoded w500 — see specTabLabelFontWeight",
+      (tester) async {
+        // Rendered inside a bar because the weight now arrives through the
+        // tab theme; a standalone item has nothing to inherit from.
+        final controller = TabController(length: 1, vsync: tester);
+        addTearDown(controller.dispose);
+        await tester.pumpApp(
+          FlowinTabs(
+            controller: controller,
+            tabs: const [FlowinTabItem(label: 'Tab', icon: Icon(Icons.circle))],
+          ),
+        );
+
+        final style = tester
+            .renderObject<RenderParagraph>(find.text('Tab'))
+            .text
+            .style!;
+        expect(style.fontSize, oracleTabLabelFontSize);
+        expect(style.fontWeight, specTabLabelFontWeight);
+        // The divergence from production is deliberate, not drift.
+        expect(specTabLabelFontWeight, isNot(oracleTabLabelFontWeight));
+      },
+    );
 
     test(
       'ACCEPTED DEVIATION: labelPadding is tightened to space100 per side, '

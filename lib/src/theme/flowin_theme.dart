@@ -78,6 +78,12 @@ class FlowinTheme {
         style: TextButton.styleFrom(
           padding: buttonPadding,
           textStyle: buttonTextStyle,
+          // Stated rather than inherited, matching the outlined sibling above.
+          // Material would default this to `primary`, which happens to equal
+          // `onSurface` under the placeholder greys — so the omission was
+          // invisible until a chromatic accent lands. The text ICON button
+          // deliberately does bind `primary`; see its contract.
+          foregroundColor: colorScheme.onSurface,
         ),
       ),
       iconButtonTheme: IconButtonThemeData(

@@ -95,8 +95,21 @@ void main() {
         expect(side?.color, scheme.outlineVariant);
       });
 
-      testWidgets('text button is configured', (tester) async {
-        expect(theme.textButtonTheme.style, isNotNull);
+      testWidgets('text button binds its foreground to the on-surface role', (
+        tester,
+      ) async {
+        // Left unbound, Material defaults this to `primary`. Under the
+        // placeholder greys `primary` and `onSurface` are the same value, so
+        // the omission rendered correctly and was invisible — until a
+        // chromatic brand accent lands, at which point every text button
+        // would turn accent-coloured at once.
+        //
+        // The text ICON button deliberately does bind `primary`; see its
+        // contract. This asserts only the text button.
+        expect(
+          theme.textButtonTheme.style!.foregroundColor?.resolve({}),
+          scheme.onSurface,
+        );
       });
 
       testWidgets('icon button uses a circle border', (tester) async {
