@@ -283,13 +283,12 @@ void main() {
                 matching: find.byType(Material),
               ),
             ),
-            paints
-              ..something((symbol, args) {
-                if (symbol == #drawRect) {
-                  overlays.addAll(args.whereType<Paint>().map((p) => p.color));
-                }
-                return false;
-              }),
+            paints..something((symbol, args) {
+              if (symbol == #drawRect) {
+                overlays.addAll(args.whereType<Paint>().map((p) => p.color));
+              }
+              return false;
+            }),
           );
         } on TestFailure {
           // `something` returning false always throws; the tally is the point.
@@ -309,7 +308,8 @@ void main() {
           expect(
             overlay.r == 0 && overlay.g == 0 && overlay.b == 0,
             isTrue,
-            reason: 'a tinted tap overlay was painted over the swatch: '
+            reason:
+                'a tinted tap overlay was painted over the swatch: '
                 '$overlay',
           );
         }

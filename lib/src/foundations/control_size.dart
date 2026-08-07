@@ -32,5 +32,4 @@ enum FlowinDesignControlSize {
 
   /// The control height in logical pixels.
   final double value;
-
 }

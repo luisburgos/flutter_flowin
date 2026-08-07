@@ -13,9 +13,14 @@ import '../../helpers/helpers.dart';
 /// framework's chip builds from the resolved theme, so that is what a
 /// theme-only-styling assertion has to look at.
 ShapeDecoration _paintedChipDecoration(WidgetTester tester, {int index = 0}) {
-  final ink = tester.widgetList<Ink>(
-    find.descendant(of: find.byType(ChoiceChip), matching: find.byType(Ink)),
-  ).elementAt(index);
+  final ink = tester
+      .widgetList<Ink>(
+        find.descendant(
+          of: find.byType(ChoiceChip),
+          matching: find.byType(Ink),
+        ),
+      )
+      .elementAt(index);
   return ink.decoration! as ShapeDecoration;
 }
 

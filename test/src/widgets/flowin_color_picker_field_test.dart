@@ -106,9 +106,7 @@ void main() {
         );
 
         final gradientSwatch = find.byWidgetPredicate(
-          (widget) =>
-              widget is FlowinColorRadialButton &&
-              widget.isGradient,
+          (widget) => widget is FlowinColorRadialButton && widget.isGradient,
         );
 
         await tester.tap(gradientSwatch);
@@ -233,9 +231,7 @@ void main() {
 
       // The gradient swatch is the one reporting isGradient.
       final gradientSwatch = find.byWidgetPredicate(
-        (widget) =>
-            widget is FlowinColorRadialButton &&
-            widget.isGradient,
+        (widget) => widget is FlowinColorRadialButton && widget.isGradient,
       );
       expect(gradientSwatch, findsOneWidget);
 
