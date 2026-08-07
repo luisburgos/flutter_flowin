@@ -111,7 +111,6 @@ class FlowinActionSheet extends StatelessWidget {
     this.displayClose = true,
     this.onClose,
     this.margin,
-    this.bodyPadding,
     super.key,
   });
 
@@ -137,10 +136,15 @@ class FlowinActionSheet extends StatelessWidget {
   final VoidCallback? onClose;
 
   /// Outer margin around the card.
+  ///
+  /// Null keeps the contract's screen-edge insets, which is what a modal
+  /// presentation wants. Pass [EdgeInsets.zero] to embed the sheet layout
+  /// inside a page, where those insets are the surrounding layout's business
+  /// rather than the sheet's.
+  ///
+  /// This is a placement concern, not a styling one: it positions the card
+  /// without changing the surface, radius, or any internal spacing.
   final EdgeInsets? margin;
-
-  /// Padding around the body.
-  final EdgeInsets? bodyPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -178,11 +182,9 @@ class FlowinActionSheet extends StatelessWidget {
           ),
           if (body != null)
             Padding(
-              padding:
-                  bodyPadding ??
-                  const EdgeInsets.symmetric(
-                    horizontal: FlowinDesignSpace.space600,
-                  ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: FlowinDesignSpace.space600,
+              ),
               child: body,
             ),
           if (footer != null)

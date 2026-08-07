@@ -155,6 +155,14 @@ class FlowinTheme {
           borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
           borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),
+        // Stated rather than left to Material, which would tint the border
+        // with its own disabled colour. The spec keeps the subtle-border role
+        // unchanged when disabled in v1: a disabled field still reads as a
+        // field, and the platform's grey is not one of our roles.
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
+        ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colorScheme.surface,
