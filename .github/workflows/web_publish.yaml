@@ -9,6 +9,12 @@ on:
     branches:
       - main
 
+  # Allows a redeploy without an empty commit — useful when a build failed for
+  # a transient reason, or to republish the current main on demand. GitHub only
+  # exposes this once the workflow exists on the default branch, so it cannot
+  # be used to preview the workflow itself before it merges.
+  workflow_dispatch:
+
 # The deployment reads the artifact and mints an id-token for the Pages
 # service; nothing here needs to write back to the repository.
 permissions:
