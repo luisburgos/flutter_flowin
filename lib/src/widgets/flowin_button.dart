@@ -34,10 +34,13 @@ enum FlowinButtonSize {
   static const FlowinButtonSize defaultSize = FlowinButtonSize.sm;
 
   /// The minimum height for this size.
-  double get minHeight => switch (this) {
-    xs => 32,
-    sm => 40,
-    md => 56,
+  double get minHeight => controlSize.value;
+
+  /// The control-height token paired with this button size.
+  FlowinDesignControlSize get controlSize => switch (this) {
+    xs => FlowinDesignControlSize.xs,
+    sm => FlowinDesignControlSize.sm,
+    md => FlowinDesignControlSize.md,
   };
 
   /// The content padding for this size (inside the button).
@@ -78,8 +81,8 @@ enum FlowinButtonSize {
   /// The outer padding for a `FlowinIconButton` of this size.
   ///
   /// **All sides**, not vertical-only: production's icon button wraps in
-  /// `EdgeInsets.all(size.padding)` (fd_icon_button.dart:74) while its regular
-  /// button uses `EdgeInsets.symmetric(vertical: …)`. Same step, different
+  /// `EdgeInsets.all(size.padding)` while its regular button uses
+  /// `EdgeInsets.symmetric(vertical: …)`. Same step, different
   /// geometry — the two are deliberately different, so they get separate
   /// members rather than one shared value.
   EdgeInsets get iconOuterPadding => EdgeInsets.all(_outerPaddingStep);

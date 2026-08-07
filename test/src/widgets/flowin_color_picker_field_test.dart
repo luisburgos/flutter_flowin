@@ -56,7 +56,7 @@ void main() {
           (widget) =>
               widget is FlowinColorRadialButton &&
               widget.color == Colors.blue &&
-              widget.outerCircleDecoration == null,
+              !widget.isGradient,
         ),
       );
       expect(blueSwatch.selected, isTrue);
@@ -77,7 +77,7 @@ void main() {
           (widget) =>
               widget is FlowinColorRadialButton &&
               widget.color == Colors.green &&
-              widget.outerCircleDecoration == null,
+              !widget.isGradient,
         );
 
         await tester.tap(greenSwatch);
@@ -106,9 +106,7 @@ void main() {
         );
 
         final gradientSwatch = find.byWidgetPredicate(
-          (widget) =>
-              widget is FlowinColorRadialButton &&
-              widget.outerCircleDecoration != null,
+          (widget) => widget is FlowinColorRadialButton && widget.isGradient,
         );
 
         await tester.tap(gradientSwatch);
@@ -211,7 +209,7 @@ void main() {
         (widget) =>
             widget is FlowinColorRadialButton &&
             widget.color == Colors.green &&
-            widget.outerCircleDecoration == null,
+            !widget.isGradient,
       );
       expect(greenSwatch, findsOneWidget);
 
@@ -231,11 +229,9 @@ void main() {
         ),
       );
 
-      // The gradient swatch is the one carrying an outerCircleDecoration.
+      // The gradient swatch is the one reporting isGradient.
       final gradientSwatch = find.byWidgetPredicate(
-        (widget) =>
-            widget is FlowinColorRadialButton &&
-            widget.outerCircleDecoration != null,
+        (widget) => widget is FlowinColorRadialButton && widget.isGradient,
       );
       expect(gradientSwatch, findsOneWidget);
 
@@ -311,7 +307,7 @@ void main() {
           );
 
           final gradient = swatches(tester).last;
-          expect(gradient.outerCircleDecoration, isNotNull);
+          expect(gradient.isGradient, isTrue);
           expect(gradient.selected, isFalse);
         },
       );

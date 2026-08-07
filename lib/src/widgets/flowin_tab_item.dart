@@ -3,19 +3,14 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 // Imported for the doc-comment reference to [FlowinTabs].
 import 'package:flutter_flowin/src/widgets/flowin_tabs.dart';
 
-/// The label text style for a [FlowinTabItem]: 14 / w500.
-const TextStyle _kTabItemLabelStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w500,
-);
-
 /// The gap between a [FlowinTabItem]'s leading icon and its label.
 // Production uses a raw 4px gap (fd_tab_item.dart) — space100.
 const double _kTabItemIconGap = FlowinDesignSpace.space100;
 
 /// {@template flowin_tab_item}
 /// A single cell within a [FlowinTabs] bar: an **icon-left** row with a
-/// single-line, **ellipsized** label (14 / w500).
+/// single-line, **ellipsized** label. The label style comes from the bar's
+/// tab theme.
 ///
 /// This differs from Material's default `Tab(icon:, text:)`, which stacks the
 /// icon *above* the label. Pass instances as the `tabs` of [FlowinTabs]; the
@@ -53,7 +48,9 @@ class FlowinTabItem extends StatelessWidget implements PreferredSizeWidget {
         label,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: _kTabItemLabelStyle,
+        // Deliberately unstyled: the bar's tab theme supplies the label
+        // style, so a Flowin cell and a raw platform cell in the same bar
+        // render alike. A style set here would outrank the theme.
       ),
     );
 

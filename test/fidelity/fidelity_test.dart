@@ -394,6 +394,29 @@ void main() {
         expect(specItemButtonIconSize, isNot(oracleItemButtonIconSize));
       },
     );
+
+    testWidgets(
+      'the row min height is the {size.control.md} token, not a loose literal',
+      (tester) async {
+        // Same guard as the icon size above, for the same reason: the widget
+        // spells 56 out because enum getters are not const-evaluable, so the
+        // literal needs a pin tying it back to the token it stands for.
+        // Without this, a spec change to the control scale would leave the
+        // row's height silently behind.
+        await tester.pumpApp(
+          FlowinItemButton(onPressed: () {}, label: 'Row'),
+        );
+
+        final minHeight = tester
+            .widget<FilledButton>(find.byType(FilledButton))
+            .style!
+            .minimumSize!
+            .resolve({})!
+            .height;
+
+        expect(minHeight, FlowinDesignControlSize.md.value);
+      },
+    );
   });
 
   group('fidelity: FlowinChip', () {
@@ -707,17 +730,31 @@ void main() {
       },
     );
 
-    testWidgets('label renders 14 / w500 like production', (tester) async {
-      await tester.pumpApp(
-        const FlowinTabItem(label: 'Tab', icon: Icon(Icons.circle)),
-      );
-      final style = tester
-          .renderObject<RenderParagraph>(find.text('Tab'))
-          .text
-          .style!;
-      expect(style.fontSize, oracleTabLabelFontSize);
-      expect(style.fontWeight, oracleTabLabelFontWeight);
-    });
+    testWidgets(
+      'ACCEPTED DEVIATION: the label weight is the type scale (w600), not '
+      "production's hardcoded w500 — see specTabLabelFontWeight",
+      (tester) async {
+        // Rendered inside a bar because the weight now arrives through the
+        // tab theme; a standalone item has nothing to inherit from.
+        final controller = TabController(length: 1, vsync: tester);
+        addTearDown(controller.dispose);
+        await tester.pumpApp(
+          FlowinTabs(
+            controller: controller,
+            tabs: const [FlowinTabItem(label: 'Tab', icon: Icon(Icons.circle))],
+          ),
+        );
+
+        final style = tester
+            .renderObject<RenderParagraph>(find.text('Tab'))
+            .text
+            .style!;
+        expect(style.fontSize, oracleTabLabelFontSize);
+        expect(style.fontWeight, specTabLabelFontWeight);
+        // The divergence from production is deliberate, not drift.
+        expect(specTabLabelFontWeight, isNot(oracleTabLabelFontWeight));
+      },
+    );
 
     test(
       'ACCEPTED DEVIATION: labelPadding is tightened to space100 per side, '
@@ -1102,8 +1139,10 @@ void main() {
       expect(card.margin, oracleSheetMargin);
       expect(card.backgroundColor, scheme.surface);
       expect(card.padding!.vertical, oracleSheetBottomPadding);
-      expect(card.borderRadius.topLeft, oracleSheetRadius);
-      expect(card.borderRadius.bottomRight, oracleSheetRadius);
+      // The sheet pins its own radius rather than inheriting the card's
+      // theme-resolved one, so this is non-null by construction.
+      expect(card.borderRadius!.topLeft, oracleSheetRadius);
+      expect(card.borderRadius!.bottomRight, oracleSheetRadius);
     });
 
     testWidgets(

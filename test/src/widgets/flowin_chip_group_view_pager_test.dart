@@ -185,5 +185,66 @@ void main() {
       await tester.pumpApp(Builder(builder: page.builder));
       expect(find.text('Body'), findsOneWidget);
     });
+
+    testWidgets('one physics governs both scrollers', (tester) async {
+      // The chip row and the page view sit one above the other and scroll the
+      // same axis. Before this, the row welded in bouncing physics with no
+      // parameter, so a caller could clamp the pages and still get a bouncing
+      // row — two horizontal scrollers with different feel on one screen.
+      const physics = ClampingScrollPhysics();
+
+      await tester.pumpApp(
+        _sized(
+          FlowinChipGroupViewPager(pagePhysics: physics, items: _pages()),
+        ),
+      );
+
+      final scrollables = tester
+          .widgetList<Scrollable>(find.byType(Scrollable))
+          .toList();
+
+      expect(
+        scrollables.length,
+        greaterThanOrEqualTo(2),
+        reason: 'expected both the chip row and the page view',
+      );
+      // A PageView wraps whatever it is given (page snapping, implicit
+      // scrolling), so the outer type is not the one supplied — the supplied
+      // physics sits inside the chain. Matching the description covers both
+      // the wrapped and the bare case.
+      for (final scrollable in scrollables) {
+        expect(
+          scrollable.physics.toString(),
+          contains('ClampingScrollPhysics'),
+          reason: 'a scroller did not take the forwarded physics',
+        );
+      }
+    });
+  });
+
+  group('FlowinChipGroup physics', () {
+    testWidgets('defaults to bouncing', (tester) async {
+      // Bouncing is a deliberate choice, not the platform default: a short
+      // chip strip that stops dead at the edge reads as broken. Pinned so the
+      // default cannot drift silently.
+      await tester.pumpApp(
+        FlowinChipGroup(labels: const ['One', 'Two']),
+      );
+
+      final scrollable = tester.widget<Scrollable>(find.byType(Scrollable));
+      expect(scrollable.physics, isA<BouncingScrollPhysics>());
+    });
+
+    testWidgets('accepts a caller override', (tester) async {
+      await tester.pumpApp(
+        FlowinChipGroup(
+          labels: const ['One', 'Two'],
+          physics: const ClampingScrollPhysics(),
+        ),
+      );
+
+      final scrollable = tester.widget<Scrollable>(find.byType(Scrollable));
+      expect(scrollable.physics, isA<ClampingScrollPhysics>());
+    });
   });
 }

@@ -10,13 +10,11 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 /// — whatever is behind the swatch shows through it, the way the iOS color
 /// picker carves its selection ring.
 ///
-/// The transparent gap is what makes the ring self-sufficient. An earlier
-/// version painted the gap in a chosen color, which meant the gap had to
-/// contrast with the swatch or the ring vanished — a white swatch on a white
-/// surface painted white-on-white-on-white and read as unselected. Revealing
-/// the background instead removes the question: there is nothing to contrast
-/// against, because the separation comes from whatever the swatch happens to
-/// sit on. Callers therefore never need to compute a gap color.
+/// The transparent gap is what makes the ring self-sufficient: the separation
+/// comes from whatever the swatch sits on, so there is nothing to contrast
+/// against and **callers never supply a gap color**. Painting the gap instead
+/// would require it to contrast with the swatch — a white swatch on a white
+/// surface would read as unselected.
 ///
 /// The default sizes derive from Flowin space and border tokens. Use
 /// [FlowinColorRadialButton.gradient] for the "pick a custom color" affordance.
@@ -30,9 +28,8 @@ class FlowinColorRadialButton extends StatelessWidget {
     this.borderWidth = FlowinDesignBorders.extraBold,
     this.gapWidth = FlowinDesignBorders.bold,
     this.onTap,
-    this.outerCircleDecoration,
     super.key,
-  });
+  }) : _outerCircleDecoration = null;
 
   /// A swatch filled with a rainbow sweep gradient, for custom-color selection.
   const FlowinColorRadialButton.gradient({
@@ -43,7 +40,7 @@ class FlowinColorRadialButton extends StatelessWidget {
     this.gapWidth = FlowinDesignBorders.bold,
     this.onTap,
     super.key,
-  }) : outerCircleDecoration = const BoxDecoration(
+  }) : _outerCircleDecoration = const BoxDecoration(
          shape: BoxShape.circle,
          gradient: SweepGradient(
            colors: [
@@ -77,8 +74,17 @@ class FlowinColorRadialButton extends StatelessWidget {
   /// Called when the swatch is tapped.
   final VoidCallback? onTap;
 
-  /// An optional decoration for the outer circle (used by the gradient ctor).
-  final BoxDecoration? outerCircleDecoration;
+  /// The decoration that fills the swatch, set only by the gradient
+  /// constructor.
+  ///
+  /// Private because it selects the fill *mechanism* rather than styling one:
+  /// when set, [color] is ignored and the swatch painter does not run. Callers
+  /// choose a fill by choosing a constructor; [isGradient] reports which.
+  final BoxDecoration? _outerCircleDecoration;
+
+  /// Whether this swatch renders the custom-colour gradient sweep rather than
+  /// a solid [color].
+  bool get isGradient => _outerCircleDecoration != null;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +102,7 @@ class FlowinColorRadialButton extends StatelessWidget {
     // A gradient swatch keeps its DecoratedBox: the sweep gradient has to be
     // painted by the decoration, and it is clipped to the ring-plus-disc shape
     // when selected so the gap stays transparent there too.
-    final Widget swatch = outerCircleDecoration != null
+    final Widget swatch = _outerCircleDecoration != null
         ? ClipPath(
             clipper: selected
                 ? _RingClipper(
@@ -105,7 +111,7 @@ class FlowinColorRadialButton extends StatelessWidget {
                     innerSize: innerSize,
                   )
                 : const _CircleClipper(),
-            child: DecoratedBox(decoration: outerCircleDecoration!),
+            child: DecoratedBox(decoration: _outerCircleDecoration),
           )
         : CustomPaint(
             painter: _SwatchPainter(
@@ -116,11 +122,10 @@ class FlowinColorRadialButton extends StatelessWidget {
             ),
           );
 
-    // Ink is suppressed. The Material paints its splash and highlight into the
-    // swatch's own bounds, and the gap is transparent now, so a tap tints
-    // whatever shows through the gap and reads as the just-picked colour
-    // dimming. The swatch IS the value it stands for, so a wash over it
-    // misreports that value; selection is already communicated by the ring.
+    // Ink is suppressed deliberately. The Material paints its splash and
+    // highlight into the swatch's own bounds, so a tap would wash the swatch
+    // in a tint — and the swatch IS the colour value it stands for, so a wash
+    // over it misreports that value. Selection is conveyed by the ring.
     return Material(
       color: Colors.transparent,
       shape: shape,

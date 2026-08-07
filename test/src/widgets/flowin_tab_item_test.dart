@@ -1,6 +1,7 @@
 // Test files favor non-const constructors for readability.
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -52,11 +53,35 @@ void main() {
       expect(text.overflow, TextOverflow.ellipsis);
     });
 
-    testWidgets('label uses the 14/w500 style', (tester) async {
-      await tester.pumpApp(FlowinTabItem(label: 'Board'));
-      final text = tester.widget<Text>(find.byType(Text));
-      expect(text.style?.fontSize, 14);
-      expect(text.style?.fontWeight, FontWeight.w500);
+    testWidgets('label style comes from the bar theme, not the item', (
+      tester,
+    ) async {
+      // The item used to pin 14/w500 on its own Text, which outranked the
+      // tab theme and made a Flowin cell render differently from a raw
+      // platform cell in the same bar. Reading the RENDERED style (rather
+      // than the Text widget's own, which is now deliberately null) is what
+      // proves the theme reaches the label.
+      //
+      // Rendered inside a bar because that is where the tab theme applies —
+      // a standalone item has no bar to inherit from and falls back to the
+      // ambient body style.
+      final controller = TabController(length: 1, vsync: tester);
+      addTearDown(controller.dispose);
+      await tester.pumpApp(
+        FlowinTabs(
+          controller: controller,
+          tabs: const [FlowinTabItem(label: 'Board')],
+        ),
+      );
+
+      final rendered = tester
+          .renderObject<RenderParagraph>(find.byType(RichText))
+          .text
+          .style;
+      final expected = FlowinTheme.light.tabBarTheme.labelStyle;
+
+      expect(rendered?.fontSize, expected?.fontSize);
+      expect(rendered?.fontWeight, expected?.fontWeight);
     });
 
     testWidgets('works as a FlowinTabs tab', (tester) async {

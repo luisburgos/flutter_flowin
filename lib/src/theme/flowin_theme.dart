@@ -39,11 +39,10 @@ class FlowinTheme {
     // rounded rectangle on anything taller than 32.
     //
     // Left to Material's own default rather than set here, because that
-    // default IS StadiumBorder. The legacy package set no shape either
-    // (fd_button.dart:161), so inheriting it is what production actually
-    // rendered. FlowinItemButton is the exception: it pins radius400 on its
-    // own ButtonStyle, because a full-width row reads as a surface, not a
-    // pill.
+    // default IS StadiumBorder, and the legacy package set no shape either —
+    // so inheriting it is what production actually rendered.
+    // FlowinItemButton is the exception: it pins radius400 on its own
+    // ButtonStyle, because a full-width row reads as a surface, not a pill.
     const buttonPadding = EdgeInsets.symmetric(
       horizontal: FlowinDesignSpace.space400,
       vertical: FlowinDesignSpace.space300,
@@ -78,6 +77,12 @@ class FlowinTheme {
         style: TextButton.styleFrom(
           padding: buttonPadding,
           textStyle: buttonTextStyle,
+          // Stated rather than inherited, matching the outlined sibling.
+          // Material defaults this to `primary`, which currently resolves to
+          // the same value as `onSurface`, so leaving it unset renders
+          // correctly today and diverges once the brand accent is chromatic.
+          // FlowinIconButton's text variant binds `primary` deliberately.
+          foregroundColor: colorScheme.onSurface,
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
@@ -105,8 +110,7 @@ class FlowinTheme {
           color: colorScheme.onSecondaryContainer,
         ),
         shape: const StadiumBorder(),
-        // Production chip content padding is uniform space400
-        // (fd_chip.dart:103).
+        // Production chip content padding is uniform space400.
         padding: const EdgeInsets.all(FlowinDesignSpace.space400),
         // Production has no extra label padding — Material would add 8 per
         // side on top of the content padding. See oracleChipBoxTolerance.
@@ -152,6 +156,13 @@ class FlowinTheme {
           borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        // Stated rather than left to Material, which would tint the border
+        // with its own disabled colour. The border role is unchanged when
+        // disabled: a disabled field still reads as a field.
+        disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
           borderSide: BorderSide(color: colorScheme.outlineVariant),
         ),

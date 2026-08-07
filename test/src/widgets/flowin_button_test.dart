@@ -6,6 +6,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/helpers.dart';
 
+/// The style the framework actually paints [text] with.
+///
+/// Reading the style off the [Text] widget would only echo what the widget was
+/// handed; the span inside [RichText] is the merged, post-theme result, which
+/// is the only thing that proves a theme value survived to the screen.
+TextStyle _renderedStyleOf(WidgetTester tester, String text) {
+  final richText = tester.widget<RichText>(
+    find.descendant(of: find.text(text), matching: find.byType(RichText)),
+  );
+  return richText.text.style!;
+}
+
 void main() {
   group('FlowinButton', () {
     testWidgets('renders its label', (tester) async {
@@ -124,6 +136,116 @@ void main() {
             borderRadius: BorderRadius.circular(customRadius),
           ),
         );
+      },
+    );
+
+    testWidgets(
+      'base label text style comes from the theme, not the widget '
+      '(theme-only styling)',
+      (tester) async {
+        // The contract names the base text style a global binding. At `md` the
+        // per-size style IS the theme base (labelLarge), so overriding the
+        // role must move the rendered label — if a future refactor inlines a
+        // literal size into the widget, this fails.
+        //
+        // The role, not filledButtonTheme.textStyle, is what the button
+        // actually reads: FlowinButton always supplies its own per-size
+        // textStyle, and a widget-level ButtonStyle outranks the component
+        // theme. See the `filledButtonTheme.textStyle is shadowed` test below.
+        const customFontSize = 37.0;
+        final theme = FlowinTheme.light.copyWith(
+          textTheme: FlowinTheme.light.textTheme.copyWith(
+            labelLarge: FlowinTheme.light.textTheme.labelLarge?.copyWith(
+              fontSize: customFontSize,
+            ),
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinButton.filled(
+            onPressed: () {},
+            label: 'Themed',
+            size: FlowinButtonSize.md,
+          ),
+          theme: theme,
+        );
+
+        // Assert the RENDERED text, not the style object handed to the button:
+        // only the painted span proves the value survived the merge.
+        expect(_renderedStyleOf(tester, 'Themed').fontSize, customFontSize);
+      },
+    );
+
+    testWidgets(
+      'filledButtonTheme.textStyle is shadowed by the per-size style '
+      '(documents the binding)',
+      (tester) async {
+        // Guards a real asymmetry rather than a behaviour we want. Because
+        // FlowinButton always sets textStyle on its own ButtonStyle, and a
+        // widget style outranks the component theme, the `textStyle` slot on
+        // filledButtonTheme never reaches the label — not even at `md`, where
+        // the two values agree. Consumers must retheme `textTheme.labelLarge`.
+        //
+        // If this ever starts failing, the widget stopped setting its own
+        // textStyle and the component-theme slot became live: delete this test
+        // and assert the override wins instead.
+        final theme = FlowinTheme.light.copyWith(
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              textStyle: const TextStyle(fontSize: 37),
+            ),
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinButton.filled(
+            onPressed: () {},
+            label: 'Shadowed',
+            size: FlowinButtonSize.md,
+          ),
+          theme: theme,
+        );
+
+        expect(
+          _renderedStyleOf(tester, 'Shadowed').fontSize,
+          FlowinTheme.light.textTheme.labelLarge?.fontSize,
+        );
+      },
+    );
+
+    testWidgets(
+      'per-variant colour roles come from the theme, not the widget '
+      '(theme-only styling)',
+      (tester) async {
+        // The contract names the per-variant colour roles a global binding.
+        // Override the filled variant's fill and label roles and assert both
+        // reach the rendered output, proving FlowinButton layers only size on
+        // top of the theme and hardcodes no colour of its own.
+        const customBackground = Color(0xFF123456);
+        const customForeground = Color(0xFF654321);
+        final theme = FlowinTheme.light.copyWith(
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              backgroundColor: customBackground,
+              foregroundColor: customForeground,
+            ),
+          ),
+        );
+
+        await tester.pumpApp(
+          FlowinButton.filled(onPressed: () {}, label: 'Coloured'),
+          theme: theme,
+        );
+
+        // The fill is painted by the Material the FilledButton renders.
+        final material = tester.widget<Material>(
+          find.descendant(
+            of: find.byType(FilledButton),
+            matching: find.byType(Material),
+          ),
+        );
+        expect(material.color, customBackground);
+        expect(_renderedStyleOf(tester, 'Coloured').color, customForeground);
       },
     );
   });

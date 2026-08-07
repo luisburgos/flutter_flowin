@@ -95,8 +95,21 @@ void main() {
         expect(side?.color, scheme.outlineVariant);
       });
 
-      testWidgets('text button is configured', (tester) async {
-        expect(theme.textButtonTheme.style, isNotNull);
+      testWidgets('text button binds its foreground to the on-surface role', (
+        tester,
+      ) async {
+        // Left unbound, Material defaults this to `primary`. Under the
+        // placeholder greys `primary` and `onSurface` are the same value, so
+        // the omission rendered correctly and was invisible — until a
+        // chromatic brand accent lands, at which point every text button
+        // would turn accent-coloured at once.
+        //
+        // The text ICON button deliberately does bind `primary`; see its
+        // contract. This asserts only the text button.
+        expect(
+          theme.textButtonTheme.style!.foregroundColor?.resolve({}),
+          scheme.onSurface,
+        );
       });
 
       testWidgets('icon button uses a circle border', (tester) async {
@@ -194,6 +207,25 @@ void main() {
 
         final context = tester.element(find.byType(SizedBox));
         expect(Theme.of(context).colorScheme.brightness, Brightness.dark);
+      });
+
+      testWidgets('binds the shadow role to the base shadow colour', (
+        tester,
+      ) async {
+        // The scheme's shadow role and the shadow actually rendered from the
+        // FlowinTokens extension must agree. They drifted once: the role said
+        // neutral700 while the rendered shadow said black, and nothing caught
+        // it because no widget reads colorScheme.shadow — so the wrong value
+        // sat dormant, waiting for the first consumer to reach for the
+        // idiomatic Material path.
+        expect(
+          FlowinTheme.dark.colorScheme.shadow,
+          FlowinDesignShadows.shadow100Dark.color,
+        );
+        expect(
+          FlowinTheme.light.colorScheme.shadow,
+          FlowinDesignShadows.shadow100.color,
+        );
       });
     });
   });

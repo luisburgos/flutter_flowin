@@ -58,7 +58,9 @@ void main() {
         expect(scheme.surfaceBright, FlowinDesignColors.neutral700);
         expect(scheme.inverseSurface, FlowinDesignColors.white);
         expect(scheme.onInverseSurface, FlowinDesignColors.neutral800);
-        expect(scheme.shadow, FlowinDesignColors.neutral700);
+        // Black, not neutral700: one ramp step from the neutral800 surface
+        // reads as nothing. Kept equal to shadow100Dark — see the theme test.
+        expect(scheme.shadow, FlowinDesignColors.black);
         expect(scheme.primaryContainer, FlowinDesignColors.primary200);
         expect(scheme.onPrimaryContainer, FlowinDesignColors.primary800);
         expect(scheme.secondaryContainer, FlowinDesignColors.secondary700);

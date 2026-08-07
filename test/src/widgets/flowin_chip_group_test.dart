@@ -5,6 +5,40 @@ import '../../helpers/helpers.dart';
 
 const _labels = ['Board', 'Timeline', 'Settings', 'Members'];
 
+/// The [ShapeDecoration] painted by the chip carrying [label] inside the group.
+///
+/// Reading `ChipTheme.of(context)` back would pass even if the group stopped
+/// deferring to the theme, so these assertions go to the [Ink] the chip
+/// actually paints.
+ShapeDecoration _paintedDecorationOf(WidgetTester tester, String label) {
+  final ink = tester.widget<Ink>(
+    find.descendant(
+      of: find.ancestor(
+        of: find.text(label),
+        matching: find.byType(ChoiceChip),
+      ),
+      matching: find.byType(Ink),
+    ),
+  );
+  return ink.decoration! as ShapeDecoration;
+}
+
+Color? _paintedFillOf(WidgetTester tester, String label) =>
+    _paintedDecorationOf(tester, label).color;
+
+OutlinedBorder _paintedShapeOf(WidgetTester tester, String label) =>
+    _paintedDecorationOf(tester, label).shape as OutlinedBorder;
+
+/// The [TextStyle] the chip's label paragraph is actually rendered with.
+TextStyle _renderedLabelStyle(WidgetTester tester, String label) {
+  return tester
+      .widget<RichText>(
+        find.descendant(of: find.text(label), matching: find.byType(RichText)),
+      )
+      .text
+      .style!;
+}
+
 /// Hosts a [FlowinChipGroupController] so the group can be driven in tests.
 class _ChipGroupHarness extends StatefulWidget {
   const _ChipGroupHarness({required this.controller});
@@ -273,6 +307,109 @@ void main() {
         ),
       );
       expect(chip.selected, isTrue);
+    });
+  });
+
+  // The group builds its own chips, so it is the layer most likely to grow a
+  // styling shortcut — passing a colour or a TextStyle down to FlowinChip
+  // instead of leaving the chipTheme to do it. These render the *group* and
+  // assert on the chip that comes out, which is the only way to catch that.
+  group('FlowinChipGroup theme-only styling', () {
+    testWidgets('selected fill comes from the chip theme, not the group', (
+      tester,
+    ) async {
+      const customSelected = Color(0xFF112233);
+      final theme = FlowinTheme.light.copyWith(
+        chipTheme: FlowinTheme.light.chipTheme.copyWith(
+          selectedColor: customSelected,
+        ),
+      );
+
+      await tester.pumpApp(
+        FlowinChipGroup(labels: _labels, initialSelectedIndex: 1),
+        theme: theme,
+      );
+
+      expect(_paintedFillOf(tester, 'Timeline'), customSelected);
+    });
+
+    testWidgets('unselected fill comes from the chip theme, not the group', (
+      tester,
+    ) async {
+      // The unselected slot is a separate binding from selectedColor: a group
+      // that hardcoded a background would still pass the selected-fill test.
+      const customBackground = Color(0xFF203040);
+      final theme = FlowinTheme.light.copyWith(
+        chipTheme: FlowinTheme.light.chipTheme.copyWith(
+          backgroundColor: customBackground,
+        ),
+      );
+
+      await tester.pumpApp(
+        FlowinChipGroup(labels: _labels, initialSelectedIndex: 1),
+        theme: theme,
+      );
+
+      expect(_paintedFillOf(tester, 'Board'), customBackground);
+    });
+
+    testWidgets('border side comes from the chip theme, not the group', (
+      tester,
+    ) async {
+      const customBorder = Color(0xFF445566);
+      final theme = FlowinTheme.light.copyWith(
+        chipTheme: FlowinTheme.light.chipTheme.copyWith(
+          side: const BorderSide(color: customBorder, width: 3),
+        ),
+      );
+
+      await tester.pumpApp(FlowinChipGroup(labels: _labels), theme: theme);
+
+      final shape = _paintedShapeOf(tester, 'Timeline');
+      expect(shape.side.color, customBorder);
+      expect(shape.side.width, 3);
+    });
+
+    testWidgets('pill shape comes from the chip theme, not the group', (
+      tester,
+    ) async {
+      final theme = FlowinTheme.light.copyWith(
+        chipTheme: FlowinTheme.light.chipTheme.copyWith(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(3)),
+          ),
+        ),
+      );
+
+      await tester.pumpApp(FlowinChipGroup(labels: _labels), theme: theme);
+
+      expect(
+        _paintedShapeOf(tester, 'Timeline'),
+        isA<RoundedRectangleBorder>().having(
+          (shape) => shape.borderRadius,
+          'borderRadius',
+          const BorderRadius.all(Radius.circular(3)),
+        ),
+      );
+    });
+
+    testWidgets('label style comes from the chip theme, not the group', (
+      tester,
+    ) async {
+      const customStyle = TextStyle(fontSize: 27, letterSpacing: 4);
+      final theme = FlowinTheme.light.copyWith(
+        chipTheme: FlowinTheme.light.chipTheme.copyWith(
+          labelStyle: customStyle,
+        ),
+      );
+
+      await tester.pumpApp(FlowinChipGroup(labels: _labels), theme: theme);
+
+      // 'Timeline' is unselected, so this exercises labelStyle rather than
+      // the secondaryLabelStyle a selected chip resolves.
+      final rendered = _renderedLabelStyle(tester, 'Timeline');
+      expect(rendered.fontSize, 27);
+      expect(rendered.letterSpacing, 4);
     });
   });
 

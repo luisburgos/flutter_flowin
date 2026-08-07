@@ -46,6 +46,28 @@ void main() {
       expect(field.enabled, isFalse);
     });
 
+    testWidgets('keeps the subtle-border role when disabled', (tester) async {
+      // The contract binds the border colour for the disabled state and says
+      // it is unchanged in v1. Without an explicit disabled border the field
+      // falls through to the platform's own disabled tint, which is not one
+      // of our roles — and asserting only `enabled == false`, as the test
+      // above does, cannot see that.
+      await tester.pumpApp(
+        FlowinTextField(initialValue: 'read only', enabled: false),
+      );
+
+      final context = tester.element(find.byType(TextField));
+      final border = tester
+          .widget<TextField>(find.byType(TextField))
+          .decoration!
+          .disabledBorder!;
+
+      expect(
+        border.borderSide.color,
+        Theme.of(context).colorScheme.outlineVariant,
+      );
+    });
+
     testWidgets(
       'border radius comes from the theme, not the widget '
       '(theme-only styling)',

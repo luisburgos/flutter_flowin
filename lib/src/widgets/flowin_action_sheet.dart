@@ -111,7 +111,6 @@ class FlowinActionSheet extends StatelessWidget {
     this.displayClose = true,
     this.onClose,
     this.margin,
-    this.bodyPadding,
     super.key,
   });
 
@@ -137,10 +136,15 @@ class FlowinActionSheet extends StatelessWidget {
   final VoidCallback? onClose;
 
   /// Outer margin around the card.
+  ///
+  /// Null keeps the contract's screen-edge insets, which is what a modal
+  /// presentation wants. Pass [EdgeInsets.zero] to embed the sheet layout
+  /// inside a page, where those insets are the surrounding layout's business
+  /// rather than the sheet's.
+  ///
+  /// This is a placement concern, not a styling one: it positions the card
+  /// without changing the surface, radius, or any internal spacing.
   final EdgeInsets? margin;
-
-  /// Padding around the body.
-  final EdgeInsets? bodyPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -178,11 +182,9 @@ class FlowinActionSheet extends StatelessWidget {
           ),
           if (body != null)
             Padding(
-              padding:
-                  bodyPadding ??
-                  const EdgeInsets.symmetric(
-                    horizontal: FlowinDesignSpace.space600,
-                  ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: FlowinDesignSpace.space600,
+              ),
               child: body,
             ),
           if (footer != null)
@@ -259,10 +261,9 @@ class FlowinActionSheetHeader extends StatelessWidget {
     // Whatever the row did not take drops into the block below it, so the
     // title stays adjacent to its subtitle either way.
     //
-    // The block used to be gated on `hasIcon`, which silently dropped the
-    // subtitle of an icon-less sheet — the subtitle was only ever rendered as
-    // a sibling of the demoted title. Gating on "is there anything to show"
-    // instead keeps the title/subtitle pairing intact in both arrangements.
+    // Gated on "is there anything to show" rather than on `hasIcon`: an
+    // icon-less sheet still has a subtitle to render, and gating on the icon
+    // would drop it.
     final belowRow = <Widget>[if (hasIcon) titleWidget, ?subtitleWidget];
 
     return Column(

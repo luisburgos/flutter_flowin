@@ -25,7 +25,11 @@ enum FlowinItemButtonVariant {
 /// The uniform inner padding of a [FlowinItemButton] (all sides).
 const double _kItemButtonPadding = FlowinDesignSpace.space400;
 
-/// The minimum height of a [FlowinItemButton] — production's md fixedSize.
+/// The minimum height of a [FlowinItemButton] — the `md` step of the control
+/// scale ([FlowinDesignControlSize.md], 56), production's md fixedSize.
+///
+/// Spelled as a literal because an enum getter is not const-evaluable; the
+/// fidelity suite pins it to the token.
 const double _kItemButtonMinHeight = 56;
 
 /// The leading icon size — the `md` step of the icon scale
@@ -154,9 +158,8 @@ class FlowinItemButton extends StatelessWidget {
     //
     // The shape is pinned here rather than inherited. Every other Flowin
     // button is a pill (Material's StadiumBorder default), but a full-width
-    // row 56 tall would then have 28-radius ends — production renders it as a
-    // rounded rectangle at radius400 (fd_item_button.dart:65). A row reads as
-    // a surface, not as a pill.
+    // row 56 tall would then have 28-radius ends. A row reads as a surface,
+    // not as a pill, so it takes radius400.
     const style = ButtonStyle(
       alignment: Alignment.centerLeft,
       padding: WidgetStatePropertyAll(
