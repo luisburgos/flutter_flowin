@@ -4,11 +4,8 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 import 'package:flutter_flowin/src/widgets/flowin_tabs.dart';
 
 /// The leading icon size for a [FlowinTabItem] — the `sm` step of the icon
-/// scale ([FlowinDesignIconSize.sm], 16).
-///
-/// Spelled as a literal because an enum getter is not const-evaluable; the
-/// value is pinned to the token in the widget's test.
-const double _kTabItemIconSize = 16;
+/// scale.
+final double _kTabItemIconSize = FlowinDesignIconSize.sm.value;
 
 /// The gap between a [FlowinTabItem]'s leading icon and its label.
 // Production uses a raw 4px gap (fd_tab_item.dart) — space100.
@@ -84,7 +81,7 @@ class FlowinTabItem extends StatelessWidget implements PreferredSizeWidget {
             // caller does not have to know, while an icon that carries its own
             // explicit size still wins.
             IconTheme.merge(
-              data: const IconThemeData(size: _kTabItemIconSize),
+              data: IconThemeData(size: _kTabItemIconSize),
               child: icon!,
             ),
             const SizedBox(width: _kTabItemIconGap),
