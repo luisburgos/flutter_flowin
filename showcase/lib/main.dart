@@ -11,7 +11,12 @@ import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
-void main() => runApp(const ShowcaseApp());
+void main() {
+  // Initializes the icon font library before the first build. Required on web
+  // in debug (DDC) — see [FDIcons.warmUp].
+  FDIcons.warmUp();
+  runApp(const ShowcaseApp());
+}
 
 /// The showcase application root.
 ///

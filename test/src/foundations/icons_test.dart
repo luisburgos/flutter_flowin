@@ -98,4 +98,20 @@ void main() {
       expect(FDIcons.spark.iconData, LucideIcons.sparkles);
     });
   });
+
+  group('FDIcons.warmUp', () {
+    // The bug it guards against only reproduces on web (DDC), where the icon
+    // library is linked lazily on first access. There is no way to assert that
+    // from the VM, so this pins the two properties that must hold everywhere:
+    // it resolves an icon, and it is safe to call more than once.
+    test('resolves the backing icon library without throwing', () {
+      expect(FDIcons.warmUp, returnsNormally);
+      expect(FDIcons.board.iconData, LucideIcons.rows2);
+    });
+
+    test('is idempotent', () {
+      FDIcons.warmUp();
+      expect(FDIcons.warmUp, returnsNormally);
+    });
+  });
 }
