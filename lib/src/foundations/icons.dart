@@ -107,8 +107,10 @@ enum FDIcons {
 
   /// Forces the backing icon library to initialize.
   ///
-  /// Call once from `main()`, before `runApp`, on any app that renders Flowin
-  /// icons on the web.
+  /// Apps built on `FlowinTheme` do not need to call this: the theme calls it
+  /// while building, which is early enough and shallow enough. Call it once
+  /// from `main()`, before `runApp`, only when rendering Flowin icons on the
+  /// web *without* a Flowin theme.
   ///
   /// **Why this is needed.** The `lucide_icons_flutter` library declares ~28k
   /// `static const IconData` fields in a single class. In debug web builds
@@ -121,10 +123,10 @@ enum FDIcons {
   /// [FDIcon], and then as a downstream layout overflow where the failed icon
   /// is replaced by an unbounded `ErrorWidget`.
   ///
-  /// Touching the library from `main()` moves that one-time cost to a shallow
-  /// stack, so every later access finds it already initialized. Release web
-  /// builds (dart2js/Wasm) and all native targets are unaffected, where this
-  /// is a cheap no-op.
+  /// Touching the library from anywhere shallower than a widget build moves
+  /// that one-time cost off the deep stack, so every later access finds it
+  /// already initialized. Release web builds (dart2js/Wasm) and all native
+  /// targets are unaffected, where this is a cheap no-op.
   static void warmUp() {
     // The specific icon is irrelevant: one access initializes the library.
     FDIcons.board.iconData;
