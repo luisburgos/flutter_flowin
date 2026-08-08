@@ -3,6 +3,10 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 // Imported for the doc-comment reference to [FlowinTabs].
 import 'package:flutter_flowin/src/widgets/flowin_tabs.dart';
 
+/// The leading icon size for a [FlowinTabItem] — the `sm` step of the icon
+/// scale.
+final double _kTabItemIconSize = FlowinDesignIconSize.sm.value;
+
 /// The gap between a [FlowinTabItem]'s leading icon and its label.
 // Production uses a raw 4px gap (fd_tab_item.dart) — space100.
 const double _kTabItemIconGap = FlowinDesignSpace.space100;
@@ -70,7 +74,16 @@ class FlowinTabItem extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null) ...[
-            icon!,
+            // The contract binds the icon to `{size.icon.sm}`. Left to the
+            // caller it diverged in practice: one application passed `sm`
+            // explicitly while another took the icon scale's default, so the
+            // same cell shipped at two sizes. An IconTheme sets it here so a
+            // caller does not have to know, while an icon that carries its own
+            // explicit size still wins.
+            IconTheme.merge(
+              data: IconThemeData(size: _kTabItemIconSize),
+              child: icon!,
+            ),
             const SizedBox(width: _kTabItemIconGap),
           ],
           labelWidget,
