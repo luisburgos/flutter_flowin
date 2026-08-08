@@ -53,6 +53,19 @@ void main() {
         expect(FlowinTheme.dark.extension<FlowinTokens>(), isNotNull);
       });
 
+      testWidgets('the bright surface has a legible on-color', (tester) async {
+        // Material models `surfaceBright` but offers no slot for its
+        // on-color, so it lives on the extension. Without it the role had
+        // nothing legible specified on top, which breaks the
+        // role-plus-on-color pairing the semantic tier is built on.
+        final scheme = FlowinTheme.dark.colorScheme;
+        final tokens = FlowinTheme.dark.extension<FlowinTokens>()!;
+
+        expect(scheme.surfaceBright, FlowinDesignColors.neutral700);
+        expect(tokens.onSurfaceBright, FlowinDesignColors.neutral200);
+        expect(tokens.onSurfaceBright, isNot(scheme.surfaceBright));
+      });
+
       testWidgets('dark semantic colors differ from light', (tester) async {
         final light = FlowinTheme.light.extension<FlowinTokens>()!;
         final dark = FlowinTheme.dark.extension<FlowinTokens>()!;

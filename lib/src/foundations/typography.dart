@@ -239,10 +239,12 @@ extension FlowinBrandTextTheme on TextTheme {
 ///
 /// Mirrors the production `flowin_design` package (fidelity oracle 0.3.0):
 /// same base ([Typography.material2021] `.black` with [interFontFamily]
-/// applied) and the same override list. Notably `titleLarge` is NOT
-/// overridden with [FlowinBaselineTextTokens.titleLarge] — production leaves
-/// it at the Material default (22px w400 in Inter). Kept for fidelity;
-/// flagged as a probable upstream oversight.
+/// applied).
+///
+/// One deliberate deviation: production leaves `titleLarge` at the Material
+/// default rather than overriding it, which left the slot carrying no Flowin
+/// value at all — a widget reading it inherited from ambient text. The spec
+/// binds it like every other named style, so it is installed here.
 /// {@endtemplate}
 class FlowinTypefaces {
   /// {@macro flowin_typefaces}
@@ -254,6 +256,7 @@ class FlowinTypefaces {
         .apply(fontFamily: interFontFamily)
         .copyWith(
           headlineSmall: FlowinBaselineTextTokens.headlineSmall,
+          titleLarge: FlowinBaselineTextTokens.titleLarge,
           titleMedium: FlowinBaselineTextTokens.titleMedium,
           titleSmall: FlowinBaselineTextTokens.titleSmall,
           bodyLarge: FlowinBaselineTextTokens.bodyLarge,

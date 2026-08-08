@@ -32,6 +32,23 @@ void main() {
       expect((iconY - labelY).abs(), lessThan(8));
     });
 
+    testWidgets('sizes the leading icon to the sm step', (tester) async {
+      // Left to the caller this diverged in the field: one application passed
+      // sm explicitly while another took the icon scale's default, so the same
+      // cell shipped at two sizes in two apps. The contract binds it.
+      await tester.pumpApp(
+        FlowinTabItem(icon: Icon(Icons.dashboard), label: 'Board'),
+      );
+
+      final icon = tester.widget<Icon>(find.byIcon(Icons.dashboard));
+      final size =
+          icon.size ??
+          IconTheme.of(
+            tester.element(find.byIcon(Icons.dashboard)),
+          ).size;
+      expect(size, FlowinDesignIconSize.sm.value);
+    });
+
     testWidgets('omits the icon when none is provided', (tester) async {
       await tester.pumpApp(FlowinTabItem(label: 'Timeline'));
       expect(find.byType(Icon), findsNothing);

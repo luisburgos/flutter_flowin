@@ -5,6 +5,22 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  group('titleLarge', () {
+    test('is installed into the type scale', () {
+      // It was defined but never installed, so the slot carried no Flowin
+      // value and a widget reading it inherited from ambient text. The spec
+      // binds it like every other named style.
+      final scale = FlowinTypefaces.baseline();
+      expect(
+        scale.titleLarge?.fontSize,
+        FlowinBaselineTextTokens.titleLarge.fontSize,
+      );
+      expect(
+        scale.titleLarge?.fontWeight,
+        FlowinBaselineTextTokens.titleLarge.fontWeight,
+      );
+    });
+  });
   group('typography', () {
     test('font family names are package-namespaced asset families', () {
       // Package-declared fonts resolve as `packages/<package>/<family>`;
@@ -220,15 +236,14 @@ void main() {
         final theme = FlowinTypefaces.baseline();
 
         expect(theme.headlineSmall, FlowinBaselineTextTokens.headlineSmall);
-        // titleLarge is intentionally NOT overridden — production
-        // (flowin_design, fidelity oracle 0.3.0) leaves it at the Material
-        // 2021 default rendered in Inter. Probable upstream oversight; kept
-        // for fidelity.
-        expect(theme.titleLarge, isNot(FlowinBaselineTextTokens.titleLarge));
+        // titleLarge IS overridden now. Production left it at the Material
+        // default, which meant the slot carried no Flowin geometry at all —
+        // `fontSize` came back null and a widget reading it inherited from
+        // ambient text. The spec binds it like every other named style, so
+        // this is a deliberate divergence from the production oracle.
+        expect(theme.titleLarge, FlowinBaselineTextTokens.titleLarge);
         expect(theme.titleLarge?.fontFamily, interFontFamily);
-        // `.black` carries only color/family; geometry (22px w400) is merged
-        // in by ThemeData's Typography at theme-build time.
-        expect(theme.titleLarge?.fontSize, isNull);
+        expect(theme.titleLarge?.fontSize, 20);
         expect(theme.titleMedium, FlowinBaselineTextTokens.titleMedium);
         expect(theme.titleSmall, FlowinBaselineTextTokens.titleSmall);
         expect(theme.bodyLarge, FlowinBaselineTextTokens.bodyLarge);
