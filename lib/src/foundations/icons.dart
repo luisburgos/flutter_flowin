@@ -105,6 +105,33 @@ enum FDIcons {
     return FDIcon(icon: this, size: size, color: color);
   }
 
+  /// Forces the backing icon library to initialize.
+  ///
+  /// Apps built on `FlowinTheme` do not need to call this: the theme calls it
+  /// while building, which is early enough and shallow enough. Call it once
+  /// from `main()`, before `runApp`, only when rendering Flowin icons on the
+  /// web *without* a Flowin theme.
+  ///
+  /// **Why this is needed.** The `lucide_icons_flutter` library declares ~28k
+  /// `static const IconData` fields in a single class. In debug web builds
+  /// (DDC), a library is initialized lazily behind a `Proxy` on first property
+  /// access, and that initialization recursively links the library's
+  /// dependencies *on the calling stack*. When the first access happens inside
+  /// [FDIcon.build], the element mount chain has already consumed several
+  /// hundred frames, and linking this library on top of that exhausts the JS
+  /// stack — surfacing as a `StackOverflowError` thrown while building
+  /// [FDIcon], and then as a downstream layout overflow where the failed icon
+  /// is replaced by an unbounded `ErrorWidget`.
+  ///
+  /// Touching the library from anywhere shallower than a widget build moves
+  /// that one-time cost off the deep stack, so every later access finds it
+  /// already initialized. Release web builds (dart2js/Wasm) and all native
+  /// targets are unaffected, where this is a cheap no-op.
+  static void warmUp() {
+    // The specific icon is irrelevant: one access initializes the library.
+    FDIcons.board.iconData;
+  }
+
   /// The concrete [IconData] backing this semantic icon.
   IconData get iconData => switch (this) {
     FDIcons.board => LucideIcons.rows2,

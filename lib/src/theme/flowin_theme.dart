@@ -28,6 +28,13 @@ class FlowinTheme {
       _build(FlowinDesignSchemes.dark, const FlowinTokens.dark());
 
   static ThemeData _build(ColorScheme colorScheme, FlowinTokens tokens) {
+    // Initializes the icon library here rather than leaving it to the first
+    // FDIcon.build. On web in debug (DDC), linking it from inside a deep
+    // widget build exhausts the JS stack — see [FDIcons.warmUp]. A theme is
+    // always built before any icon renders, and at a far shallower stack, so
+    // this makes consuming apps immune without requiring a main() call.
+    FDIcons.warmUp();
+
     final textTheme = FlowinTypefaces.baseline().apply(
       bodyColor: colorScheme.onSurface,
       displayColor: colorScheme.onSurface,
