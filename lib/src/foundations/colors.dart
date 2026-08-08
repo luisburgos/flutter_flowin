@@ -116,16 +116,17 @@ class FlowinDesignColors {
 
   // --- Accent ramps -------------------------------------------------------
   //
-  // The accent roles are neutral by default, so these currently mirror the
-  // neutral ramp step for step. They are kept as their own ramps rather than
-  // aliased to it because they are a customization surface: an application
-  // re-pointing an accent gets a full ramp to work from, and the roles stay
-  // independently re-pointable (see DESIGN.md section 2).
+  // Kept as their own ramps rather than aliased to `neutral`, because they are
+  // a customization surface: an application re-pointing an accent gets a full
+  // ramp to work from, and the roles stay independently re-pointable (see
+  // DESIGN.md section 2). Their values track `neutral` only because neutral is
+  // the accent default — nothing requires that, and a real accent palette would
+  // replace them.
   //
-  // Because they mirror `neutral`, a change there has to be mirrored here.
-  // The 400 step was `#b6b6b6` while `neutral400` was `#ababab` — a leftover
-  // from an earlier palette that survived because nothing reads that step.
-  // `foundations_test.dart` now asserts the ramps stay aligned.
+  // The 400 step read `#b6b6b6` while `neutral400` read `#ababab`. The spec
+  // recorded that as an artifact of aliasing the roles onto neutral, to be
+  // resolved rather than kept, so it is aligned here. No scheme reads a 400
+  // step, so nothing rendered changes.
 
   /// Primary 800.
   static const Color primary800 = Color(0xFF181818);
