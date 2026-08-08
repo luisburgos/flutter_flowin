@@ -91,9 +91,9 @@ class FlowinTokens extends ThemeExtension<FlowinTokens> {
       // BoxShadow.lerp can return null; fall back to the start value.
       shadow: BoxShadow.lerp(shadow, other.shadow, t) ?? shadow,
       defaultIconSize: t < 0.5 ? defaultIconSize : other.defaultIconSize,
-      onSurfaceBright:
-          Color.lerp(onSurfaceBright, other.onSurfaceBright, t) ??
-          onSurfaceBright,
+      // Non-null on both sides, so `Color.lerp` cannot return null here —
+      // unlike `BoxShadow.lerp` above, which can.
+      onSurfaceBright: Color.lerp(onSurfaceBright, other.onSurfaceBright, t)!,
     );
   }
 }
