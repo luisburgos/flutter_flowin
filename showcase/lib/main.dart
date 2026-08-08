@@ -11,14 +11,7 @@ import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
-void main() {
-  // PROBE (temporary): force the Lucide library to initialize at a shallow
-  // stack, before any widget build. If the StackOverflowError goes away, the
-  // cause is DDC's lazy library init running inside a deep build stack.
-  // ignore: unnecessary_statements
-  FDIcons.scanFace.iconData;
-  runApp(const ShowcaseApp());
-}
+void main() => runApp(const ShowcaseApp());
 
 /// The showcase application root.
 ///
