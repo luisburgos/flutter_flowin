@@ -114,6 +114,20 @@ class FlowinDesignColors {
   /// Success 100.
   static const Color success100 = Color(0xFFE7F3E1);
 
+  // --- Accent ramps -------------------------------------------------------
+  //
+  // Kept as their own ramps rather than aliased to `neutral`, because they are
+  // a customization surface: an application re-pointing an accent gets a full
+  // ramp to work from, and the roles stay independently re-pointable (see
+  // DESIGN.md section 2). Their values track `neutral` only because neutral is
+  // the accent default — nothing requires that, and a real accent palette would
+  // replace them.
+  //
+  // The 400 step read `#b6b6b6` while `neutral400` read `#ababab`. The spec
+  // recorded that as an artifact of aliasing the roles onto neutral, to be
+  // resolved rather than kept, so it is aligned here. No scheme reads a 400
+  // step, so nothing rendered changes.
+
   /// Primary 800.
   static const Color primary800 = Color(0xFF181818);
 
@@ -127,7 +141,7 @@ class FlowinDesignColors {
   static const Color primary500 = Color(0xFF7A7A7A);
 
   /// Primary 400.
-  static const Color primary400 = Color(0xFFB6B6B6);
+  static const Color primary400 = Color(0xFFABABAB);
 
   /// Primary 300.
   static const Color primary300 = Color(0xFFDBDBDB);
@@ -151,7 +165,7 @@ class FlowinDesignColors {
   static const Color secondary500 = Color(0xFF7A7A7A);
 
   /// Secondary 400.
-  static const Color secondary400 = Color(0xFFB6B6B6);
+  static const Color secondary400 = Color(0xFFABABAB);
 
   /// Secondary 300.
   static const Color secondary300 = Color(0xFFDBDBDB);
@@ -175,7 +189,7 @@ class FlowinDesignColors {
   static const Color tertiary500 = Color(0xFF7A7A7A);
 
   /// Tertiary 400.
-  static const Color tertiary400 = Color(0xFFB6B6B6);
+  static const Color tertiary400 = Color(0xFFABABAB);
 
   /// Tertiary 300.
   static const Color tertiary300 = Color(0xFFDBDBDB);

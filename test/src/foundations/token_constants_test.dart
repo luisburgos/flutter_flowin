@@ -76,7 +76,7 @@ void main() {
       expect(FlowinDesignColors.primary700, const Color(0xFF313131));
       expect(FlowinDesignColors.primary600, const Color(0xFF494949));
       expect(FlowinDesignColors.primary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.primary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.primary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.primary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.primary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.primary100, const Color(0xFFF9F9F9));
@@ -87,7 +87,7 @@ void main() {
       expect(FlowinDesignColors.secondary700, const Color(0xFF313131));
       expect(FlowinDesignColors.secondary600, const Color(0xFF494949));
       expect(FlowinDesignColors.secondary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.secondary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.secondary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.secondary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.secondary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.secondary100, const Color(0xFFF9F9F9));
@@ -98,7 +98,7 @@ void main() {
       expect(FlowinDesignColors.tertiary700, const Color(0xFF313131));
       expect(FlowinDesignColors.tertiary600, const Color(0xFF494949));
       expect(FlowinDesignColors.tertiary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.tertiary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.tertiary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.tertiary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.tertiary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.tertiary100, const Color(0xFFF9F9F9));

@@ -98,17 +98,70 @@ void main() {
       testWidgets('text button binds its foreground to the on-surface role', (
         tester,
       ) async {
-        // Left unbound, Material defaults this to `primary`. Under the
-        // placeholder greys `primary` and `onSurface` are the same value, so
-        // the omission rendered correctly and was invisible — until a
-        // chromatic brand accent lands, at which point every text button
-        // would turn accent-coloured at once.
+        // Left unbound, Material defaults this to `primary`. Under the default
+        // neutral palette `primary` and `onSurface` are the same value, so the
+        // omission rendered correctly and was invisible — until a consumer
+        // re-points the accent, at which point every text button would follow
+        // it.
         //
         // The text ICON button deliberately does bind `primary`; see its
         // contract. This asserts only the text button.
         expect(
           theme.textButtonTheme.style!.foregroundColor?.resolve({}),
           scheme.onSurface,
+        );
+      });
+
+      testWidgets('an accent override reaches the components that bind it', (
+        tester,
+      ) async {
+        // The accent roles are neutral by default but exist to be re-pointed
+        // by a consuming application (DESIGN.md section 2). That promise is
+        // only real if an override at the theme level reaches every component
+        // binding the role, without the call site changing — and because the
+        // default palette makes the roles indistinguishable from the neutral
+        // ramp, nothing about the rendered output would reveal a break.
+        const accent = Color(0xFF3366FF);
+        final themed = FlowinTheme.light.copyWith(
+          colorScheme: FlowinTheme.light.colorScheme.copyWith(primary: accent),
+        );
+
+        await tester.pumpApp(
+          FlowinButton.filled(onPressed: () {}, label: 'Go'),
+          theme: themed,
+        );
+
+        final material = tester.widget<Material>(
+          find
+              .descendant(
+                of: find.byType(FilledButton),
+                matching: find.byType(Material),
+              )
+              .first,
+        );
+        expect(material.color, accent);
+      });
+
+      testWidgets('accent roles stay independently overridable', (
+        tester,
+      ) async {
+        // Overriding one accent must not move the others: an application may
+        // re-point only `secondary`, which is a supported configuration.
+        const accent = Color(0xFF3366FF);
+        final themed = FlowinTheme.light.copyWith(
+          colorScheme: FlowinTheme.light.colorScheme.copyWith(
+            secondary: accent,
+          ),
+        );
+
+        expect(themed.colorScheme.secondary, accent);
+        expect(
+          themed.colorScheme.primary,
+          FlowinTheme.light.colorScheme.primary,
+        );
+        expect(
+          themed.colorScheme.tertiary,
+          FlowinTheme.light.colorScheme.tertiary,
         );
       });
 
