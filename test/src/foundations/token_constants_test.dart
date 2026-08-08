@@ -18,6 +18,71 @@ void main() {
   });
 
   group('FlowinDesignColors', () {
+    test('the accent ramps mirror the neutral ramp step for step', () {
+      // The accent roles are neutral by default, so these ramps duplicate
+      // `neutral` rather than aliasing it — they exist as a customization
+      // surface for an application that re-points an accent.
+      //
+      // Duplication means a change to `neutral` has to be mirrored, and that
+      // is exactly what failed before: the 400 step sat at #b6b6b6 while
+      // neutral400 moved to #ababab, and nothing noticed because no scheme
+      // reads that step. This asserts the mirroring instead of trusting it.
+      const neutral = <int, Color>{
+        100: FlowinDesignColors.neutral100,
+        200: FlowinDesignColors.neutral200,
+        300: FlowinDesignColors.neutral300,
+        400: FlowinDesignColors.neutral400,
+        500: FlowinDesignColors.neutral500,
+        600: FlowinDesignColors.neutral600,
+        700: FlowinDesignColors.neutral700,
+        800: FlowinDesignColors.neutral800,
+      };
+      const accents = <String, Map<int, Color>>{
+        'primary': {
+          100: FlowinDesignColors.primary100,
+          200: FlowinDesignColors.primary200,
+          300: FlowinDesignColors.primary300,
+          400: FlowinDesignColors.primary400,
+          500: FlowinDesignColors.primary500,
+          600: FlowinDesignColors.primary600,
+          700: FlowinDesignColors.primary700,
+          800: FlowinDesignColors.primary800,
+        },
+        'secondary': {
+          100: FlowinDesignColors.secondary100,
+          200: FlowinDesignColors.secondary200,
+          300: FlowinDesignColors.secondary300,
+          400: FlowinDesignColors.secondary400,
+          500: FlowinDesignColors.secondary500,
+          600: FlowinDesignColors.secondary600,
+          700: FlowinDesignColors.secondary700,
+          800: FlowinDesignColors.secondary800,
+        },
+        'tertiary': {
+          100: FlowinDesignColors.tertiary100,
+          200: FlowinDesignColors.tertiary200,
+          300: FlowinDesignColors.tertiary300,
+          400: FlowinDesignColors.tertiary400,
+          500: FlowinDesignColors.tertiary500,
+          600: FlowinDesignColors.tertiary600,
+          700: FlowinDesignColors.tertiary700,
+          800: FlowinDesignColors.tertiary800,
+        },
+      };
+
+      for (final entry in accents.entries) {
+        for (final step in neutral.keys) {
+          expect(
+            entry.value[step],
+            neutral[step],
+            reason:
+                '${entry.key}$step drifted from neutral$step — the accent '
+                'ramps mirror neutral until an accent is re-pointed',
+          );
+        }
+      }
+    });
+
     test('can be constructed', () {
       expect(FlowinDesignColors(), isA<FlowinDesignColors>());
     });
@@ -76,7 +141,7 @@ void main() {
       expect(FlowinDesignColors.primary700, const Color(0xFF313131));
       expect(FlowinDesignColors.primary600, const Color(0xFF494949));
       expect(FlowinDesignColors.primary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.primary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.primary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.primary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.primary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.primary100, const Color(0xFFF9F9F9));
@@ -87,7 +152,7 @@ void main() {
       expect(FlowinDesignColors.secondary700, const Color(0xFF313131));
       expect(FlowinDesignColors.secondary600, const Color(0xFF494949));
       expect(FlowinDesignColors.secondary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.secondary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.secondary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.secondary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.secondary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.secondary100, const Color(0xFFF9F9F9));
@@ -98,7 +163,7 @@ void main() {
       expect(FlowinDesignColors.tertiary700, const Color(0xFF313131));
       expect(FlowinDesignColors.tertiary600, const Color(0xFF494949));
       expect(FlowinDesignColors.tertiary500, const Color(0xFF7A7A7A));
-      expect(FlowinDesignColors.tertiary400, const Color(0xFFB6B6B6));
+      expect(FlowinDesignColors.tertiary400, const Color(0xFFABABAB));
       expect(FlowinDesignColors.tertiary300, const Color(0xFFDBDBDB));
       expect(FlowinDesignColors.tertiary200, const Color(0xFFF3F3F3));
       expect(FlowinDesignColors.tertiary100, const Color(0xFFF9F9F9));

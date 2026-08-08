@@ -114,6 +114,19 @@ class FlowinDesignColors {
   /// Success 100.
   static const Color success100 = Color(0xFFE7F3E1);
 
+  // --- Accent ramps -------------------------------------------------------
+  //
+  // The accent roles are neutral by default, so these currently mirror the
+  // neutral ramp step for step. They are kept as their own ramps rather than
+  // aliased to it because they are a customization surface: an application
+  // re-pointing an accent gets a full ramp to work from, and the roles stay
+  // independently re-pointable (see DESIGN.md section 2).
+  //
+  // Because they mirror `neutral`, a change there has to be mirrored here.
+  // The 400 step was `#b6b6b6` while `neutral400` was `#ababab` — a leftover
+  // from an earlier palette that survived because nothing reads that step.
+  // `foundations_test.dart` now asserts the ramps stay aligned.
+
   /// Primary 800.
   static const Color primary800 = Color(0xFF181818);
 
@@ -127,7 +140,7 @@ class FlowinDesignColors {
   static const Color primary500 = Color(0xFF7A7A7A);
 
   /// Primary 400.
-  static const Color primary400 = Color(0xFFB6B6B6);
+  static const Color primary400 = Color(0xFFABABAB);
 
   /// Primary 300.
   static const Color primary300 = Color(0xFFDBDBDB);
@@ -151,7 +164,7 @@ class FlowinDesignColors {
   static const Color secondary500 = Color(0xFF7A7A7A);
 
   /// Secondary 400.
-  static const Color secondary400 = Color(0xFFB6B6B6);
+  static const Color secondary400 = Color(0xFFABABAB);
 
   /// Secondary 300.
   static const Color secondary300 = Color(0xFFDBDBDB);
@@ -175,7 +188,7 @@ class FlowinDesignColors {
   static const Color tertiary500 = Color(0xFF7A7A7A);
 
   /// Tertiary 400.
-  static const Color tertiary400 = Color(0xFFB6B6B6);
+  static const Color tertiary400 = Color(0xFFABABAB);
 
   /// Tertiary 300.
   static const Color tertiary300 = Color(0xFFDBDBDB);
