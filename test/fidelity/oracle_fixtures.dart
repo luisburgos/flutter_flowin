@@ -470,8 +470,34 @@ const oracleSheetRadius = 40.0;
 const oracleSheetBottomPadding = 24.0;
 const oracleSheetColumnSpacing = 16.0;
 
-/// Header/body/footer horizontal inset — space600. (fd_action_sheet.dart)
+/// Body/footer horizontal inset — space600. (fd_action_sheet.dart)
+///
+/// The header deliberately diverges: it owns its own insets rather than
+/// sharing this one, so its text sits 8 further in than the body's. See
+/// [oracleSheetHeaderTextInset].
 const oracleSheetContentInset = 24.0;
+
+/// Vertical padding wrapping the sheet's column — space600.
+///
+/// Applied inside the card rather than as the card's own `padding`, so the
+/// card can clip its child to the squircle radius.
+const oracleSheetVerticalPadding = 24.0;
+
+/// Header text inset — space800.
+///
+/// Both header regions inset their text by this much, 8 further in than the
+/// body's [oracleSheetContentInset].
+const oracleSheetHeaderTextInset = 32.0;
+
+/// Header bar right inset — space400.
+///
+/// Narrower than [oracleSheetHeaderTextInset] because the close button carries
+/// no inset of its own, so this gutter is the only thing holding it off the
+/// card edge. The control sits closer to the edge than the text does.
+const oracleSheetHeaderTrailingInset = 16.0;
+
+/// Gap between the header's bar and its supporting text — space200.
+const oracleSheetHeaderRegionGap = 8.0;
 
 /// Footer row gap — space300. (fd_action_sheet_footer.dart:24)
 const oracleSheetFooterSpacing = 12.0;

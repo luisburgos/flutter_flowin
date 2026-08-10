@@ -10,6 +10,10 @@
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+// The header's two regions are internal to the action sheet and deliberately
+// absent from the package barrel, so they are imported by path here.
+import 'package:flutter_flowin/src/components/action_sheet/header/flowin_action_sheet_header_bar.dart';
+import 'package:flutter_flowin/src/components/action_sheet/header/flowin_action_sheet_header_supporting.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/helpers.dart';
@@ -1138,15 +1142,45 @@ void main() {
       final card = tester.widget<FlowinCard>(find.byType(FlowinCard).first);
       expect(card.margin, oracleSheetMargin);
       expect(card.backgroundColor, scheme.surface);
-      expect(card.padding!.vertical, oracleSheetBottomPadding);
       // The sheet pins its own radius rather than inheriting the card's
       // theme-resolved one, so this is non-null by construction.
       expect(card.borderRadius!.topLeft, oracleSheetRadius);
       expect(card.borderRadius!.bottomRight, oracleSheetRadius);
+      // The card clips its child to that radius, which is what forces the
+      // vertical padding inward — see the next test.
+      expect(card.clipChild, isTrue);
+      expect(card.padding, isNull);
+    });
+
+    testWidgets('vertical padding wraps the column, not the card', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        const FlowinActionSheet(title: 'Sheet'),
+      );
+      // The 24 lives on a Padding inside the card rather than on the card's
+      // own `padding`: the card clips its child, so padding applied outside
+      // the clip would be clipped away with it.
+      final padding = tester.widget<Padding>(
+        find
+            .descendant(
+              of: find.byType(FlowinCard),
+              matching: find.byWidgetPredicate(
+                (w) =>
+                    w is Padding &&
+                    w.padding ==
+                        const EdgeInsets.symmetric(
+                          vertical: oracleSheetVerticalPadding,
+                        ),
+              ),
+            )
+            .first,
+      );
+      expect(padding.padding.vertical, oracleSheetVerticalPadding * 2);
     });
 
     testWidgets(
-      'header/body/footer share the space600 content inset like production '
+      'body and footer share the space600 content inset '
       '(fd_action_sheet.dart:72-103)',
       (tester) async {
         await tester.pumpApp(
@@ -1156,33 +1190,70 @@ void main() {
             footer: Text('Footer'),
           ),
         );
-        final sheet = find.byType(FlowinActionSheet);
-        Finder padded(EdgeInsets insets) => find.descendant(
-          of: sheet,
-          matching: find.byWidgetPredicate(
-            (w) => w is Padding && w.padding == insets,
-          ),
-        );
-
-        // Header: top/left/right; body and footer: horizontal.
         expect(
-          padded(
-            const EdgeInsets.only(
-              top: oracleSheetContentInset,
-              left: oracleSheetContentInset,
-              right: oracleSheetContentInset,
+          find.descendant(
+            of: find.byType(FlowinActionSheet),
+            matching: find.byWidgetPredicate(
+              (w) =>
+                  w is Padding &&
+                  w.padding ==
+                      const EdgeInsets.symmetric(
+                        horizontal: oracleSheetContentInset,
+                      ),
             ),
-          ),
-          findsOneWidget,
-        );
-        expect(
-          padded(
-            const EdgeInsets.symmetric(horizontal: oracleSheetContentInset),
           ),
           findsNWidgets(2),
         );
       },
     );
+
+    testWidgets("the header owns its insets rather than sharing the body's", (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        const FlowinActionSheet(title: 'Sheet', subtitle: 'Subtitle'),
+      );
+      Finder paddingIn<T>(EdgeInsets insets) => find.descendant(
+        of: find.byType(T),
+        matching: find.byWidgetPredicate(
+          (w) => w is Padding && w.padding == insets,
+        ),
+      );
+
+      // The bar is asymmetric: the close button carries no inset of its own,
+      // so its gutter is narrower than the text's and the control sits closer
+      // to the card edge.
+      expect(
+        paddingIn<FlowinActionSheetHeaderBar>(
+          const EdgeInsets.only(
+            left: oracleSheetHeaderTextInset,
+            right: oracleSheetHeaderTrailingInset,
+          ),
+        ),
+        findsOneWidget,
+      );
+
+      // Supporting text is non-interactive, so it is symmetric — and its top
+      // inset is the gap to the bar above it.
+      expect(
+        paddingIn<FlowinActionSheetHeaderSupporting>(
+          const EdgeInsets.only(
+            left: oracleSheetHeaderTextInset,
+            right: oracleSheetHeaderTextInset,
+            top: oracleSheetHeaderRegionGap,
+          ),
+        ),
+        findsOneWidget,
+      );
+
+      // Both header regions sit further in than the body's inset. This is the
+      // deliberate divergence: header text is optically inset for its larger
+      // type, so it does not share oracleSheetContentInset.
+      expect(
+        oracleSheetHeaderTextInset,
+        greaterThan(oracleSheetContentInset),
+      );
+    });
 
     testWidgets('column spacing matches production (space400)', (
       tester,

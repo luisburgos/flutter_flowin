@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flowin/src/components/action_sheet/header/flowin_action_sheet_header.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
-import 'package:flutter_flowin/src/widgets/flowin_button.dart'
-    show FlowinButtonSize;
 import 'package:flutter_flowin/src/widgets/flowin_card.dart';
-import 'package:flutter_flowin/src/widgets/flowin_icon_button.dart';
 
 /// Pops the current Flowin action sheet (a modal bottom sheet).
 extension PopFlowinActionSheet on BuildContext {
@@ -111,6 +109,7 @@ class FlowinActionSheet extends StatelessWidget {
     this.displayClose = true,
     this.onClose,
     this.margin,
+    this.bodyPadding,
     super.key,
   });
 
@@ -146,6 +145,13 @@ class FlowinActionSheet extends StatelessWidget {
   /// without changing the surface, radius, or any internal spacing.
   final EdgeInsets? margin;
 
+  /// Overrides the horizontal inset around [body].
+  ///
+  /// Null keeps the contract's inset, which aligns the body with the footer.
+  /// Pass [EdgeInsets.zero] for a body that should bleed to the card edge, such
+  /// as a full-width list or divider.
+  final EdgeInsets? bodyPadding;
+
   @override
   Widget build(BuildContext context) {
     return FlowinCard(
@@ -161,170 +167,41 @@ class FlowinActionSheet extends StatelessWidget {
       borderRadius: const FlowinCardBorderRadius.all(
         FlowinDesignRadius.radius1000,
       ),
-      padding: const EdgeInsets.only(bottom: FlowinDesignSpace.space600),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: FlowinDesignSpace.space400,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: FlowinDesignSpace.space600,
-              left: FlowinDesignSpace.space600,
-              right: FlowinDesignSpace.space600,
-            ),
-            child: FlowinActionSheetHeader(
+      clipChild: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: FlowinDesignSpace.space600,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: FlowinDesignSpace.space400,
+          children: [
+            FlowinActionSheetHeader(
               title: title,
               subtitle: subtitle,
               icon: headerIcon,
               displayClose: displayClose,
               onClose: onClose ?? () => context.popFlowinActionSheet(),
             ),
-          ),
-          if (body != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: FlowinDesignSpace.space600,
+            if (body != null)
+              Padding(
+                padding:
+                    bodyPadding ??
+                    const EdgeInsets.symmetric(
+                      horizontal: FlowinDesignSpace.space600,
+                    ),
+                child: body,
               ),
-              child: body,
-            ),
-          if (footer != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: FlowinDesignSpace.space600,
-              ),
-              child: footer,
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// {@template flowin_action_sheet_header}
-/// The header of a [FlowinActionSheet]: a title (or icon), an optional
-/// subtitle, and an optional close button.
-/// {@endtemplate}
-class FlowinActionSheetHeader extends StatelessWidget {
-  /// {@macro flowin_action_sheet_header}
-  const FlowinActionSheetHeader({
-    required this.title,
-    this.subtitle,
-    this.icon,
-    this.displayClose = true,
-    this.onClose,
-    super.key,
-  });
-
-  /// The header title.
-  final String title;
-
-  /// An optional subtitle, rendered beneath the title with or without an
-  /// [icon].
-  final String? subtitle;
-
-  /// An optional leading icon.
-  final Widget? icon;
-
-  /// Whether to show the close button.
-  final bool displayClose;
-
-  /// Called when the close button is tapped.
-  final VoidCallback? onClose;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final hasIcon = icon != null;
-
-    final titleWidget = Text(title, style: textTheme.headlineSmall);
-    final subtitleWidget = subtitle != null
-        ? Text(
-            subtitle!,
-            style: textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          )
-        : null;
-
-    final close = displayClose
-        ? FlowinIconButton.tonal(
-            icon: FDIcons.x.toIcon(size: FlowinDesignIconSize.sm),
-            // xs (32×32) to match the legacy reference, not the defaulted
-            // sm (40×40).
-            size: FlowinButtonSize.xs,
-            onPressed: () => onClose?.call(),
-          )
-        : const SizedBox.shrink();
-
-    // The top row carries the icon when there is one, and the title otherwise.
-    // Whatever the row did not take drops into the block below it, so the
-    // title stays adjacent to its subtitle either way.
-    //
-    // Gated on "is there anything to show" rather than on `hasIcon`: an
-    // icon-less sheet still has a subtitle to render, and gating on the icon
-    // would drop it.
-    final belowRow = <Widget>[if (hasIcon) titleWidget, ?subtitleWidget];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Padding(
+            if (footer != null)
+              Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: FlowinDesignSpace.space200,
+                  horizontal: FlowinDesignSpace.space600,
                 ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: hasIcon ? icon : titleWidget,
-                ),
+                child: footer,
               ),
-            ),
-            close,
           ],
         ),
-        if (belowRow.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(
-              left: FlowinDesignSpace.space200,
-              right: FlowinDesignSpace.space200,
-              top: FlowinDesignSpace.space200,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: FlowinDesignSpace.space200,
-              children: belowRow,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-/// {@template flowin_action_sheet_footer}
-/// The footer of a [FlowinActionSheet]: an optional left action and a required
-/// right action, laid out as equal-width columns.
-/// {@endtemplate}
-class FlowinActionSheetFooter extends StatelessWidget {
-  /// {@macro flowin_action_sheet_footer}
-  const FlowinActionSheetFooter({required this.right, this.left, super.key});
-
-  /// The optional left action.
-  final Widget? left;
-
-  /// The right action.
-  final Widget right;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: FlowinDesignSpace.space300,
-      children: [
-        if (left != null) Expanded(child: left!),
-        Expanded(child: right),
-      ],
+      ),
     );
   }
 }
