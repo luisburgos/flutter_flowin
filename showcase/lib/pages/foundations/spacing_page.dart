@@ -1,4 +1,5 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The semantic spacing steps, each drawn at its real width.
@@ -11,7 +12,7 @@ class SpacingPage extends StatelessWidget {
     final scheme = context.colorScheme;
     final text = context.textTheme;
 
-    return ShowcaseScaffold(
+    return ShowcaseScaffold.stacked(
       title: 'Spacing',
       children: [
         ShowcaseSection(

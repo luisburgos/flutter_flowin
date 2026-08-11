@@ -1,4 +1,6 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_row.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// Demonstrates chips, chip groups and the chip-driven view pager.

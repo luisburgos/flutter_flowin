@@ -1,4 +1,5 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The corner-radius scale, each step drawn on a card.
@@ -10,7 +11,7 @@ class RadiusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final text = context.textTheme;
 
-    return ShowcaseScaffold(
+    return ShowcaseScaffold.stacked(
       title: 'Radius',
       children: [
         ShowcaseSection(

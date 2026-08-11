@@ -1,4 +1,5 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -35,7 +36,7 @@ class NavigationPage extends StatelessWidget {
       ),
     ];
 
-    return ShowcaseScaffold(
+    return ShowcaseScaffold.stacked(
       title: 'Navigation',
       children: [
         for (final (title, subtitle, icon, builder) in demos)
