@@ -11,6 +11,7 @@ class ColorsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = context.colorScheme;
+    final semantic = context.semanticColors;
 
     return ShowcaseScaffold.stacked(
       title: 'Colors',
@@ -33,6 +34,31 @@ class ColorsPage extends StatelessWidget {
                   ),
                   ('surface', scheme.surface, scheme.onSurface),
                   ('error', scheme.errorContainer, scheme.onErrorContainer),
+                ])
+                  ColorSwatchCard(
+                    label: entry.$1,
+                    background: entry.$2,
+                    foreground: entry.$3,
+                  ),
+              ],
+            ),
+          ],
+        ),
+        ShowcaseSection(
+          title: 'Semantic colors',
+          description:
+              'success / warning / info live on FlowinTokens rather than on '
+              "Material's ColorScheme, which has no role for them. Read them "
+              'from context.semanticColors.',
+          children: [
+            Wrap(
+              spacing: FlowinDesignSpace.space200,
+              runSpacing: FlowinDesignSpace.space200,
+              children: [
+                for (final entry in [
+                  ('success', semantic.success, semantic.onSuccess),
+                  ('warning', semantic.warning, semantic.onWarning),
+                  ('info', semantic.info, semantic.onInfo),
                 ])
                   ColorSwatchCard(
                     label: entry.$1,

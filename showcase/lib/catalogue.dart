@@ -2,7 +2,7 @@ import 'package:flowin_showcase/components/showcase/showcase_entry.dart';
 import 'package:flowin_showcase/pages/buttons/buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/icon_buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/item_buttons_page.dart';
-import 'package:flowin_showcase/pages/cards_page.dart';
+import 'package:flowin_showcase/pages/cards/cards_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_groups_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_pagers_page.dart';
 import 'package:flowin_showcase/pages/chips/chips_page.dart';
@@ -119,7 +119,7 @@ final componentEntries = <ShowcaseEntry>[
   ),
   ShowcaseEntry(
     title: 'Cards & surfaces',
-    subtitle: 'Card radii, shadows, dividers, semantic colors',
+    subtitle: 'Smooth-cornered surfaces, and the rules that separate content',
     icon: FDIcons.timeline,
     builder: (_) => const CardsPage(),
   ),
