@@ -1,4 +1,4 @@
-import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:equatable/equatable.dart';
 
 /// Which widget fills the sheet's body slot.
 enum BodyChoice {
@@ -45,8 +45,7 @@ enum FooterChoice {
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class SheetConfig {
+class SheetConfig extends Equatable {
   /// {@macro sheet_config}
   const SheetConfig({
     this.hasIcon = false,
@@ -87,14 +86,5 @@ class SheetConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is SheetConfig &&
-      other.hasIcon == hasIcon &&
-      other.hasSubtitle == hasSubtitle &&
-      other.hasClose == hasClose &&
-      other.body == body &&
-      other.footer == footer;
-
-  @override
-  int get hashCode => Object.hash(hasIcon, hasSubtitle, hasClose, body, footer);
+  List<Object?> get props => [hasIcon, hasSubtitle, hasClose, body, footer];
 }

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// Which child fills a [FlowinInputField]'s slot in the preview.
@@ -21,8 +22,7 @@ enum InputFieldChild {
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class InputFieldConfig {
+class InputFieldConfig extends Equatable {
   /// {@macro input_field_config}
   const InputFieldConfig({
     this.child = InputFieldChild.iconAndValue,
@@ -54,12 +54,5 @@ class InputFieldConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is InputFieldConfig &&
-      other.child == child &&
-      other.hasLabel == hasLabel &&
-      other.surface == surface;
-
-  @override
-  int get hashCode => Object.hash(child, hasLabel, surface);
+  List<Object?> get props => [child, hasLabel, surface];
 }

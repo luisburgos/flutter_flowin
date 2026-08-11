@@ -1,11 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroup] preview.
 ///
 /// Deliberately-undriven parameters are recorded in flowin_pm#35.
-@immutable
-class ChipGroupConfig {
+class ChipGroupConfig extends Equatable {
   /// {@macro chip_group_config}
   const ChipGroupConfig({
     this.isScrollable = true,
@@ -71,18 +71,7 @@ class ChipGroupConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is ChipGroupConfig &&
-      other.isScrollable == isScrollable &&
-      other.unselectedVariant == unselectedVariant &&
-      other.manyLabels == manyLabels &&
-      other.padding == padding &&
-      other.chipSpacing == chipSpacing &&
-      other.runSpacing == runSpacing &&
-      other.wrapAlignment == wrapAlignment;
-
-  @override
-  int get hashCode => Object.hash(
+  List<Object?> get props => [
     isScrollable,
     unselectedVariant,
     manyLabels,
@@ -90,5 +79,5 @@ class ChipGroupConfig {
     chipSpacing,
     runSpacing,
     wrapAlignment,
-  );
+  ];
 }

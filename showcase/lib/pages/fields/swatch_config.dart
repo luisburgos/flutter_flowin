@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The diameters a swatch can be previewed at.
@@ -62,8 +63,7 @@ enum SwatchSubject {
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class SwatchConfig {
+class SwatchConfig extends Equatable {
   /// {@macro swatch_config}
   const SwatchConfig({
     this.subject = SwatchSubject.swatches,
@@ -124,16 +124,12 @@ class SwatchConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is SwatchConfig &&
-      other.subject == subject &&
-      other.selected == selected &&
-      other.showGradient == showGradient &&
-      other.size == size &&
-      other.ringWidth == ringWidth &&
-      other.gapWidth == gapWidth;
-
-  @override
-  int get hashCode =>
-      Object.hash(subject, selected, showGradient, size, ringWidth, gapWidth);
+  List<Object?> get props => [
+    subject,
+    selected,
+    showGradient,
+    size,
+    ringWidth,
+    gapWidth,
+  ];
 }

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the icon-set preview.
@@ -5,8 +6,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class IconConfig {
+class IconConfig extends Equatable {
   /// {@macro icon_config}
   const IconConfig({
     this.size = FlowinDesignIconSize.md,
@@ -27,11 +27,5 @@ class IconConfig {
       );
 
   @override
-  bool operator ==(Object other) =>
-      other is IconConfig &&
-      other.size == size &&
-      other.showLabels == showLabels;
-
-  @override
-  int get hashCode => Object.hash(size, showLabels);
+  List<Object?> get props => [size, showLabels];
 }

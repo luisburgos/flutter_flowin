@@ -1,8 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinItemButton] preview.
-@immutable
-class ItemButtonConfig {
+class ItemButtonConfig extends Equatable {
   /// {@macro item_button_config}
   const ItemButtonConfig({
     this.variant = FlowinItemButtonVariant.tonal,
@@ -31,12 +31,5 @@ class ItemButtonConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is ItemButtonConfig &&
-      other.variant == variant &&
-      other.hasIcon == hasIcon &&
-      other.enabled == enabled;
-
-  @override
-  int get hashCode => Object.hash(variant, hasIcon, enabled);
+  List<Object?> get props => [variant, hasIcon, enabled];
 }

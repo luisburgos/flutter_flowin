@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -63,8 +64,7 @@ enum CardFill {
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class CardConfig {
+class CardConfig extends Equatable {
   /// {@macro card_config}
   const CardConfig({
     this.radius = CardRadius.themed,
@@ -174,23 +174,7 @@ class CardConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is CardConfig &&
-      other.radius == radius &&
-      other.fill == fill &&
-      other.bordered == bordered &&
-      other.elevated == elevated &&
-      other.resolveForeground == resolveForeground &&
-      other.preferCream == preferCream &&
-      other.clipChild == clipChild &&
-      other.compareContrast == compareContrast &&
-      other.padding == padding &&
-      other.margin == margin &&
-      other.intrinsicHeight == intrinsicHeight &&
-      other.height == height;
-
-  @override
-  int get hashCode => Object.hash(
+  List<Object?> get props => [
     radius,
     fill,
     bordered,
@@ -203,5 +187,5 @@ class CardConfig {
     margin,
     intrinsicHeight,
     height,
-  );
+  ];
 }

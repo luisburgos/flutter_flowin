@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinButton] preview.
@@ -5,8 +6,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class ButtonConfig {
+class ButtonConfig extends Equatable {
   /// {@macro button_config}
   const ButtonConfig({
     this.variant = FlowinButtonVariant.filled,
@@ -44,13 +44,5 @@ class ButtonConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is ButtonConfig &&
-      other.variant == variant &&
-      other.size == size &&
-      other.hasIcon == hasIcon &&
-      other.enabled == enabled;
-
-  @override
-  int get hashCode => Object.hash(variant, size, hasIcon, enabled);
+  List<Object?> get props => [variant, size, hasIcon, enabled];
 }
