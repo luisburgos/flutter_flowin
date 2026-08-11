@@ -1,30 +1,75 @@
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroupViewPager] preview.
+///
+/// `animateDuration`, `animateCurve` and `initialIndex` stay deliberately
+/// undriven: motion values and a start index are per-call-site tuning, not
+/// axes a reader picks a pager along.
 @immutable
 class ChipPagerConfig {
   /// {@macro chip_pager_config}
-  const ChipPagerConfig({this.isScrollable = false, this.showDivider = true});
+  const ChipPagerConfig({
+    this.isScrollable = false,
+    this.showDivider = true,
+    this.unselectedVariant = FlowinChipVariant.unselected,
+    this.chipsPadding = SpacingStep.sm,
+    this.keepPagesAlive = true,
+  });
 
-  /// Whether the chip row scrolls horizontally or wraps.
+  /// Whether the chip row scrolls or wraps.
   final bool isScrollable;
 
-  /// Whether a hairline separates the chip row from the pages.
+  /// Whether a hairline separates the chips from the pages.
   final bool showDivider;
 
+  /// The emphasis every unselected chip carries.
+  final FlowinChipVariant unselectedVariant;
+
+  /// Horizontal padding around the chip row.
+  ///
+  /// Horizontal only: a scrollable chip row is a fixed height, so a vertical
+  /// inset would come out of the chips — the Chip groups page demonstrates
+  /// that; here the row keeps the shape a real caller gives it.
+  final SpacingStep chipsPadding;
+
+  /// Whether a page's state survives being swiped away.
+  ///
+  /// The preview gives each page a counter so this is visible rather than
+  /// stated: count up, switch away and back, and the count either survives
+  /// or resets with the knob.
+  final bool keepPagesAlive;
+
   /// A copy with the given fields replaced.
-  ChipPagerConfig copyWith({bool? isScrollable, bool? showDivider}) =>
-      ChipPagerConfig(
-        isScrollable: isScrollable ?? this.isScrollable,
-        showDivider: showDivider ?? this.showDivider,
-      );
+  ChipPagerConfig copyWith({
+    bool? isScrollable,
+    bool? showDivider,
+    FlowinChipVariant? unselectedVariant,
+    SpacingStep? chipsPadding,
+    bool? keepPagesAlive,
+  }) => ChipPagerConfig(
+    isScrollable: isScrollable ?? this.isScrollable,
+    showDivider: showDivider ?? this.showDivider,
+    unselectedVariant: unselectedVariant ?? this.unselectedVariant,
+    chipsPadding: chipsPadding ?? this.chipsPadding,
+    keepPagesAlive: keepPagesAlive ?? this.keepPagesAlive,
+  );
 
   @override
   bool operator ==(Object other) =>
       other is ChipPagerConfig &&
       other.isScrollable == isScrollable &&
-      other.showDivider == showDivider;
+      other.showDivider == showDivider &&
+      other.unselectedVariant == unselectedVariant &&
+      other.chipsPadding == chipsPadding &&
+      other.keepPagesAlive == keepPagesAlive;
 
   @override
-  int get hashCode => Object.hash(isScrollable, showDivider);
+  int get hashCode => Object.hash(
+    isScrollable,
+    showDivider,
+    unselectedVariant,
+    chipsPadding,
+    keepPagesAlive,
+  );
 }

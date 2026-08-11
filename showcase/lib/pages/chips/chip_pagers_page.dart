@@ -57,28 +57,78 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
           clipChild: true,
           size: const Size(_pagerMaxWidth, _pagerHeight),
           child: FlowinChipGroupViewPager(
-            key: ValueKey('${config.isScrollable}-${config.showDivider}'),
+            // keepPagesAlive is in the key so toggling it rebuilds the pager
+            // with fresh keep-alive wiring rather than mutating it in place.
+            key: ValueKey(
+              '${config.isScrollable}-'
+              '${config.showDivider}-'
+              '${config.keepPagesAlive}',
+            ),
             isScrollable: config.isScrollable,
             showDivider: config.showDivider,
+            unselectedVariant: config.unselectedVariant,
+            keepPagesAlive: config.keepPagesAlive,
             // Horizontal only: a scrollable chip row is a fixed 48 tall, so
             // vertical padding comes out of the chips rather than around
-            // them and crushes them until their labels spill out.
+            // them and crushes them until their labels spill out — the Chip
+            // groups page demonstrates exactly that with its padding knob.
             chipsPadding: EdgeInsets.symmetric(
-              horizontal: context.spacing.sm,
+              horizontal: config.chipsPadding.resolve(context),
             ),
             items: [
               for (final page in const ['Board', 'Timeline', 'Settings'])
                 FlowinChipGroupViewPage.child(
                   label: page,
-                  child: Center(
-                    child: Text(page, style: context.textTheme.titleMedium),
-                  ),
+                  child: _CounterPage(label: page),
                 ),
             ],
           ),
         ),
         knobsBuilder: (context, config, onChanged) =>
             ChipPagerKnobs(config: config, onChanged: onChanged),
+      ),
+    );
+  }
+}
+
+/// A page holding its own counter, so keepPagesAlive is visible.
+///
+/// The parameter's whole meaning is whether a page's state survives being
+/// swiped away, and stateless page content cannot show that. Count up,
+/// switch to another chip and back: the count survives or resets with the
+/// knob.
+class _CounterPage extends StatefulWidget {
+  const _CounterPage({required this.label});
+
+  final String label;
+
+  @override
+  State<_CounterPage> createState() => _CounterPageState();
+}
+
+class _CounterPageState extends State<_CounterPage> {
+  int _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: FlowinDesignSpace.space300,
+        children: [
+          Text(widget.label, style: context.textTheme.titleMedium),
+          Text(
+            'count: $_count',
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          FlowinButton(
+            label: 'Increment',
+            size: FlowinButtonSize.xs,
+            onPressed: () => setState(() => _count++),
+          ),
+        ],
       ),
     );
   }
