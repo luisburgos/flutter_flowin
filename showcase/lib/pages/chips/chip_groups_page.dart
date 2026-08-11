@@ -66,9 +66,6 @@ class _ChipGroupsPageState extends State<ChipGroupsPage> {
           initialSelectedIndex: 1,
           isScrollable: config.isScrollable,
           unselectedVariant: config.unselectedVariant,
-          // All sides, from the knob: on a scrollable group the vertical
-          // share comes out of the chips rather than around them, which the
-          // padding knob exists to make visible.
           padding: config.padding.all(context),
           chipSpacing: config.chipSpacing.resolve(context),
           chipRunSpacing: config.runSpacing.resolve(context),

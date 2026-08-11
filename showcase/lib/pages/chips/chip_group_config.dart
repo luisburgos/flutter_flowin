@@ -32,11 +32,10 @@ class ChipGroupConfig {
 
   /// Padding around the chips, applied on every side.
   ///
-  /// All sides deliberately: a scrollable group is a fixed height, so its
-  /// vertical padding comes out of the chips rather than around them, and
-  /// sweeping this knob up is what makes that visible — the chips crush until
-  /// their labels spill. Something a reader should reach, not arrive in, so
-  /// the default is none.
+  /// A vertical inset grows the scrollable row rather than shrinking the
+  /// chips inside it — the row is `height + padding.vertical`. It used to be
+  /// the other way around: the fixed row handed the chips whatever the inset
+  /// left, and this knob is what made that visible enough to fix.
   final SpacingStep padding;
 
   /// The gap between chips within a row.

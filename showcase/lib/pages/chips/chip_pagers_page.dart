@@ -68,10 +68,8 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
             showDivider: config.showDivider,
             unselectedVariant: config.unselectedVariant,
             keepPagesAlive: config.keepPagesAlive,
-            // Horizontal only: a scrollable chip row is a fixed 48 tall, so
-            // vertical padding comes out of the chips rather than around
-            // them and crushes them until their labels spill out — the Chip
-            // groups page demonstrates exactly that with its padding knob.
+            // Horizontal only: the pager keeps the row shape a real caller
+            // gives it. The all-sides case lives on the Chip groups page.
             chipsPadding: EdgeInsets.symmetric(
               horizontal: config.chipsPadding.resolve(context),
             ),

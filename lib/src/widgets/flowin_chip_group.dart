@@ -117,10 +117,16 @@ class FlowinChipGroup extends StatefulWidget {
   /// Whether the chips scroll horizontally. When false they [Wrap].
   final bool isScrollable;
 
-  /// The fixed height of the row when scrollable.
+  /// The height of the chip row when scrollable.
+  ///
+  /// This is the chips' own extent: any vertical component of [padding] is
+  /// added *around* it, so the rendered box is `height + padding.vertical`.
   final double? height;
 
   /// Padding around the chips.
+  ///
+  /// The vertical component grows the scrollable row rather than shrinking
+  /// the chips inside it.
   final EdgeInsets padding;
 
   /// Spacing between chips.
@@ -242,7 +248,15 @@ class _FlowinChipGroupState extends State<FlowinChipGroup> {
     }
 
     return SizedBox(
-      height: widget.height ?? FlowinDesignSpace.space1200,
+      // Grown by the vertical padding so an inset wraps the chips instead of
+      // eating them. The ListView applies padding inside this box, and a
+      // horizontal list hands its children the cross extent minus the
+      // vertical inset — so at a fixed height every pixel of vertical
+      // padding came out of the chips, crushing them below their content
+      // until the border drew through the labels.
+      height:
+          (widget.height ?? FlowinDesignSpace.space1200) +
+          widget.padding.vertical,
       child: ListView.separated(
         padding: widget.padding,
         scrollDirection: Axis.horizontal,

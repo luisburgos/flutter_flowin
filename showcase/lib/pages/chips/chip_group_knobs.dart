@@ -67,9 +67,6 @@ class ChipGroupKnobs extends StatelessWidget {
         FlowinPlaygroundKnobGroup(
           title: 'Spacing',
           children: [
-            // Sweeping padding up on a scrollable group is what shows the
-            // fixed-height behaviour: the inset comes out of the chips, not
-            // around them, and they crush until their labels spill.
             FlowinPlaygroundSpacingKnob(
               label: 'Padding',
               value: config.padding,

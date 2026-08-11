@@ -28,9 +28,8 @@ class ChipPagerConfig {
 
   /// Horizontal padding around the chip row.
   ///
-  /// Horizontal only: a scrollable chip row is a fixed height, so a vertical
-  /// inset would come out of the chips — the Chip groups page demonstrates
-  /// that; here the row keeps the shape a real caller gives it.
+  /// Horizontal only: the pager keeps the row shape a real caller gives it,
+  /// and the all-sides case lives on the Chip groups page.
   final SpacingStep chipsPadding;
 
   /// Whether a page's state survives being swiped away.
