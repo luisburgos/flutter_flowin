@@ -30,6 +30,7 @@ class SheetsPage extends StatelessWidget {
     // The app bar is built the same way so the page still matches the others.
     return Scaffold(
       appBar: FlowinAppBar(
+        height: kFlowinAppBarHeight + context.spacing.xxs,
         leading: FlowinIconButton.text(
           icon: FDIcons.back.toIcon(),
           onPressed: () => Navigator.of(context).pop(),
@@ -38,9 +39,12 @@ class SheetsPage extends StatelessWidget {
         // The panes below run edge to edge with no padding to separate them
         // from the bar, so the bar draws its own hairline. Same treatment
         // FlowinTabsAppBar uses, and the same token.
-        footer: const Divider(
-          height: FlowinDesignBorders.regular,
-          thickness: FlowinDesignBorders.regular,
+        footer: Padding(
+          padding: EdgeInsetsGeometry.only(top: context.spacing.xxs),
+          child: const Divider(
+            height: FlowinDesignBorders.regular,
+            thickness: FlowinDesignBorders.regular,
+          ),
         ),
         child: Text('Action sheets', style: context.textTheme.titleMedium),
       ),
