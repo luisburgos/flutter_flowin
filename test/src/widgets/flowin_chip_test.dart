@@ -363,10 +363,13 @@ void main() {
     testWidgets('a leading widget gets a gap before the label', (
       tester,
     ) async {
+      // The sm icon step, which is what the leading slot is sized for — a
+      // smaller icon floats centred in the avatar box and reads as a wider
+      // gap from its own edge.
       await tester.pumpApp(
         FlowinChip(
           label: const Text('SET 1'),
-          leading: const Icon(Icons.circle, size: 12),
+          leading: const Icon(Icons.circle, size: 16),
         ),
       );
 
@@ -374,11 +377,34 @@ void main() {
       final labelLeft = tester.getRect(find.text('SET 1')).left;
 
       // The theme zeroes labelPadding for label-only chips; without the
-      // widget-level inset the icon sits flush against the text.
+      // widget-level inset the icon sits flush against the text. A full
+      // spacing step: at the previous half-step the gap read as touching
+      // once icon anti-aliasing and stroke weight took their share of it.
       expect(
         labelLeft - leadingRight,
-        closeTo(FlowinDesignSpace.space100, 0.5),
+        closeTo(FlowinDesignSpace.space200, 0.5),
       );
+    });
+
+    testWidgets('a leading icon keeps its requested size', (tester) async {
+      // Material's default constrains the avatar box to the label's height —
+      // 12 for labelSmall — so a 16px icon painted past a 12px layout box,
+      // spilling into the gap and fraying the pill. The theme unconstrains
+      // the avatar box; the icon's layout box must match what was asked for.
+      await tester.pumpApp(
+        FlowinChip(
+          label: const Text('SET 1'),
+          leading: FDIcons.done.toIcon(size: FlowinDesignIconSize.sm),
+        ),
+      );
+
+      final icon = tester.getRect(find.byType(Icon));
+      expect(icon.width, FlowinDesignIconSize.sm.value);
+      expect(icon.height, FlowinDesignIconSize.sm.value);
+
+      // And it stays vertically centred on the label.
+      final label = tester.getRect(find.text('SET 1'));
+      expect(icon.center.dy, closeTo(label.center.dy, 0.5));
     });
 
     testWidgets('a label-only chip keeps the theme zero labelPadding', (
