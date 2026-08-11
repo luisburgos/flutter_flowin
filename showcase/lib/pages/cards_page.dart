@@ -142,27 +142,6 @@ class CardsPage extends StatelessWidget {
               ),
           ],
         ),
-        ShowcaseSection(
-          chipLabel: 'Dividers',
-          title: 'Dividers',
-          description:
-              'Flowin ships no divider widget — the native Divider is '
-              'styled by dividerTheme.',
-          children: [
-            const Divider(),
-            SizedBox(height: context.spacing.xs),
-            const SizedBox(
-              height: 48,
-              child: Row(
-                children: [
-                  Expanded(child: Center(child: Text('Left'))),
-                  VerticalDivider(),
-                  Expanded(child: Center(child: Text('Right'))),
-                ],
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }
@@ -268,7 +247,7 @@ class _ForegroundOnFillDemo extends StatelessWidget {
           ],
         ),
         ShowcaseSection(
-          chipLabel: 'Divider',
+          chipLabel: 'Dividers',
           title: 'Dividers',
           description:
               'There is no Flowin divider component: the native Divider and '
