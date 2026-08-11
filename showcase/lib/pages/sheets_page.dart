@@ -1,4 +1,4 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// Width at which the playground splits into a preview and a knob pane.
@@ -25,15 +25,26 @@ class SheetsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ShowcaseScaffold(
-      title: 'Action sheets',
-      children: [
-        ShowcaseSection(
-          title: 'Playground',
-          leadingGap: false,
-          children: [_PlaygroundDemo()],
+    // Not ShowcaseScaffold: it wraps its children in a padded ListView, and
+    // the playground's panes run edge to edge and own their own scrolling.
+    // The app bar is built the same way so the page still matches the others.
+    return Scaffold(
+      appBar: FlowinAppBar(
+        leading: FlowinIconButton.text(
+          icon: FDIcons.back.toIcon(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-      ],
+        trailing: const ThemeModeToggle(),
+        // The panes below run edge to edge with no padding to separate them
+        // from the bar, so the bar draws its own hairline. Same treatment
+        // FlowinTabsAppBar uses, and the same token.
+        footer: const Divider(
+          height: FlowinDesignBorders.regular,
+          thickness: FlowinDesignBorders.regular,
+        ),
+        child: Text('Action sheets', style: context.textTheme.titleMedium),
+      ),
+      body: const _PlaygroundDemo(),
     );
   }
 }
@@ -273,7 +284,20 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
 
   /// The configured sheet. [onAction] fires from the footer buttons, so the
   /// modal can pop while the inline preview does nothing.
-  Widget _buildSheet({required VoidCallback onAction}) => FlowinActionSheet(
+  ///
+  /// [margin] and [onClose] are the caller's, because the two presentations
+  /// want opposite things from both.
+  ///
+  /// The inline preview zeroes the margin, since the stage already insets the
+  /// sheet, and passes a no-op close so the button is visible without the
+  /// preview being dismissable. The modal passes neither: it keeps the
+  /// widget's own screen-edge margin, and leaving `onClose` null lets the
+  /// sheet's default pop run rather than overriding it with a no-op.
+  Widget _buildSheet({
+    required VoidCallback onAction,
+    EdgeInsets? margin,
+    VoidCallback? onClose,
+  }) => FlowinActionSheet(
     title: 'Descriptive title',
     subtitle: _config.hasSubtitle
         ? 'Write something in here that gives clear directions.'
@@ -282,8 +306,8 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
         ? FDIcons.board.toIcon(size: FlowinDesignIconSize.xl)
         : null,
     displayClose: _config.hasClose,
-    onClose: () {},
-    margin: EdgeInsets.zero,
+    onClose: onClose,
+    margin: margin,
     body: _buildBody(),
     footer: _buildFooter(onAction),
   );
@@ -328,46 +352,53 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
   Widget _buildKnobs(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: FlowinDesignSpace.space600,
       children: [
         Column(
-          //spacing: FlowinDesignSpace.space600,
-          //runSpacing: FlowinDesignSpace.space200,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'VISIBILITY',
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
             _SwitchControl(
-              label: 'Show haeder icon',
+              label: 'Show icon',
               value: _config.hasIcon,
               onChanged: (v) => _apply(_config.copyWith(hasIcon: v)),
             ),
             _SwitchControl(
-              label: 'Show header ubtitle',
+              label: 'Show subtitle',
               value: _config.hasSubtitle,
               onChanged: (v) => _apply(_config.copyWith(hasSubtitle: v)),
             ),
             _SwitchControl(
-              label: 'Show close action',
+              label: 'Show close',
               value: _config.hasClose,
               onChanged: (v) => _apply(_config.copyWith(hasClose: v)),
             ),
           ],
         ),
-        SizedBox(height: context.spacing.sm),
-        // Stacked rather than wrapped: each dropdown fills the width it is
-        // given, so they cannot share a line without one dictating the pane's
-        // minimum width.
-        _DropdownControl<_BodyChoice>(
-          label: 'Body',
-          value: _config.body,
-          values: _BodyChoice.values,
-          labelOf: (v) => v.label,
-          onChanged: (v) => _apply(_config.copyWith(body: v)),
-        ),
-        _DropdownControl<_FooterChoice>(
-          label: 'Footer',
-          value: _config.footer,
-          values: _FooterChoice.values,
-          labelOf: (v) => v.label,
-          onChanged: (v) => _apply(_config.copyWith(footer: v)),
+        Column(
+          spacing: FlowinDesignSpace.space600,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _DropdownControl<_BodyChoice>(
+              label: 'Body',
+              value: _config.body,
+              values: _BodyChoice.values,
+              labelOf: (v) => v.label,
+              onChanged: (v) => _apply(_config.copyWith(body: v)),
+            ),
+            _DropdownControl<_FooterChoice>(
+              label: 'Footer',
+              value: _config.footer,
+              values: _FooterChoice.values,
+              labelOf: (v) => v.label,
+              onChanged: (v) => _apply(_config.copyWith(footer: v)),
+            ),
+          ],
         ),
       ],
     );
@@ -383,6 +414,9 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Flush to the panel edges: the tab row's own indicator spans the full
+        // width, so insetting it would leave the underline stopping short of
+        // the surface it belongs to.
         FlowinTabs(
           controller: _tabs,
           tabs: const [
@@ -390,21 +424,44 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
             FlowinTabItem(label: 'Custom'),
           ],
         ),
-        SizedBox(height: context.spacing.md),
-        AnimatedBuilder(
-          animation: _tabs.animation!,
-          builder: (context, _) =>
-              _tabs.index == 0 ? _buildPresets(context) : _buildKnobs(context),
+        Padding(
+          padding: const EdgeInsets.all(FlowinDesignSpace.space600),
+          child: AnimatedBuilder(
+            animation: _tabs.animation!,
+            builder: (context, _) => _tabs.index == 0
+                ? _buildPresets(context)
+                : _buildKnobs(context),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildModalButton() => FlowinButton.tonal(
-    size: FlowinButtonSize.md,
-    icon: FDIcons.more.toIcon(size: FlowinDesignIconSize.sm),
-    onPressed: _openAsModal,
-    label: 'Open as modal',
+  /// The pane's pinned action, separated from the controls above it.
+  ///
+  /// Kept out of [_buildControlPane] so the split layout can hold it below the
+  /// scrolling region rather than inside it.
+  Widget _buildPaneFooter(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Divider(height: FlowinDesignBorders.regular),
+      Padding(
+        padding: const EdgeInsets.all(FlowinDesignSpace.space600),
+        child: _buildModalButton(),
+      ),
+    ],
+  );
+
+  /// Full width so it reads as an action on the pane rather than one more
+  /// control among the knobs above it.
+  Widget _buildModalButton() => SizedBox(
+    width: double.infinity,
+    child: FlowinButton.tonal(
+      size: FlowinButtonSize.md,
+      icon: FDIcons.more.toIcon(size: FlowinDesignIconSize.sm),
+      onPressed: _openAsModal,
+      label: 'Open as modal',
+    ),
   );
 
   @override
@@ -415,15 +472,22 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < _splitPaneBreakpoint) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Stacked, so the sidebar's left border would divide nothing. A
+          // Divider does the same job along the axis they actually meet on.
+          // The page scrolls as one, so there is no pane bottom to pin to —
+          // the footer stays inline at the end of the controls.
+          return ListView(
             children: [
-              _Panel(child: _buildControlPane(context)),
-              SizedBox(height: context.spacing.md),
-              _PreviewStage(child: _buildSheet(onAction: () {})),
-              SizedBox(height: context.spacing.sm),
-              _buildModalButton(),
-              SizedBox(height: context.spacing.sm),
+              _PreviewStage(
+                child: _buildSheet(
+                  onAction: () {},
+                  onClose: () {},
+                  margin: EdgeInsets.zero,
+                ),
+              ),
+              const Divider(height: FlowinDesignBorders.regular),
+              _buildControlPane(context),
+              _buildPaneFooter(context),
             ],
           );
         }
@@ -431,31 +495,50 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
         // Stage first in the reading order, controls to its right. The stage
         // takes the remaining width so the preview stays the focus, while the
         // control pane is fixed — controls that reflow as you use them are
-        // harder to hit than ones that stay put.
+        // harder to hit than ones that stay put. Everything that drives the
+        // preview lives in that pane, including the modal trigger.
+        //
+        // Stretched and gapless: the panes meet at the sidebar's border the
+        // way a docked inspector does, rather than floating apart as cards.
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: FlowinDesignSpace.space600,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Each pane scrolls on its own: a tall sheet should not push the
+            // controls off-screen, and long controls should not move the
+            // preview.
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _PreviewStage(child: _buildSheet(onAction: () {})),
-                  SizedBox(height: context.spacing.sm),
-                  _buildModalButton(),
-                ],
+              child: LayoutBuilder(
+                builder: (context, pane) => SingleChildScrollView(
+                  // Floor the stage at the pane's height so its tint fills the
+                  // pane; without it the stage hugs the sheet and the surface
+                  // stops partway down.
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: pane.maxHeight),
+                    child: _PreviewStage(
+                      child: _buildSheet(
+                        onAction: () {},
+                        onClose: () {},
+                        margin: EdgeInsets.zero,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
             SizedBox(
               width: _knobPaneWidth,
-              child: _Panel(
+              child: _SidebarPane(
+                // Only the controls scroll; the footer is pinned to the pane's
+                // bottom by the Expanded above it, so the modal trigger stays
+                // reachable however long the control list grows.
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildControlPane(context),
-                    SizedBox(height: context.spacing.md),
-                    const Divider(),
-                    SizedBox(height: context.spacing.md),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: _buildControlPane(context),
+                      ),
+                    ),
+                    _buildPaneFooter(context),
                   ],
                 ),
               ),
@@ -467,23 +550,26 @@ class _PlaygroundDemoState extends State<_PlaygroundDemo>
   }
 }
 
-/// A tinted panel behind the playground's two halves.
+/// The control pane's surface: `surface`, divided from the preview by a
+/// hairline on its leading edge rather than by a gap.
 ///
-/// Uses `outlineVariant` rather than one of the `surfaceContainer` roles: the
-/// Flowin scheme leaves those at their default, which resolves to plain
-/// `surface` — pure white in light mode — so a container role here would tint
-/// nothing at all. `outlineVariant` is the one neutral in the scheme that sits
-/// a single ramp step off the surface, which is exactly the separation these
-/// panels want.
-class _Panel extends StatelessWidget {
-  const _Panel({required this.child});
+/// Square and full-bleed, so the pane reads as a region of the window in the
+/// way an editor's inspector does. Rounding it would make it a card floating
+/// on the page, which is the opposite of a docked pane.
+class _SidebarPane extends StatelessWidget {
+  const _SidebarPane({required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return FlowinCard(
-      clipChild: true,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        border: Border(
+          left: BorderSide(color: context.colorScheme.outlineVariant),
+        ),
+      ),
       child: child,
     );
   }
@@ -500,11 +586,18 @@ class _PreviewStage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _Panel(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: _sheetMaxWidth),
-          child: child,
+    return DecoratedBox(
+      // outlineVariant, not a surfaceContainer role: the Flowin scheme leaves
+      // those at their default, which resolves to plain surface — pure white
+      // in light mode — so the white sheet would vanish into its own stage.
+      decoration: BoxDecoration(color: context.colorScheme.outlineVariant),
+      child: Padding(
+        padding: const EdgeInsets.all(FlowinDesignSpace.space600),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _sheetMaxWidth),
+            child: child,
+          ),
         ),
       ),
     );
@@ -592,13 +685,14 @@ class _DropdownControl<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      spacing: FlowinDesignSpace.space200,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: context.textTheme.bodyLarge),
+        Text(label.toUpperCase(), style: context.textTheme.bodySmall),
         // `isExpanded` so the button takes the space left rather than sizing
         // to its widest item, which is what pushes it past a narrow pane.
-        Expanded(
+        SizedBox(
+          width: double.infinity,
           child: DropdownButton<T>(
             value: value,
             isExpanded: true,
