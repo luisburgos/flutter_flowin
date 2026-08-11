@@ -496,8 +496,13 @@ const oracleSheetHeaderTextInset = 32.0;
 /// card edge. The control sits closer to the edge than the text does.
 const oracleSheetHeaderTrailingInset = 16.0;
 
-/// Gap between the header's bar and its supporting text — space200.
-const oracleSheetHeaderRegionGap = 8.0;
+/// Gap between the header's bar and its supporting text.
+///
+/// Two values, because the bar's content sets its own optical baseline: a
+/// title carries line-height padding an icon does not, so the same visual gap
+/// needs a smaller number under a title.
+const oracleSheetHeaderRegionGapWithIcon = 8.0;
+const oracleSheetHeaderRegionGapWithTitle = 2.0;
 
 /// Footer row gap — space300. (fd_action_sheet_footer.dart:24)
 const oracleSheetFooterSpacing = 12.0;

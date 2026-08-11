@@ -57,22 +57,30 @@ class _SheetsPageState extends State<SheetsPage> {
       builder: (sheetContext) => FlowinActionSheet(
         title: 'Rename board',
         headerIcon: FDIcons.edit.toIcon(size: FlowinDesignIconSize.lg),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: FlowinDesignSpace.space300,
-          children: [
-            FlowinLabeledTextField(
-              label: 'Board name',
-              hintText: 'Q3 roadmap',
-              autofocus: true,
-              onChanged: (v) => name = v,
-            ),
-            FlowinChipGroup(
-              labels: const ['Personal', 'Team', 'Public'],
-              initialSelectedIndex: 1,
-              onSelected: (_) {},
-            ),
-          ],
+        body: Padding(
+          padding: const EdgeInsetsGeometry.symmetric(
+            vertical: FlowinDesignSpace.space200,
+            horizontal: FlowinDesignSpace.space800,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: FlowinDesignSpace.space300,
+            children: [
+              FlowinLabeledTextField(
+                label: 'Board name',
+                hintText: 'Q3 roadmap',
+                autofocus: true,
+                onChanged: (v) => name = v,
+              ),
+              FlowinChipGroup(
+                labels: const ['Personal', 'Team', 'Public'],
+                initialSelectedIndex: 1,
+                onSelected: (_) {},
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          ),
         ),
         footer: FlowinActionSheetFooter(
           right: FlowinButton.filled(
@@ -95,26 +103,31 @@ class _SheetsPageState extends State<SheetsPage> {
       context: context,
       builder: (sheetContext) => FlowinActionSheet(
         title: 'Board actions',
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: FlowinDesignSpace.space200,
-          children: [
-            for (final action in const [
-              ('Edit', FDIcons.edit),
-              ('Share', FDIcons.share),
-              ('Duplicate', FDIcons.arrowDownUp),
-            ])
-              FlowinItemButton.tonal(
-                icon: action.$2.toIcon(),
-                onPressed: () => Navigator.of(sheetContext).pop(action.$1),
-                label: action.$1,
+        body: Padding(
+          padding: const EdgeInsetsGeometry.symmetric(
+            horizontal: FlowinDesignSpace.space600,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: FlowinDesignSpace.space200,
+            children: [
+              for (final action in const [
+                ('Edit', FDIcons.edit),
+                ('Share', FDIcons.share),
+                ('Duplicate', FDIcons.arrowDownUp),
+              ])
+                FlowinItemButton.tonal(
+                  icon: action.$2.toIcon(),
+                  onPressed: () => Navigator.of(sheetContext).pop(action.$1),
+                  label: action.$1,
+                ),
+              FlowinItemButton.destructive(
+                icon: FDIcons.trash.toIcon(),
+                onPressed: () => Navigator.of(sheetContext).pop('Delete'),
+                label: 'Delete',
               ),
-            FlowinItemButton.destructive(
-              icon: FDIcons.trash.toIcon(),
-              onPressed: () => Navigator.of(sheetContext).pop('Delete'),
-              label: 'Delete',
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

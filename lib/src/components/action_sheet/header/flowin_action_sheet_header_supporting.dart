@@ -6,11 +6,8 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 /// The header's supporting text: the stacked lines beneath the bar.
 ///
 /// Holds the subtitle, plus the title when an icon has taken the bar's leading
-/// slot. Non-interactive, so unlike [FlowinActionSheetHeaderBar] its insets are
-/// symmetric.
-///
-/// Internal to the action sheet: public so it can live in its own file, but
-/// deliberately absent from the package's export barrel.
+/// slot. Carries no control, so unlike [FlowinActionSheetHeaderBar] its insets
+/// are symmetric.
 /// {@endtemplate}
 class FlowinActionSheetHeaderSupporting extends StatelessWidget {
   /// {@macro flowin_action_sheet_header_supporting}
@@ -24,15 +21,17 @@ class FlowinActionSheetHeaderSupporting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    // Full width so the block matches the bar above it; the column would
+    // otherwise shrink to its longest line and the header would look ragged.
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.only(
         left: FlowinDesignSpace.space800,
         right: FlowinDesignSpace.space800,
-        top: FlowinDesignSpace.space200,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: FlowinDesignSpace.space200,
+        spacing: FlowinDesignSpace.space50,
         children: children,
       ),
     );

@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 /// {@template flowin_action_sheet_header_title}
 /// The action sheet's title, rendered at headline rank.
 ///
-/// The rank travels with the title rather than with the region hosting it: the
-/// title reads the same whether it sits in the header bar or has been displaced
-/// into the supporting block by an icon.
-///
-/// Internal to the action sheet: public so it can live in its own file, but
-/// deliberately absent from the package's export barrel.
+/// The rank travels with the title, not with the region hosting it, so the
+/// title reads the same in the bar or displaced into the supporting block.
 /// {@endtemplate}
 class FlowinActionSheetHeaderTitle extends StatelessWidget {
   /// {@macro flowin_action_sheet_header_title}

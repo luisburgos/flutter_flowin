@@ -1180,7 +1180,7 @@ void main() {
     });
 
     testWidgets(
-      'body and footer share the space600 content inset '
+      'the footer carries the space600 content inset and the body does not '
       '(fd_action_sheet.dart:72-103)',
       (tester) async {
         await tester.pumpApp(
@@ -1190,6 +1190,9 @@ void main() {
             footer: Text('Footer'),
           ),
         );
+        // Deviation from production, which insets both. The body is handed to
+        // the column unwrapped so it can bleed to the card edge — a list or a
+        // divider insets itself, and one that should not cannot un-inset.
         expect(
           find.descendant(
             of: find.byType(FlowinActionSheet),
@@ -1202,7 +1205,7 @@ void main() {
                       ),
             ),
           ),
-          findsNWidgets(2),
+          findsOneWidget,
         );
       },
     );
@@ -1233,17 +1236,21 @@ void main() {
         findsOneWidget,
       );
 
-      // Supporting text is non-interactive, so it is symmetric — and its top
-      // inset is the gap to the bar above it.
+      // Supporting text carries no control, so it is symmetric. The gap to the
+      // bar is the header column's spacing, not a top inset here.
       expect(
-        paddingIn<FlowinActionSheetHeaderSupporting>(
-          const EdgeInsets.only(
-            left: oracleSheetHeaderTextInset,
-            right: oracleSheetHeaderTextInset,
-            top: oracleSheetHeaderRegionGap,
-          ),
+        tester
+            .widget<Container>(
+              find.descendant(
+                of: find.byType(FlowinActionSheetHeaderSupporting),
+                matching: find.byType(Container),
+              ),
+            )
+            .padding,
+        const EdgeInsets.only(
+          left: oracleSheetHeaderTextInset,
+          right: oracleSheetHeaderTextInset,
         ),
-        findsOneWidget,
       );
 
       // Both header regions sit further in than the body's inset. This is the
@@ -1253,6 +1260,37 @@ void main() {
         oracleSheetHeaderTextInset,
         greaterThan(oracleSheetContentInset),
       );
+    });
+
+    testWidgets('the bar-to-supporting gap narrows when a title leads', (
+      tester,
+    ) async {
+      Future<double?> gapWith({required bool icon}) async {
+        await tester.pumpApp(
+          FlowinActionSheet(
+            title: 'Sheet',
+            subtitle: 'Subtitle',
+            headerIcon: icon ? const Icon(Icons.info) : null,
+          ),
+        );
+        // `.first` is the header's own column; the supporting block nests
+        // another one inside it.
+        return tester
+            .widget<Column>(
+              find
+                  .descendant(
+                    of: find.byType(FlowinActionSheetHeader),
+                    matching: find.byType(Column),
+                  )
+                  .first,
+            )
+            .spacing;
+      }
+
+      // An icon sits flush in the bar; a title brings its own line-height
+      // padding, so the gap under it is reduced to read as the same distance.
+      expect(await gapWith(icon: true), oracleSheetHeaderRegionGapWithIcon);
+      expect(await gapWith(icon: false), oracleSheetHeaderRegionGapWithTitle);
     });
 
     testWidgets('column spacing matches production (space400)', (

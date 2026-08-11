@@ -109,7 +109,6 @@ class FlowinActionSheet extends StatelessWidget {
     this.displayClose = true,
     this.onClose,
     this.margin,
-    this.bodyPadding,
     super.key,
   });
 
@@ -145,13 +144,6 @@ class FlowinActionSheet extends StatelessWidget {
   /// without changing the surface, radius, or any internal spacing.
   final EdgeInsets? margin;
 
-  /// Overrides the horizontal inset around [body].
-  ///
-  /// Null keeps the contract's inset, which aligns the body with the footer.
-  /// Pass [EdgeInsets.zero] for a body that should bleed to the card edge, such
-  /// as a full-width list or divider.
-  final EdgeInsets? bodyPadding;
-
   @override
   Widget build(BuildContext context) {
     return FlowinCard(
@@ -183,15 +175,7 @@ class FlowinActionSheet extends StatelessWidget {
               displayClose: displayClose,
               onClose: onClose ?? () => context.popFlowinActionSheet(),
             ),
-            if (body != null)
-              Padding(
-                padding:
-                    bodyPadding ??
-                    const EdgeInsets.symmetric(
-                      horizontal: FlowinDesignSpace.space600,
-                    ),
-                child: body,
-              ),
+            ?body,
             if (footer != null)
               Padding(
                 padding: const EdgeInsets.symmetric(

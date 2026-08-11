@@ -12,12 +12,9 @@ import 'package:flutter_flowin/src/widgets/flowin_icon_button.dart';
 /// The header of a `FlowinActionSheet`: a title (or icon), an optional
 /// subtitle, and an optional close button.
 ///
-/// Composed of two regions. [FlowinActionSheetHeaderBar] carries the primary
-/// line — a leading mark beside the close control — and
-/// [FlowinActionSheetHeaderSupporting] carries the stacked text beneath it.
-///
-/// The header owns the rule that decides which region holds the title, because
-/// both regions it affects are its own children. See [build].
+/// Two regions: [FlowinActionSheetHeaderBar] for the primary line and
+/// [FlowinActionSheetHeaderSupporting] for the text beneath it. The header owns
+/// which region holds the title, since both are its own children.
 /// {@endtemplate}
 class FlowinActionSheetHeader extends StatelessWidget {
   /// {@macro flowin_action_sheet_header}
@@ -65,17 +62,18 @@ class FlowinActionSheetHeader extends StatelessWidget {
           )
         : const SizedBox.shrink();
 
-    // The bar's leading slot carries the icon when there is one, and the title
-    // otherwise. Whatever the bar did not take drops into the supporting
-    // block, so the title stays adjacent to its subtitle either way.
-    //
-    // Gated on "is there anything to show" rather than on `hasIcon`: an
-    // icon-less sheet still has a subtitle to render, and gating on the icon
-    // would drop it.
+    // An icon takes the bar's one leading slot and displaces the title down
+    // here, keeping it adjacent to its subtitle either way. Gated on "anything
+    // to show" rather than on `hasIcon`, or an icon-less sheet would lose its
+    // subtitle.
     final supporting = <Widget>[if (hasIcon) titleWidget, ?subtitleWidget];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      // Wider gap under an icon than under a title: the title already carries
+      // its own line-height padding, so the two need different gaps to read as
+      // the same distance.
+      spacing: hasIcon ? FlowinDesignSpace.space200 : FlowinDesignSpace.space50,
       children: [
         FlowinActionSheetHeaderBar(
           leading: hasIcon ? icon : titleWidget,

@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 /// The action sheet's subtitle, rendered at body rank in the variant color.
 ///
 /// Always sits in the header's supporting block, directly beneath the title.
-///
-/// Internal to the action sheet: public so it can live in its own file, but
-/// deliberately absent from the package's export barrel.
 /// {@endtemplate}
 class FlowinActionSheetHeaderSubtitle extends StatelessWidget {
   /// {@macro flowin_action_sheet_header_subtitle}
