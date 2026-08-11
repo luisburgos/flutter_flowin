@@ -250,6 +250,9 @@ class _LibraryTab extends StatelessWidget {
     return FlowinChipGroupViewPager(
       // Wrap layout: two chips always fit, so nothing scrolls out of reach.
       isScrollable: false,
+      // The tab bar above already draws a hairline, so the pager's own would
+      // be a second rule a few pixels below the first.
+      showDivider: false,
       // Vertical padding too, unlike the paged scaffold: there the chips sit
       // below an app bar that already gives them room, while here they butt
       // straight against the tab bar above and the list's divider below.
