@@ -29,8 +29,23 @@ enum FlowinChipVariant {
 /// Material's default 8-per-side would be slack around a lone label. It is
 /// wrong once a leading widget is present: the same zero closes the gap before
 /// the label and leaves the icon touching the text.
+///
+/// The half step is a true 4px now that the icon no longer overflows its
+/// box: the old near-touching look was the glyph painting past a squeezed
+/// avatar box into the gap, not the gap itself being too small.
+///
+/// The vertical component is what sizes the leading correctly. RenderChip's
+/// content height is label plus labelPadding, the avatar box tracks that
+/// content height, and its layout *asserts* no box exceeds it — so with a
+/// zero labelPadding a 16px icon was squeezed into a label-height 12px box
+/// and painted past it, spilling into the gap and fraying the pill. Two
+/// pixels per side lifts the content to 16, exactly the `sm` icon step the
+/// leading slot is built for. (Unconstraining `avatarBoxConstraints` instead
+/// trips the assert and crashes in debug.)
 const _leadingLabelGap = EdgeInsetsDirectional.only(
   start: FlowinDesignSpace.space100,
+  top: FlowinDesignSpace.space50,
+  bottom: FlowinDesignSpace.space50,
 );
 
 /// {@template flowin_chip}

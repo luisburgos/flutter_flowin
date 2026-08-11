@@ -66,7 +66,10 @@ class _ChipGroupsPageState extends State<ChipGroupsPage> {
           initialSelectedIndex: 1,
           isScrollable: config.isScrollable,
           unselectedVariant: config.unselectedVariant,
-          padding: EdgeInsets.zero,
+          padding: config.padding.all(context),
+          chipSpacing: config.chipSpacing.resolve(context),
+          chipRunSpacing: config.runSpacing.resolve(context),
+          wrapAlignment: config.wrapAlignment,
           onSelected: (_) {},
         ),
         knobsBuilder: (context, config, onChanged) =>

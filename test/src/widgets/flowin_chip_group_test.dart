@@ -489,4 +489,81 @@ void main() {
       expect(notifications, 1);
     });
   });
+
+  group('scrollable padding wraps the chips instead of eating them', () {
+    // The ListView applies padding inside the row's box, and a horizontal
+    // list hands its children the cross extent minus the vertical inset — so
+    // at a fixed height every pixel of vertical padding came out of the
+    // chips, crushing them below their content until the border drew through
+    // the labels. The row grows by the inset instead.
+    testWidgets('vertical padding grows the row box', (tester) async {
+      await tester.pumpApp(
+        FlowinChipGroup(
+          labels: _labels,
+          padding: const EdgeInsets.all(FlowinDesignSpace.space300),
+        ),
+      );
+
+      final box = tester.getSize(find.byType(FlowinChipGroup));
+      expect(
+        box.height,
+        FlowinDesignSpace.space1200 + 2 * FlowinDesignSpace.space300,
+      );
+    });
+
+    testWidgets('the chips keep their height under vertical padding', (
+      tester,
+    ) async {
+      await tester.pumpApp(FlowinChipGroup(labels: _labels));
+      final unpadded = tester.getSize(find.byType(ChoiceChip).first).height;
+
+      await tester.pumpApp(
+        FlowinChipGroup(
+          labels: _labels,
+          padding: const EdgeInsets.all(FlowinDesignSpace.space600),
+        ),
+      );
+      final padded = tester.getSize(find.byType(ChoiceChip).first).height;
+
+      expect(
+        padded,
+        unpadded,
+        reason: 'the inset must wrap the chips, not shrink them',
+      );
+    });
+
+    testWidgets('horizontal-only padding leaves the row at its height', (
+      tester,
+    ) async {
+      // The default callers all pass horizontal-only padding; their rows must
+      // not move.
+      await tester.pumpApp(
+        FlowinChipGroup(
+          labels: _labels,
+          padding: const EdgeInsets.symmetric(
+            horizontal: FlowinDesignSpace.space400,
+          ),
+        ),
+      );
+
+      final box = tester.getSize(find.byType(FlowinChipGroup));
+      expect(box.height, FlowinDesignSpace.space1200);
+    });
+
+    testWidgets('an explicit height grows by the inset too', (tester) async {
+      await tester.pumpApp(
+        FlowinChipGroup(
+          labels: _labels,
+          height: FlowinDesignSpace.space1600,
+          padding: const EdgeInsets.all(FlowinDesignSpace.space200),
+        ),
+      );
+
+      final box = tester.getSize(find.byType(FlowinChipGroup));
+      expect(
+        box.height,
+        FlowinDesignSpace.space1600 + 2 * FlowinDesignSpace.space200,
+      );
+    });
+  });
 }

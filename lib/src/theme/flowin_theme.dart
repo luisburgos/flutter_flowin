@@ -125,6 +125,12 @@ class FlowinTheme {
         // Production's chip is a bare Container with no leading slot, so a
         // selected chip shows no checkmark; Material would insert one.
         showCheckmark: false,
+        // Note: avatarBoxConstraints stays at Material's default (the avatar
+        // box tracks the content height). Unconstraining it looks like the
+        // fix for a leading icon taller than the label, but RenderChip
+        // asserts `sizes.content >= boxSize.height` and crashes in debug.
+        // The content height is what has to grow — FlowinChip does that
+        // through labelPadding when a leading is present.
       ),
       tabBarTheme: TabBarThemeData(
         indicatorSize: TabBarIndicatorSize.tab,
