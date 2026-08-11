@@ -35,6 +35,12 @@ class SwatchKnobs extends StatelessWidget {
       isRelevant: isPrimitive,
       reason: 'the picker field exposes no swatch size',
     );
+    final ringExists = FlowinKnobRelevance.when(
+      isRelevant: isPrimitive && config.selected,
+      reason:
+          'an unselected swatch is a full disc — there is no ring or gap to '
+          'size',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,6 +87,30 @@ class SwatchKnobs extends StatelessWidget {
               values: SwatchSize.values,
               labelOf: (v) => '${v.name} — ${v.value.toInt()}px',
               onChanged: (v) => onChanged(config.copyWith(size: v)),
+            ),
+          ],
+        ),
+        // The ring's anatomy. These are fixed token widths that do not scale
+        // with the swatch — which is why the diameter slider reads differently
+        // at every step, and why sweeping these is the other half of that
+        // demonstration.
+        FlowinPlaygroundKnobGroup(
+          title: 'Selection ring',
+          relevantWhen: ringExists,
+          children: [
+            FlowinPlaygroundStepKnob<BorderStep>(
+              label: 'Ring width',
+              value: config.ringWidth,
+              values: BorderStep.values,
+              labelOf: (v) => '${v.name} — ${v.value.toInt()}px',
+              onChanged: (v) => onChanged(config.copyWith(ringWidth: v)),
+            ),
+            FlowinPlaygroundStepKnob<BorderStep>(
+              label: 'Gap width',
+              value: config.gapWidth,
+              values: BorderStep.values,
+              labelOf: (v) => '${v.name} — ${v.value.toInt()}px',
+              onChanged: (v) => onChanged(config.copyWith(gapWidth: v)),
             ),
           ],
         ),
