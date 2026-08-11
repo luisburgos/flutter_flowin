@@ -11,7 +11,6 @@ dependencies:
   figma_squircle: ^0.6.3
   flutter:
     sdk: flutter
-  flutter_svg: ^2.3.0
   ios_color_picker:
     git:
       url: https://github.com/luisburgos/ios_color_picker
