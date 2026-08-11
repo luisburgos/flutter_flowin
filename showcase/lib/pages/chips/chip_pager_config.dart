@@ -3,9 +3,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroupViewPager] preview.
 ///
-/// `animateDuration`, `animateCurve` and `initialIndex` stay deliberately
-/// undriven: motion values and a start index are per-call-site tuning, not
-/// axes a reader picks a pager along.
+/// Deliberately-undriven parameters are recorded in flowin_pm#35.
 @immutable
 class ChipPagerConfig {
   /// {@macro chip_pager_config}

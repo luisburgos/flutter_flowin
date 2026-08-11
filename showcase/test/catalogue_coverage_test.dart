@@ -117,9 +117,9 @@ final _nestedPages = <String, (String parentEntry, WidgetBuilder builder)>{
 /// header sub-pieces — are correctly invisible, because a consumer cannot
 /// reach them either.
 ///
-/// No export here uses `show`/`hide`; if one ever does, this resolver
-/// over-includes and the mismatch will surface as a failure to triage, not a
-/// silent pass.
+/// `show`/`hide` combinators are honoured: an edge's filter applies to
+/// everything visible through it, including what the child re-exports, which
+/// matches how the language resolves them.
 Set<String> _exportedWidgetNames() {
   final barrel = File('../lib/flutter_flowin.dart');
   expect(
@@ -128,22 +128,29 @@ Set<String> _exportedWidgetNames() {
     reason: 'expected to run from the showcase package directory',
   );
 
-  final exportRe = RegExp(r"^export\s+'([^']+)'", multiLine: true);
+  final exportRe = RegExp(
+    r"^export\s+'([^']+)'\s*(?:(show|hide)\s+([^;]+))?;",
+    multiLine: true,
+  );
   final classRe = RegExp(
     r'^class\s+(\w+)(?:<[^>]*>)?\s+extends\s+(?:StatelessWidget|StatefulWidget)\b',
     multiLine: true,
   );
 
-  final seen = <String>{};
-  final queue = <File>[barrel];
-  final names = <String>{};
+  // Everything a file makes visible: its own public widget classes plus what
+  // its exports let through. Memoised per file; the in-progress guard turns
+  // an export cycle into an empty contribution rather than a hang.
+  final memo = <String, Set<String>>{};
+  final visiting = <String>{};
 
-  while (queue.isNotEmpty) {
-    final file = queue.removeLast();
+  Set<String> visibleFrom(File file) {
     final path = file.uri.normalizePath().toFilePath();
-    if (!seen.add(path)) continue;
+    final cached = memo[path];
+    if (cached != null) return cached;
+    if (!visiting.add(path)) return const {};
 
     final source = file.readAsStringSync();
+    final names = <String>{};
     for (final match in classRe.allMatches(source)) {
       final name = match.group(1)!;
       if (!name.startsWith('_')) names.add(name);
@@ -151,10 +158,28 @@ Set<String> _exportedWidgetNames() {
     for (final match in exportRe.allMatches(source)) {
       final target = match.group(1)!;
       if (target.startsWith('package:')) continue;
-      queue.add(File('${file.parent.path}/$target'));
+
+      var through = visibleFrom(File('${file.parent.path}/$target'));
+      final combinator = match.group(2);
+      if (combinator != null) {
+        final listed = match
+            .group(3)!
+            .split(',')
+            .map((n) => n.trim())
+            .where((n) => n.isNotEmpty)
+            .toSet();
+        through = combinator == 'show'
+            ? through.intersection(listed)
+            : through.difference(listed);
+      }
+      names.addAll(through);
     }
+
+    visiting.remove(path);
+    return memo[path] = names;
   }
-  return names;
+
+  return visibleFrom(barrel);
 }
 
 void main() {
