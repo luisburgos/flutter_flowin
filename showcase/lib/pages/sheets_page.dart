@@ -98,6 +98,28 @@ class _SheetsPageState extends State<SheetsPage> {
     }
   }
 
+  Future<void> _showFullBleed(BuildContext context) async {
+    await showFlowinActionSheet<void>(
+      context: context,
+      builder: (sheetContext) => FlowinActionSheet(
+        title: 'Share score',
+        // No Padding around the body: the sheet insets nothing, so a body that
+        // should reach the card edge simply does not wrap itself. The card
+        // clips it to the corner radius.
+        body: const _ScorePanel(),
+        footer: FlowinActionSheetFooter(
+          right: FlowinButton.filled(
+            size: FlowinButtonSize.md,
+            icon: FDIcons.share.toIcon(size: FlowinDesignIconSize.sm),
+            onPressed: () => Navigator.of(sheetContext).pop(),
+            label: 'Share',
+          ),
+        ),
+      ),
+    );
+    _record('share sheet dismissed');
+  }
+
   Future<void> _showMenu(BuildContext context) async {
     final choice = await showFlowinActionSheet<String>(
       context: context,
@@ -144,8 +166,10 @@ class _SheetsPageState extends State<SheetsPage> {
           title: 'Modal sheets',
           description:
               'showFlowinActionSheet presents a Flowin-styled modal '
-              'bottom sheet, clamped to 480px on wide viewports. Each sheet '
-              'reports what it returned into the card below.',
+              'bottom sheet, clamped to 480px on wide viewports. The footer '
+              'stretches a lone action to full width, so omitting the left '
+              'one is how a single-action sheet is built. Each sheet reports '
+              'what it returned into the card below.',
           children: [
             FlowinItemButton.tonal(
               icon: FDIcons.board.toIcon(),
@@ -163,6 +187,12 @@ class _SheetsPageState extends State<SheetsPage> {
               icon: FDIcons.edit.toIcon(),
               onPressed: () => _showForm(context),
               label: 'Sheet with a form body',
+            ),
+            SizedBox(height: context.spacing.xs),
+            FlowinItemButton.tonal(
+              icon: FDIcons.share.toIcon(),
+              onPressed: () => _showFullBleed(context),
+              label: 'Sheet with a full-bleed body',
             ),
             SizedBox(height: context.spacing.xs),
             FlowinItemButton.tonal(
@@ -192,12 +222,139 @@ class _SheetsPageState extends State<SheetsPage> {
           ],
         ),
         const ShowcaseSection(
+          chipLabel: 'Header',
+          title: 'Title placement',
+          description:
+              'The title is always adjacent to its subtitle. The bar holds one '
+              'leading element, so an icon takes it and pushes the title into '
+              'the supporting block below. Toggle the icon to watch the title '
+              'move.',
+          children: [_TitlePlacementDemo()],
+        ),
+        const ShowcaseSection(
           chipLabel: 'Inline',
           title: 'FlowinActionSheet — inline',
           description: 'The same widget rendered inline, without the modal.',
           children: [_InlineSheetDemo()],
         ),
       ],
+    );
+  }
+}
+
+/// The header's title-placement rule, driven by two toggles.
+///
+/// The title is always adjacent to its subtitle. The bar has one leading slot,
+/// so an icon takes it and displaces the title into the supporting block
+/// below; without an icon the title keeps the slot. Toggling the icon moves
+/// the title between the two regions in place, which is the point of showing
+/// this live rather than as four separate sheets.
+class _TitlePlacementDemo extends StatefulWidget {
+  const _TitlePlacementDemo();
+
+  @override
+  State<_TitlePlacementDemo> createState() => _TitlePlacementDemoState();
+}
+
+class _TitlePlacementDemoState extends State<_TitlePlacementDemo> {
+  bool _hasIcon = false;
+  bool _hasSubtitle = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          spacing: FlowinDesignSpace.space200,
+          children: [
+            FlowinChip(
+              label: const Text('Icon'),
+              variant: _hasIcon
+                  ? FlowinChipVariant.selected
+                  : FlowinChipVariant.unselected,
+              onSelected: (v) => setState(() => _hasIcon = v),
+            ),
+            FlowinChip(
+              label: const Text('Subtitle'),
+              variant: _hasSubtitle
+                  ? FlowinChipVariant.selected
+                  : FlowinChipVariant.unselected,
+              onSelected: (v) => setState(() => _hasSubtitle = v),
+            ),
+          ],
+        ),
+        SizedBox(height: context.spacing.sm),
+        FlowinActionSheet(
+          title: 'Descriptive title',
+          subtitle: _hasSubtitle
+              ? 'Write something in here that gives clear directions.'
+              : null,
+          headerIcon: _hasIcon
+              ? FDIcons.board.toIcon(size: FlowinDesignIconSize.xl)
+              : null,
+          displayClose: false,
+          margin: EdgeInsets.zero,
+        ),
+        SizedBox(height: context.spacing.sm),
+        ShowcaseRow(
+          label: 'Title sits in',
+          child: FlowinCard(
+            padding: EdgeInsets.all(context.spacing.md),
+            child: Row(
+              spacing: FlowinDesignSpace.space300,
+              children: [
+                FDIcons.done.toIcon(size: FlowinDesignIconSize.sm),
+                Expanded(
+                  child: Text(
+                    _hasIcon
+                        ? 'the supporting block — the icon took the bar'
+                        : 'the bar — no icon to displace it',
+                    style: context.textTheme.bodyLarge,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A full-bleed body: a dark panel spanning the card corner to corner.
+///
+/// Deliberately carries no horizontal inset of its own. That is the whole
+/// point of the demo — the sheet insets nothing, so reaching the card edge is
+/// the body's own choice rather than something it has to undo.
+class _ScorePanel extends StatelessWidget {
+  const _ScorePanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      color: scheme.inverseSurface,
+      height: FlowinDesignSpace.space1400 * 3,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: FlowinDesignSpace.space600,
+          horizontal: FlowinDesignSpace.space800,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            for (final score in ['2', '2'])
+              Text(
+                score,
+                style: context.textTheme.displaySmall?.copyWith(
+                  color: scheme.onInverseSurface,
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
