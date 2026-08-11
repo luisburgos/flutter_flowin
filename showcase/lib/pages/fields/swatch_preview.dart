@@ -50,6 +50,8 @@ class _SwatchRowDemoState extends State<SwatchRowDemo> {
           FlowinColorRadialButton(
             color: color,
             size: size,
+            borderWidth: widget.config.ringWidth.value,
+            gapWidth: widget.config.gapWidth.value,
             selected:
                 widget.config.selected &&
                 color.toARGB32() == _accent.toARGB32(),
@@ -59,6 +61,8 @@ class _SwatchRowDemoState extends State<SwatchRowDemo> {
           FlowinColorRadialButton.gradient(
             color: _accent,
             size: size,
+            borderWidth: widget.config.ringWidth.value,
+            gapWidth: widget.config.gapWidth.value,
             onTap: () {},
           ),
       ],

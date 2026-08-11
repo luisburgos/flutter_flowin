@@ -26,6 +26,28 @@ enum SwatchSize {
   final double value;
 }
 
+/// The widths a swatch's selection ring and carved gap can step along.
+///
+/// The three steps of the Flowin border scale. The ring and gap are the
+/// swatch's anatomy — fixed token widths that do not scale with the diameter,
+/// which is exactly why the size slider reads differently at every step.
+/// These two knobs are the other half of that demonstration.
+enum BorderStep {
+  /// The hairline step.
+  regular(FlowinDesignBorders.regular),
+
+  /// The emphasis step, the gap's own default.
+  bold(FlowinDesignBorders.bold),
+
+  /// The heaviest step, the ring's own default.
+  extraBold(FlowinDesignBorders.extraBold);
+
+  const BorderStep(this.value);
+
+  /// The width in logical pixels.
+  final double value;
+}
+
 /// Which form the swatch is shown in.
 enum SwatchSubject {
   /// The bare [FlowinColorRadialButton] primitive, in a row.
@@ -48,6 +70,8 @@ class SwatchConfig {
     this.selected = true,
     this.showGradient = true,
     this.size = SwatchSize.regular,
+    this.ringWidth = BorderStep.extraBold,
+    this.gapWidth = BorderStep.bold,
   });
 
   /// Whether the primitive or the composed field is previewed.
@@ -71,17 +95,32 @@ class SwatchConfig {
   /// swatch size.
   final SwatchSize size;
 
+  /// The width of the selection ring.
+  ///
+  /// Only meaningful while a swatch is selected — an unselected swatch is a
+  /// full disc with no ring to size.
+  final BorderStep ringWidth;
+
+  /// The width of the transparent gap the ring carves.
+  ///
+  /// Same scope as [ringWidth]: the gap only exists inside a selection ring.
+  final BorderStep gapWidth;
+
   /// A copy with the given fields replaced.
   SwatchConfig copyWith({
     SwatchSubject? subject,
     bool? selected,
     bool? showGradient,
     SwatchSize? size,
+    BorderStep? ringWidth,
+    BorderStep? gapWidth,
   }) => SwatchConfig(
     subject: subject ?? this.subject,
     selected: selected ?? this.selected,
     showGradient: showGradient ?? this.showGradient,
     size: size ?? this.size,
+    ringWidth: ringWidth ?? this.ringWidth,
+    gapWidth: gapWidth ?? this.gapWidth,
   );
 
   @override
@@ -90,8 +129,11 @@ class SwatchConfig {
       other.subject == subject &&
       other.selected == selected &&
       other.showGradient == showGradient &&
-      other.size == size;
+      other.size == size &&
+      other.ringWidth == ringWidth &&
+      other.gapWidth == gapWidth;
 
   @override
-  int get hashCode => Object.hash(subject, selected, showGradient, size);
+  int get hashCode =>
+      Object.hash(subject, selected, showGradient, size, ringWidth, gapWidth);
 }
