@@ -30,9 +30,9 @@ enum FlowinChipVariant {
 /// wrong once a leading widget is present: the same zero closes the gap before
 /// the label and leaves the icon touching the text.
 ///
-/// A full spacing step rather than the half-step it used to be: at 4px the
-/// gap read as touching once icon anti-aliasing and stroke weight took their
-/// share of it.
+/// The half step is a true 4px now that the icon no longer overflows its
+/// box: the old near-touching look was the glyph painting past a squeezed
+/// avatar box into the gap, not the gap itself being too small.
 ///
 /// The vertical component is what sizes the leading correctly. RenderChip's
 /// content height is label plus labelPadding, the avatar box tracks that
@@ -43,7 +43,7 @@ enum FlowinChipVariant {
 /// leading slot is built for. (Unconstraining `avatarBoxConstraints` instead
 /// trips the assert and crashes in debug.)
 const _leadingLabelGap = EdgeInsetsDirectional.only(
-  start: FlowinDesignSpace.space200,
+  start: FlowinDesignSpace.space100,
   top: FlowinDesignSpace.space50,
   bottom: FlowinDesignSpace.space50,
 );

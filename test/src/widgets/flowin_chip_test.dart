@@ -377,12 +377,12 @@ void main() {
       final labelLeft = tester.getRect(find.text('SET 1')).left;
 
       // The theme zeroes labelPadding for label-only chips; without the
-      // widget-level inset the icon sits flush against the text. A full
-      // spacing step: at the previous half-step the gap read as touching
-      // once icon anti-aliasing and stroke weight took their share of it.
+      // widget-level inset the icon sits flush against the text. A half step
+      // is a true 4px now that the icon fits its box instead of painting
+      // past it into the gap.
       expect(
         labelLeft - leadingRight,
-        closeTo(FlowinDesignSpace.space200, 0.5),
+        closeTo(FlowinDesignSpace.space100, 0.5),
       );
     });
 
