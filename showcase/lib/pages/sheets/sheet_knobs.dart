@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
@@ -49,7 +50,7 @@ class SheetKnobs extends StatelessWidget {
         FlowinPlaygroundKnobGroup(
           title: 'Body',
           children: [
-            FlowinPlaygroundChoiceKnob<BodyChoice>(
+            FlowinShowcaseDropdown<BodyChoice>(
               value: config.body,
               values: BodyChoice.values,
               labelOf: (v) => v.label,
@@ -60,7 +61,7 @@ class SheetKnobs extends StatelessWidget {
         FlowinPlaygroundKnobGroup(
           title: 'Footer',
           children: [
-            FlowinPlaygroundChoiceKnob<FooterChoice>(
+            FlowinShowcaseDropdown<FooterChoice>(
               value: config.footer,
               values: FooterChoice.values,
               labelOf: (v) => v.label,

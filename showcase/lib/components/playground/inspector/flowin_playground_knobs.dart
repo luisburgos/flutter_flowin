@@ -1,4 +1,3 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// A titled group of knobs.
@@ -70,44 +69,6 @@ class FlowinPlaygroundSwitchKnob extends StatelessWidget {
         // overflow the row instead of wrapping.
         Expanded(child: Text(label, style: context.textTheme.bodyLarge)),
       ],
-    );
-  }
-}
-
-/// A dropdown knob for a fixed set of choices.
-///
-/// Unlabelled: a leading label competes with the selected value for the
-/// inspector's narrow width, and the value is the part worth reading. Wrap it
-/// in a [FlowinPlaygroundKnobGroup] to name it.
-class FlowinPlaygroundChoiceKnob<T> extends StatelessWidget {
-  /// {@macro flowin_playground_choice_knob}
-  const FlowinPlaygroundChoiceKnob({
-    required this.value,
-    required this.values,
-    required this.labelOf,
-    required this.onChanged,
-    super.key,
-  });
-
-  /// The selected choice.
-  final T value;
-
-  /// Every choice, in the order they should appear.
-  final List<T> values;
-
-  /// Renders a choice's display text.
-  final String Function(T) labelOf;
-
-  /// Called with the picked choice.
-  final ValueChanged<T> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return FlowinShowcaseDropdown<T>(
-      value: value,
-      values: values,
-      labelOf: labelOf,
-      onChanged: onChanged,
     );
   }
 }
