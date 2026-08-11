@@ -6,7 +6,7 @@ import 'package:flowin_showcase/pages/form_page.dart';
 import 'package:flowin_showcase/pages/foundations_page.dart';
 import 'package:flowin_showcase/pages/navigation_page.dart';
 import 'package:flowin_showcase/pages/profile_example_page.dart';
-import 'package:flowin_showcase/pages/sheets_page.dart';
+import 'package:flowin_showcase/pages/sheets/sheets_page.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
