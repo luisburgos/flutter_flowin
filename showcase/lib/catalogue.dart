@@ -6,7 +6,9 @@ import 'package:flowin_showcase/pages/cards_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_groups_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_pagers_page.dart';
 import 'package:flowin_showcase/pages/chips/chips_page.dart';
-import 'package:flowin_showcase/pages/form_page.dart';
+import 'package:flowin_showcase/pages/fields/input_fields_page.dart';
+import 'package:flowin_showcase/pages/fields/swatches_page.dart';
+import 'package:flowin_showcase/pages/fields/text_fields_page.dart';
 import 'package:flowin_showcase/pages/foundations/colors_page.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icons_page.dart';
 import 'package:flowin_showcase/pages/foundations/radius_page.dart';
@@ -98,10 +100,22 @@ final componentEntries = <ShowcaseEntry>[
     builder: (_) => const ChipPagersPage(),
   ),
   ShowcaseEntry(
-    title: 'Fields',
-    subtitle: 'InputField, TextField, colour swatches',
+    title: 'Input fields',
+    subtitle: 'A label and a bordered surface around any content',
+    icon: FDIcons.board,
+    builder: (_) => const InputFieldsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Text fields',
+    subtitle: 'Typed entry, on its own or under a label',
     icon: FDIcons.edit,
-    builder: (_) => const FormPage(),
+    builder: (_) => const TextFieldsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Colour swatches',
+    subtitle: 'Picking a colour, as a single swatch or a whole field',
+    icon: FDIcons.paint,
+    builder: (_) => const SwatchesPage(),
   ),
   ShowcaseEntry(
     title: 'Cards & surfaces',
