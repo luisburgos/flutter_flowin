@@ -14,7 +14,7 @@ class SheetScorePanel extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         minHeight: FlowinDesignSpace.space1400 * 3,
       ),
       color: scheme.inverseSurface,

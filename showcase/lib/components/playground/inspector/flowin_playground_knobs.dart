@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// A titled group of knobs.
@@ -73,20 +74,20 @@ class FlowinPlaygroundSwitchKnob extends StatelessWidget {
   }
 }
 
-/// A labelled dropdown for a knob with a fixed set of choices.
+/// A dropdown knob for a fixed set of choices.
+///
+/// Unlabelled: a leading label competes with the selected value for the
+/// inspector's narrow width, and the value is the part worth reading. Wrap it
+/// in a [FlowinPlaygroundKnobGroup] to name it.
 class FlowinPlaygroundChoiceKnob<T> extends StatelessWidget {
   /// {@macro flowin_playground_choice_knob}
   const FlowinPlaygroundChoiceKnob({
-    required this.label,
     required this.value,
     required this.values,
     required this.labelOf,
     required this.onChanged,
     super.key,
   });
-
-  /// The knob's label.
-  final String label;
 
   /// The selected choice.
   final T value;
@@ -102,27 +103,11 @@ class FlowinPlaygroundChoiceKnob<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      spacing: FlowinDesignSpace.space200,
-      children: [
-        Text(label, style: context.textTheme.bodyLarge),
-        // `isExpanded` so the button takes the space left rather than sizing
-        // to its widest item, which is what pushes it past a narrow inspector.
-        Expanded(
-          child: DropdownButton<T>(
-            value: value,
-            isExpanded: true,
-            borderRadius: BorderRadius.circular(FlowinDesignRadius.radius300),
-            items: [
-              for (final v in values)
-                DropdownMenuItem<T>(value: v, child: Text(labelOf(v))),
-            ],
-            onChanged: (v) {
-              if (v != null) onChanged(v);
-            },
-          ),
-        ),
-      ],
+    return FlowinShowcaseDropdown<T>(
+      value: value,
+      values: values,
+      labelOf: labelOf,
+      onChanged: onChanged,
     );
   }
 }
