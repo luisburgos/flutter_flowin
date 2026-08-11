@@ -35,7 +35,8 @@ class _Home {
 ///   [_deliberatelyUncatalogued]. A newly exported component fails the suite
 ///   until it is catalogued or excluded with a reason — the omission the old
 ///   list could never see. That derivation is what surfaced FDIcon and
-///   FDSvgIcon, both public API and both absent from the old pinned list.
+///   FDSvgIcon, both public API and both absent from the old pinned list —
+///   FDIcon got catalogued, FDSvgIcon retired (flowin_pm#34).
 final _homes = <Type, _Home>{
   FlowinAppBar: const _Home('App bars → FlowinAppBar'),
   FlowinTabAppBar: const _Home('App bars → FlowinTabAppBar'),
@@ -93,11 +94,6 @@ const _deliberatelyUncatalogued = <String, String>{
       'Internal to FlowinActionSheet; never built directly by a consumer.',
   'FlowinInlineColorPicker':
       'The row inside FlowinColorPickerField; swept through that widget.',
-  'FDSvgIcon':
-      'Exported but embryonic: FDSvgIcons, the namespace it renders from, is '
-      'an empty TODO with no icon contents, so there is nothing to catalogue '
-      'yet. Revisit when contents land — or retire the export if they never '
-      'do.',
 };
 
 /// The demo pages an entry routes to rather than builds inline.

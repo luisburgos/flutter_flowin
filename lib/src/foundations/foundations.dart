@@ -11,5 +11,4 @@ export 'radius.dart';
 export 'schemes.dart';
 export 'shadows.dart';
 export 'spacing.dart';
-export 'svg_icons.dart';
 export 'typography.dart';
