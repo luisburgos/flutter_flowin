@@ -253,12 +253,15 @@ class _LibraryTab extends StatelessWidget {
       // The tab bar above already draws a hairline, so the pager's own would
       // be a second rule a few pixels below the first.
       showDivider: false,
-      // Vertical padding too, unlike the paged scaffold: there the chips sit
-      // below an app bar that already gives them room, while here they butt
-      // straight against the tab bar above and the list's divider below.
-      chipsPadding: EdgeInsets.symmetric(
-        horizontal: context.spacing.md,
-        vertical: context.spacing.sm,
+      // Top padding only, unlike the paged scaffold: there the chips sit below
+      // an app bar that already gives them room, while here they butt straight
+      // against the tab bar. Nothing on the bottom — the pager adds its own
+      // gap below the chip row, and the list its own padding above the first
+      // entry, so a third would read as a trough.
+      chipsPadding: EdgeInsets.only(
+        left: context.spacing.md,
+        right: context.spacing.md,
+        top: context.spacing.sm,
       ),
       items: [
         FlowinChipGroupViewPage.child(
@@ -283,7 +286,15 @@ class _EntryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.all(context.spacing.md),
+      // Tighter on top: whatever sits above the list — a chip row on Library,
+      // the tab bar on Examples — already supplies its own gap, so a full step
+      // here would double it.
+      padding: EdgeInsets.fromLTRB(
+        context.spacing.md,
+        context.spacing.xs,
+        context.spacing.md,
+        context.spacing.md,
+      ),
       itemCount: entries.length,
       separatorBuilder: (_, _) => SizedBox(height: context.spacing.xs),
       itemBuilder: (context, index) {
