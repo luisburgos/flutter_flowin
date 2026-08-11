@@ -24,13 +24,13 @@ enum CardRadius {
 /// space tokens still — a card height is a sizing decision, but the values it
 /// lands on are the system's, not arbitrary pixels.
 enum CardHeight {
-  /// 64 — a compact row.
+  /// A compact row.
   compact(FlowinDesignSpace.space1600),
 
-  /// 96 — the height a single-line card sits at comfortably.
+  /// The height a single-line card sits at comfortably.
   regular(FlowinDesignSpace.space2400),
 
-  /// 160 — room for a title, body and an action.
+  /// Room for a title, body and an action.
   tall(FlowinDesignSpace.space4000);
 
   const CardHeight(this.value);

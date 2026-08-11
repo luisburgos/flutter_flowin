@@ -20,13 +20,6 @@ const swatchPalette = <Color>[
   Colors.blue,
 ];
 
-/// The diameter used when the size knob is off, matching the component's own
-/// default.
-const double _regularSize = FlowinDesignSpace.space700;
-
-/// The diameter used when the size knob is on.
-const double _largeSize = FlowinDesignSpace.space1000;
-
 /// A row of [FlowinColorRadialButton]s that tracks which one is selected.
 ///
 /// Stateful because the selection is the point: a swatch row where tapping
@@ -47,7 +40,7 @@ class _SwatchRowDemoState extends State<SwatchRowDemo> {
 
   @override
   Widget build(BuildContext context) {
-    final size = widget.config.large ? _largeSize : _regularSize;
+    final size = widget.config.size.value;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

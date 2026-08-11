@@ -1,6 +1,7 @@
 import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -103,7 +104,8 @@ class CardKnobs extends StatelessWidget {
               value: config.intrinsicHeight,
               onChanged: (v) => onChanged(config.copyWith(intrinsicHeight: v)),
             ),
-            FlowinShowcaseDropdown<CardHeight>(
+            FlowinPlaygroundStepKnob<CardHeight>(
+              label: 'Pinned to',
               value: config.height,
               values: CardHeight.values,
               labelOf: _heightLabel,

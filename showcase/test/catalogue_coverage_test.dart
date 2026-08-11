@@ -7,18 +7,37 @@ import 'package:flutter_test/flutter_test.dart';
 /// Components the showcase must render on some page.
 ///
 /// The showcase is the only catalogue since the widgetbook was retired. This
-/// list pins what it currently covers, so a component cannot silently fall out
-/// of it — the failure mode that rotted the widgetbook, where `flowin_tab_item`
-/// lost its use case and nothing noticed (flowin_pm#10).
+/// list pins what it currently covers, against the failure mode that rotted
+/// the widgetbook, where `flowin_tab_item` lost its use case and nothing
+/// noticed (flowin_pm#10).
 ///
 /// Compares by *type*, not by count. Matching totals are what hid that drift:
 /// one use case had been lost and an unrelated one added, so the numbers agreed
 /// at 16 vs 16 while the catalogue was wrong.
 ///
-/// **This list is hand-maintained, so it catches regression, not omission.** A
-/// newly exported component is simply absent from it, and nothing looks for it
-/// — that still relies on review. Closing that gap needs the expected list
-/// derived from the package source rather than written by hand.
+/// ## What this does NOT catch
+///
+/// The sweep asks only whether a type renders on *some* page, so its guarantee
+/// is far narrower than "the catalogue is intact". Measured by deleting
+/// entries and re-running:
+///
+/// - **Deleting a whole catalogue entry passes** whenever its component also
+///   renders elsewhere. Removing `Cards & surfaces` is invisible, because
+///   `FlowinCard` appears inside other pages' previews and in the entry tiles
+///   themselves. The same holds for `FlowinChip`, `FlowinIconButton` and
+///   `FlowinTabs`.
+/// - **Removal is caught only for a component rendered on exactly one page** —
+///   `FlowinChipGroupViewPager` is the one that currently qualifies.
+/// - **Omission is never caught.** A newly exported component is simply absent
+///   from this hand-maintained list and nothing looks for it.
+/// - **Non-Flowin subjects are invisible.** The Dividers page demonstrates the
+///   framework's `Divider`, which is not a package type, so deleting that
+///   entry passes silently.
+///
+/// Closing these needs the expected list derived from the package's exports,
+/// and the sweep asserting *which* page each component appears on rather than
+/// that it appears at all. Until then this is a weak backstop, and review is
+/// what actually protects the catalogue.
 final _catalogued = <Type>[
   FlowinAppBar,
   FlowinButton,
