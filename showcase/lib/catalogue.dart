@@ -6,6 +6,7 @@ import 'package:flowin_showcase/pages/cards/cards_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_groups_page.dart';
 import 'package:flowin_showcase/pages/chips/chip_pagers_page.dart';
 import 'package:flowin_showcase/pages/chips/chips_page.dart';
+import 'package:flowin_showcase/pages/dividers/dividers_page.dart';
 import 'package:flowin_showcase/pages/fields/input_fields_page.dart';
 import 'package:flowin_showcase/pages/fields/swatches_page.dart';
 import 'package:flowin_showcase/pages/fields/text_fields_page.dart';
@@ -120,9 +121,15 @@ final componentEntries = <ShowcaseEntry>[
   ),
   ShowcaseEntry(
     title: 'Cards & surfaces',
-    subtitle: 'Smooth-cornered surfaces, and the rules that separate content',
+    subtitle: 'Smooth-cornered surfaces, and keeping their content readable',
     icon: FDIcons.timeline,
     builder: (_) => const CardsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Dividers',
+    subtitle: 'Theme-styled rules between stacked or side-by-side content',
+    icon: FDIcons.arrowRightLeft,
+    builder: (_) => const DividersPage(),
   ),
   ShowcaseEntry(
     title: 'App bars',

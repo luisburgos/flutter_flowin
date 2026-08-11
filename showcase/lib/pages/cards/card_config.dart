@@ -50,6 +50,7 @@ class CardConfig {
     this.resolveForeground = true,
     this.preferCream = false,
     this.clipChild = false,
+    this.compareContrast = false,
   });
 
   /// The corner treatment.
@@ -82,6 +83,13 @@ class CardConfig {
   /// preview fills the card edge to edge while this is on.
   final bool clipChild;
 
+  /// Whether the preview shows the resolved and inherited results together.
+  ///
+  /// The resolver's whole contract is a comparison — this colour rather than
+  /// the one the theme would have supplied — so one card can only ever show
+  /// half of it. Turning this on renders the same card both ways at once.
+  final bool compareContrast;
+
   /// A copy with the given fields replaced.
   CardConfig copyWith({
     CardRadius? radius,
@@ -91,6 +99,7 @@ class CardConfig {
     bool? resolveForeground,
     bool? preferCream,
     bool? clipChild,
+    bool? compareContrast,
   }) => CardConfig(
     radius: radius ?? this.radius,
     fill: fill ?? this.fill,
@@ -99,6 +108,7 @@ class CardConfig {
     resolveForeground: resolveForeground ?? this.resolveForeground,
     preferCream: preferCream ?? this.preferCream,
     clipChild: clipChild ?? this.clipChild,
+    compareContrast: compareContrast ?? this.compareContrast,
   );
 
   @override
@@ -110,7 +120,8 @@ class CardConfig {
       other.elevated == elevated &&
       other.resolveForeground == resolveForeground &&
       other.preferCream == preferCream &&
-      other.clipChild == clipChild;
+      other.clipChild == clipChild &&
+      other.compareContrast == compareContrast;
 
   @override
   int get hashCode => Object.hash(
@@ -121,5 +132,6 @@ class CardConfig {
     resolveForeground,
     preferCream,
     clipChild,
+    compareContrast,
   );
 }

@@ -32,11 +32,24 @@ class CardKnobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // A transparent fill is whatever sits behind the card, which the card
-    // cannot see, so it never resolves against it whatever these are set to.
-    // Hidden rather than disabled: a knob that is present but inert reads as a
-    // bug in the component.
-    final resolvable = config.fill != CardFill.transparent;
+    final resolvesAgainstFill = FlowinKnobRelevance.when(
+      isRelevant: config.fill != CardFill.transparent,
+      reason:
+          'a transparent fill is whatever sits behind the card, which the '
+          'card cannot see, so it is never resolved against',
+    );
+    final seedsTheResolver = FlowinKnobRelevance.when(
+      isRelevant: config.resolveForeground || config.compareContrast,
+      reason:
+          'the preference is what the resolver starts from, and nothing '
+          'is being resolved',
+    );
+    final resolverIsChosen = FlowinKnobRelevance.when(
+      isRelevant: !config.compareContrast,
+      reason:
+          'the comparison shows both settings at once, so it drives this '
+          'rather than the knob',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,26 +97,30 @@ class CardKnobs extends StatelessWidget {
             ),
           ],
         ),
-        if (resolvable)
-          FlowinPlaygroundKnobGroup(
-            title: 'Content colour',
-            children: [
-              FlowinPlaygroundSwitchKnob(
-                label: 'Resolve against fill',
-                value: config.resolveForeground,
-                onChanged: (v) =>
-                    onChanged(config.copyWith(resolveForeground: v)),
-              ),
-              // Only meaningful while something is being resolved: the
-              // preference is what the resolver starts from.
-              if (config.resolveForeground)
-                FlowinPlaygroundSwitchKnob(
-                  label: 'Prefer cream',
-                  value: config.preferCream,
-                  onChanged: (v) => onChanged(config.copyWith(preferCream: v)),
-                ),
-            ],
-          ),
+        FlowinPlaygroundKnobGroup(
+          title: 'Content colour',
+          relevantWhen: resolvesAgainstFill,
+          children: [
+            FlowinPlaygroundSwitchKnob(
+              label: 'Compare with inherited',
+              value: config.compareContrast,
+              onChanged: (v) => onChanged(config.copyWith(compareContrast: v)),
+            ),
+            FlowinPlaygroundSwitchKnob(
+              label: 'Resolve against fill',
+              value: config.resolveForeground,
+              relevantWhen: resolverIsChosen,
+              onChanged: (v) =>
+                  onChanged(config.copyWith(resolveForeground: v)),
+            ),
+            FlowinPlaygroundSwitchKnob(
+              label: 'Prefer cream',
+              value: config.preferCream,
+              relevantWhen: seedsTheResolver,
+              onChanged: (v) => onChanged(config.copyWith(preferCream: v)),
+            ),
+          ],
+        ),
       ],
     );
   }

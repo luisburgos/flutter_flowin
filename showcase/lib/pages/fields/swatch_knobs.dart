@@ -22,11 +22,18 @@ class SwatchKnobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The picker field owns its selection, always pins a gradient swatch, and
-    // exposes no swatch size, so every knob below would drive nothing while it
-    // is the subject. Hidden rather than disabled: a knob that is present but
-    // inert reads as a bug in the component.
     final isPrimitive = config.subject == SwatchSubject.swatches;
+
+    final ownsItsSelection = FlowinKnobRelevance.when(
+      isRelevant: isPrimitive,
+      reason:
+          'the picker field owns its selection and always pins a '
+          'gradient swatch',
+    );
+    final exposesNoSize = FlowinKnobRelevance.when(
+      isRelevant: isPrimitive,
+      reason: 'the picker field exposes no swatch size',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,33 +50,33 @@ class SwatchKnobs extends StatelessWidget {
             ),
           ],
         ),
-        if (isPrimitive)
-          FlowinPlaygroundKnobGroup(
-            title: 'State',
-            children: [
-              FlowinPlaygroundSwitchKnob(
-                label: 'Selected',
-                value: config.selected,
-                onChanged: (v) => onChanged(config.copyWith(selected: v)),
-              ),
-              FlowinPlaygroundSwitchKnob(
-                label: 'Show gradient swatch',
-                value: config.showGradient,
-                onChanged: (v) => onChanged(config.copyWith(showGradient: v)),
-              ),
-            ],
-          ),
-        if (isPrimitive)
-          FlowinPlaygroundKnobGroup(
-            title: 'Size',
-            children: [
-              FlowinPlaygroundSwitchKnob(
-                label: 'Large',
-                value: config.large,
-                onChanged: (v) => onChanged(config.copyWith(large: v)),
-              ),
-            ],
-          ),
+        FlowinPlaygroundKnobGroup(
+          title: 'State',
+          relevantWhen: ownsItsSelection,
+          children: [
+            FlowinPlaygroundSwitchKnob(
+              label: 'Selected',
+              value: config.selected,
+              onChanged: (v) => onChanged(config.copyWith(selected: v)),
+            ),
+            FlowinPlaygroundSwitchKnob(
+              label: 'Show gradient swatch',
+              value: config.showGradient,
+              onChanged: (v) => onChanged(config.copyWith(showGradient: v)),
+            ),
+          ],
+        ),
+        FlowinPlaygroundKnobGroup(
+          title: 'Size',
+          relevantWhen: exposesNoSize,
+          children: [
+            FlowinPlaygroundSwitchKnob(
+              label: 'Large',
+              value: config.large,
+              onChanged: (v) => onChanged(config.copyWith(large: v)),
+            ),
+          ],
+        ),
       ],
     );
   }

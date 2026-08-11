@@ -25,10 +25,17 @@ const _cardHeight = 96.0;
 /// across configuration changes.
 class CardDemo extends StatelessWidget {
   /// {@macro card_demo}
-  const CardDemo({required this.config, super.key});
+  const CardDemo({required this.config, this.resolveOverride, super.key});
 
   /// The configuration driving the card.
   final CardConfig config;
+
+  /// Forces [FlowinCard.resolveForeground] regardless of the configuration.
+  ///
+  /// Set only by [CardContrastDemo], which renders this card twice to put the
+  /// resolved and inherited results beside each other. Null means the
+  /// configuration's own value stands.
+  final bool? resolveOverride;
 
   /// The corner radii for [CardConfig.radius].
   ///
@@ -97,10 +104,58 @@ class CardDemo extends StatelessWidget {
       backgroundColor: _backgroundColor,
       borderSide: borderSide,
       shadows: config.elevated ? [context.flowinTokens.shadow] : null,
-      resolveForeground: config.resolveForeground,
+      resolveForeground: resolveOverride ?? config.resolveForeground,
       foregroundColor: config.preferCream ? _cream : null,
       clipChild: config.clipChild,
       child: child,
+    );
+  }
+}
+
+/// The same card twice: content colour resolved on one, inherited on the
+/// other.
+///
+/// A single card cannot show what the resolver does. Toggling the knob changes
+/// the one specimen, so a reader has to remember the previous state to see any
+/// difference — and on a fill where the inherited colour happens to be legible
+/// there is no difference to remember. Side by side, the failure is simply
+/// visible.
+///
+/// Which column fails inverts with the theme, and that is the point: a light
+/// theme fails on dark fills, a dark theme on light ones, so no single
+/// inherited colour can serve a fill the theme cannot see.
+class CardContrastDemo extends StatelessWidget {
+  /// {@macro card_contrast_demo}
+  const CardContrastDemo({required this.config, super.key});
+
+  /// The configuration driving both cards.
+  final CardConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    final captionStyle = context.textTheme.labelSmall?.copyWith(
+      color: context.colorScheme.onSurfaceVariant,
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: context.spacing.sm,
+      children: [
+        for (final (caption, resolve) in const [
+          ('Resolved against the fill', true),
+          ('Inherited from the theme', false),
+        ])
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(caption, style: captionStyle),
+              SizedBox(height: context.spacing.xxs),
+              CardDemo(config: config, resolveOverride: resolve),
+            ],
+          ),
+      ],
     );
   }
 }
