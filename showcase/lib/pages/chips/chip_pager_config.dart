@@ -1,11 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroupViewPager] preview.
 ///
 /// Deliberately-undriven parameters are recorded in flowin_pm#35.
-@immutable
-class ChipPagerConfig {
+class ChipPagerConfig extends Equatable {
   /// {@macro chip_pager_config}
   const ChipPagerConfig({
     this.isScrollable = false,
@@ -53,20 +53,11 @@ class ChipPagerConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is ChipPagerConfig &&
-      other.isScrollable == isScrollable &&
-      other.showDivider == showDivider &&
-      other.unselectedVariant == unselectedVariant &&
-      other.chipsPadding == chipsPadding &&
-      other.keepPagesAlive == keepPagesAlive;
-
-  @override
-  int get hashCode => Object.hash(
+  List<Object?> get props => [
     isScrollable,
     showDivider,
     unselectedVariant,
     chipsPadding,
     keepPagesAlive,
-  );
+  ];
 }

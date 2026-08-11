@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChip] preview.
@@ -5,8 +6,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class ChipConfig {
+class ChipConfig extends Equatable {
   /// {@macro chip_config}
   const ChipConfig({
     this.variant = FlowinChipVariant.unselected,
@@ -38,12 +38,5 @@ class ChipConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is ChipConfig &&
-      other.variant == variant &&
-      other.hasLeading == hasLeading &&
-      other.enabled == enabled;
-
-  @override
-  int get hashCode => Object.hash(variant, hasLeading, enabled);
+  List<Object?> get props => [variant, hasLeading, enabled];
 }

@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the text-field preview.
@@ -10,8 +11,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class TextFieldConfig {
+class TextFieldConfig extends Equatable {
   /// {@macro text_field_config}
   const TextFieldConfig({
     this.hasLabel = true,
@@ -58,15 +58,11 @@ class TextFieldConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is TextFieldConfig &&
-      other.hasLabel == hasLabel &&
-      other.hasInitialValue == hasInitialValue &&
-      other.hasHint == hasHint &&
-      other.multiline == multiline &&
-      other.enabled == enabled;
-
-  @override
-  int get hashCode =>
-      Object.hash(hasLabel, hasInitialValue, hasHint, multiline, enabled);
+  List<Object?> get props => [
+    hasLabel,
+    hasInitialValue,
+    hasHint,
+    multiline,
+    enabled,
+  ];
 }

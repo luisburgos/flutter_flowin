@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// How many tabs the previewed bar carries.
@@ -19,8 +20,7 @@ enum TabCount {
 /// Value equality is what lets the playground tell a preset from a custom
 /// configuration, so it is a requirement of the type rather than a
 /// convenience.
-@immutable
-class TabsConfig {
+class TabsConfig extends Equatable {
   /// {@macro tabs_config}
   const TabsConfig({
     this.count = TabCount.few,
@@ -58,13 +58,5 @@ class TabsConfig {
   );
 
   @override
-  bool operator ==(Object other) =>
-      other is TabsConfig &&
-      other.count == count &&
-      other.isScrollable == isScrollable &&
-      other.hasIcons == hasIcons &&
-      other.longLabel == longLabel;
-
-  @override
-  int get hashCode => Object.hash(count, isScrollable, hasIcons, longLabel);
+  List<Object?> get props => [count, isScrollable, hasIcons, longLabel];
 }
