@@ -14,7 +14,8 @@ import 'package:flowin_showcase/pages/foundations/icons/icons_page.dart';
 import 'package:flowin_showcase/pages/foundations/radius_page.dart';
 import 'package:flowin_showcase/pages/foundations/spacing_page.dart';
 import 'package:flowin_showcase/pages/foundations/typography_page.dart';
-import 'package:flowin_showcase/pages/navigation_page.dart';
+import 'package:flowin_showcase/pages/navigation/app_bars_page.dart';
+import 'package:flowin_showcase/pages/navigation/tabs_page.dart';
 import 'package:flowin_showcase/pages/profile_example_page.dart';
 import 'package:flowin_showcase/pages/sheets/sheets_page.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
@@ -124,10 +125,16 @@ final componentEntries = <ShowcaseEntry>[
     builder: (_) => const CardsPage(),
   ),
   ShowcaseEntry(
-    title: 'App bars & tabs',
-    subtitle: 'AppBar, TabAppBar, Tabs — each in a full-page demo',
+    title: 'App bars',
+    subtitle: 'Page chrome, shown in place because that is the only way',
     icon: FDIcons.arrowRightLeft,
-    builder: (_) => const NavigationPage(),
+    builder: (_) => const AppBarsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Tabs',
+    subtitle: 'Switching between peer sections, fixed or scrolling',
+    icon: FDIcons.settings,
+    builder: (_) => const TabsPage(),
   ),
   ShowcaseEntry(
     title: 'Action sheets',

@@ -1,5 +1,5 @@
 import 'package:flowin_showcase/catalogue.dart';
-import 'package:flowin_showcase/pages/navigation_page.dart';
+import 'package:flowin_showcase/pages/navigation/app_bar_demos.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,12 +65,15 @@ void main() {
     ) async {
       // Entry pages, plus the nested demo pages they route to. A component
       // catalogued one tap deep is still catalogued, so the sweep reaches them.
+      //
+      // The two app bars are the only components that still need this: they
+      // can only be demonstrated as a real Scaffold.appBar, so their entry
+      // page routes to them rather than building them itself.
       final builders = <WidgetBuilder>[
         for (final entry in [...componentEntries, ...exampleEntries])
           entry.builder,
         (_) => const AppBarDemoPage(),
         (_) => const TabAppBarDemoPage(),
-        (_) => const TabsDemoPage(),
       ];
 
       final seen = <Type>{};
