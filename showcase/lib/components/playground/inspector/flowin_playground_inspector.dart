@@ -54,7 +54,18 @@ class FlowinPlaygroundInspector<T> extends StatefulWidget {
 class _FlowinPlaygroundInspectorState<T>
     extends State<FlowinPlaygroundInspector<T>>
     with SingleTickerProviderStateMixin {
-  late final TabController _tabs = TabController(length: 2, vsync: this);
+  // Created in initState rather than as a `late final` field initializer.
+  // With empty presets the tabs never render, so a lazy initializer would
+  // first run inside dispose() — and creating a ticker there looks up
+  // TickerMode on a deactivated element, which throws. Every catalogue page
+  // happens to pass presets, so only a presetless playground ever hit it.
+  late final TabController _tabs;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabs = TabController(length: 2, vsync: this);
+  }
 
   @override
   void dispose() {
