@@ -55,6 +55,10 @@ class _ButtonsPageState extends State<ButtonsPage> {
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,
+        // Surface, not the default tint: outlineVariant and
+        // secondaryContainer resolve to the same value, so a tonal button on
+        // the default stage would be invisible.
+        previewBackground: context.colorScheme.surface,
         previewBuilder: (context, config) => FlowinButton(
           variant: config.variant,
           size: config.size,

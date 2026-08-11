@@ -44,6 +44,7 @@ class FlowinPlayground<T> extends StatelessWidget {
     this.presets = const [],
     this.actions = const [],
     this.previewMaxWidth,
+    this.previewBackground,
     super.key,
   });
 
@@ -73,6 +74,12 @@ class FlowinPlayground<T> extends StatelessWidget {
   /// Clamps the previewed subject's width to what it really renders at.
   final double? previewMaxWidth;
 
+  /// Overrides the preview stage's background.
+  ///
+  /// Pass `surface` when the subject is a neutral the default tint would
+  /// swallow — a tonal or outlined control.
+  final Color? previewBackground;
+
   /// The preset matching [config], or null once the knobs have moved away.
   FlowinPlaygroundPreset<T>? get _activePreset {
     for (final preset in presets) {
@@ -83,6 +90,7 @@ class FlowinPlayground<T> extends StatelessWidget {
 
   Widget _buildPreview(BuildContext context) => FlowinPlaygroundPreview(
     maxWidth: previewMaxWidth,
+    background: previewBackground,
     child: previewBuilder(context, config),
   );
 
