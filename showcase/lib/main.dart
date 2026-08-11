@@ -250,7 +250,13 @@ class _LibraryTab extends StatelessWidget {
     return FlowinChipGroupViewPager(
       // Wrap layout: two chips always fit, so nothing scrolls out of reach.
       isScrollable: false,
-      chipsPadding: EdgeInsets.symmetric(horizontal: context.spacing.md),
+      // Vertical padding too, unlike the paged scaffold: there the chips sit
+      // below an app bar that already gives them room, while here they butt
+      // straight against the tab bar above and the list's divider below.
+      chipsPadding: EdgeInsets.symmetric(
+        horizontal: context.spacing.md,
+        vertical: context.spacing.sm,
+      ),
       items: [
         FlowinChipGroupViewPage.child(
           label: 'Foundations',
