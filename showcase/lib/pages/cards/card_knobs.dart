@@ -1,5 +1,6 @@
 import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -11,12 +12,12 @@ String _radiusLabel(CardRadius radius) => switch (radius) {
   CardRadius.asymmetric => 'Asymmetric',
 };
 
-/// Display text for each padding choice.
-String _paddingLabel(CardPadding padding) => switch (padding) {
-  CardPadding.none => 'None',
-  CardPadding.snug => 'Snug',
-  CardPadding.comfortable => 'Comfortable',
-};
+/// Display text for each height choice.
+///
+/// The pixel value alongside the name, like the spacing knob: a card pinned to
+/// "regular" tells a reader nothing about how tall that is.
+String _heightLabel(CardHeight height) =>
+    '${height.name} — ${height.value.toInt()}px';
 
 /// Display text for each fill choice.
 String _fillLabel(CardFill fill) => switch (fill) {
@@ -63,6 +64,10 @@ class CardKnobs extends StatelessWidget {
           'a clipped child is meant to reach the corners it is clipped to, '
           'so it takes no inset',
     );
+    final heightIsPinned = FlowinKnobRelevance.when(
+      isRelevant: !config.intrinsicHeight,
+      reason: 'the content is deciding the height, so there is none to pin',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,14 +96,38 @@ class CardKnobs extends StatelessWidget {
           ],
         ),
         FlowinPlaygroundKnobGroup(
-          title: 'Padding',
-          relevantWhen: contentIsInset,
+          title: 'Height',
           children: [
-            FlowinShowcaseDropdown<CardPadding>(
+            FlowinPlaygroundSwitchKnob(
+              label: 'Size to content',
+              value: config.intrinsicHeight,
+              onChanged: (v) => onChanged(config.copyWith(intrinsicHeight: v)),
+            ),
+            FlowinShowcaseDropdown<CardHeight>(
+              value: config.height,
+              values: CardHeight.values,
+              labelOf: _heightLabel,
+              relevantWhen: heightIsPinned,
+              onChanged: (v) => onChanged(config.copyWith(height: v)),
+            ),
+          ],
+        ),
+        // Padding and margin together: they are the same scale applied on
+        // either side of the card's edge, and reading them side by side is
+        // what makes the difference obvious.
+        FlowinPlaygroundKnobGroup(
+          title: 'Spacing',
+          children: [
+            FlowinPlaygroundSpacingKnob(
+              label: 'Padding',
               value: config.padding,
-              values: CardPadding.values,
-              labelOf: _paddingLabel,
+              relevantWhen: contentIsInset,
               onChanged: (v) => onChanged(config.copyWith(padding: v)),
+            ),
+            FlowinPlaygroundSpacingKnob(
+              label: 'Margin',
+              value: config.margin,
+              onChanged: (v) => onChanged(config.copyWith(margin: v)),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// A dropdown for picking one of a fixed set of choices.
@@ -9,6 +10,11 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Carries no label. Callers that need one put it above the dropdown — a
 /// leading label competes with the selected value for a narrow pane's width,
 /// and the value is the part worth reading.
+///
+/// Pass [relevantWhen] when the choice stops applying while the rest of its
+/// group still does — a height to pin when the content is deciding it. Where
+/// the whole group drops out instead, scope the group rather than each knob
+/// inside it. See [FlowinKnobRelevance] for why hidden and not disabled.
 class FlowinShowcaseDropdown<T> extends StatelessWidget {
   /// {@macro flowin_showcase_dropdown}
   const FlowinShowcaseDropdown({
@@ -16,8 +22,12 @@ class FlowinShowcaseDropdown<T> extends StatelessWidget {
     required this.values,
     required this.labelOf,
     required this.onChanged,
+    this.relevantWhen = const FlowinKnobRelevance.always(),
     super.key,
   });
+
+  /// When this knob applies at all.
+  final FlowinKnobRelevance relevantWhen;
 
   /// The selected choice.
   final T value;
@@ -36,6 +46,8 @@ class FlowinShowcaseDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!relevantWhen.isRelevant) return const SizedBox.shrink();
+
     return DropdownButton<T>(
       value: value,
       // Takes the width it is given rather than sizing to its widest item,

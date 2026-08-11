@@ -1,5 +1,6 @@
 import 'package:flowin_showcase/components/playground/flowin_playground.dart';
 import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flowin_showcase/pages/cards/card_knobs.dart';
@@ -47,7 +48,17 @@ const _presets = <FlowinPlaygroundPreset<CardConfig>>[
   FlowinPlaygroundPreset(
     label: 'Dense',
     summary: 'A tight inset, for a card repeated down a list.',
-    config: CardConfig(padding: CardPadding.snug),
+    config: CardConfig(padding: SpacingStep.xs),
+  ),
+  FlowinPlaygroundPreset(
+    label: 'Inset in a list',
+    summary: 'Held off its neighbours, for a card among other cards.',
+    config: CardConfig(margin: SpacingStep.md),
+  ),
+  FlowinPlaygroundPreset(
+    label: 'Sized to content',
+    summary: 'No pinned height, which is how most callers use a card.',
+    config: CardConfig(intrinsicHeight: true),
   ),
   FlowinPlaygroundPreset(
     label: 'Media',
@@ -82,9 +93,14 @@ class _CardsPageState extends State<CardsPage> {
         // both the card's own themed fill and the colour its border is drawn
         // in, so a themed or outlined card would vanish into the stage.
         previewBackground: context.colorScheme.surface,
-        previewBuilder: (context, config) => config.compareContrast
-            ? CardContrastDemo(config: config)
-            : CardDemo(config: config),
+        // Bounded so the margin knob has something to push against: margin is
+        // space outside the card, so without a visible edge it would look
+        // identical to the card simply getting smaller.
+        previewBuilder: (context, config) => CardMarginBounds(
+          child: config.compareContrast
+              ? CardContrastDemo(config: config)
+              : CardDemo(config: config),
+        ),
         knobsBuilder: (context, config, onChanged) =>
             CardKnobs(config: config, onChanged: onChanged),
       ),
