@@ -78,18 +78,26 @@ class ShowcaseEntry {
   final WidgetBuilder builder;
 }
 
-/// The component catalogue — one entry per widget family.
+/// The design tokens every component is built from.
 ///
-/// Filed by what a thing *is*, not what it is used for, so a reader who arrives
-/// with a component name in hand finds it where they expect. Realistic
-/// compositions live in [exampleEntries] instead.
-final componentEntries = <ShowcaseEntry>[
+/// Separated from [componentEntries] because a token is not a widget: these
+/// pages answer "what values exist" rather than "what can I place on a
+/// screen", and mixing the two makes both harder to scan.
+final foundationEntries = <ShowcaseEntry>[
   ShowcaseEntry(
     title: 'Foundations',
     subtitle: 'Colors, spacing, radius, typography, icons',
     icon: FDIcons.paint,
     builder: (_) => const FoundationsPage(),
   ),
+];
+
+/// The component catalogue — one entry per widget family.
+///
+/// Filed by what a thing *is*, not what it is used for, so a reader who arrives
+/// with a component name in hand finds it where they expect. Realistic
+/// compositions live in [exampleEntries] instead.
+final componentEntries = <ShowcaseEntry>[
   ShowcaseEntry(
     title: 'Buttons',
     subtitle: 'Button, IconButton, ItemButton — all variants and sizes',
@@ -176,7 +184,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         leading: FDIcons.scanFace.toIcon(),
         trailing: const ThemeModeToggle(),
         tabs: const [
-          FlowinTabItem(label: 'Components'),
+          FlowinTabItem(label: 'Library'),
           FlowinTabItem(label: 'Examples'),
         ],
       ),
@@ -186,7 +194,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabs,
               children: [
-                _EntryList(entries: componentEntries),
+                const _LibraryTab(),
                 _EntryList(entries: exampleEntries),
               ],
             ),
@@ -197,6 +205,34 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           const SafeArea(top: false, child: AppVersionLabel()),
         ],
       ),
+    );
+  }
+}
+
+/// The Library tab: foundations and components, paged by chip.
+///
+/// Two lists rather than one, because a token and a widget answer different
+/// questions — "what values exist" versus "what can I place on a screen" — and
+/// a reader is usually after one or the other, not both.
+class _LibraryTab extends StatelessWidget {
+  const _LibraryTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlowinChipGroupViewPager(
+      // Wrap layout: two chips always fit, so nothing scrolls out of reach.
+      isScrollable: false,
+      chipsPadding: EdgeInsets.symmetric(horizontal: context.spacing.md),
+      items: [
+        FlowinChipGroupViewPage.child(
+          label: 'Foundations',
+          child: _EntryList(entries: foundationEntries),
+        ),
+        FlowinChipGroupViewPage.child(
+          label: 'Components',
+          child: _EntryList(entries: componentEntries),
+        ),
+      ],
     );
   }
 }
