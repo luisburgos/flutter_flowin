@@ -3,7 +3,9 @@ import 'package:flowin_showcase/pages/buttons/buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/icon_buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/item_buttons_page.dart';
 import 'package:flowin_showcase/pages/cards_page.dart';
-import 'package:flowin_showcase/pages/chips_page.dart';
+import 'package:flowin_showcase/pages/chips/chip_groups_page.dart';
+import 'package:flowin_showcase/pages/chips/chip_pagers_page.dart';
+import 'package:flowin_showcase/pages/chips/chips_page.dart';
 import 'package:flowin_showcase/pages/form_page.dart';
 import 'package:flowin_showcase/pages/foundations/colors_page.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icons_page.dart';
@@ -79,9 +81,21 @@ final componentEntries = <ShowcaseEntry>[
   ),
   ShowcaseEntry(
     title: 'Chips',
-    subtitle: 'Chip, ChipGroup, ChipGroupViewPager',
+    subtitle: 'Selectable labels across every variant and state',
     icon: FDIcons.board,
     builder: (_) => const ChipsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Chip groups',
+    subtitle: 'A row of chips with one selected, scrolling or wrapped',
+    icon: FDIcons.arrowRightLeft,
+    builder: (_) => const ChipGroupsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Chip view pagers',
+    subtitle: 'Chips that page between whole views',
+    icon: FDIcons.timeline,
+    builder: (_) => const ChipPagersPage(),
   ),
   ShowcaseEntry(
     title: 'Fields',
