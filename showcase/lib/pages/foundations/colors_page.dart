@@ -1,5 +1,6 @@
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flowin_showcase/pages/foundations/widgets/color_swatch_card.dart';
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The Flowin palette mapped onto Material's ColorScheme roles.
@@ -11,7 +12,7 @@ class ColorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = context.colorScheme;
 
-    return ShowcaseScaffold(
+    return ShowcaseScaffold.stacked(
       title: 'Colors',
       children: [
         ShowcaseSection(

@@ -1,4 +1,4 @@
-import 'package:flowin_showcase/pages/showcase_scaffold.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -55,7 +55,7 @@ class _ProfileExamplePageState extends State<ProfileExamplePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ShowcaseScaffold(
+    return ShowcaseScaffold.stacked(
       title: 'Create profile',
       children: [
         // Extra horizontal inset on top of the scaffold's own body padding.

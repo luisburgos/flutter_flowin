@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/catalogue.dart';
 import 'package:flowin_showcase/main.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';

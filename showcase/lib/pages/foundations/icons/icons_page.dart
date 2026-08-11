@@ -1,9 +1,9 @@
 import 'package:flowin_showcase/components/playground/flowin_playground.dart';
 import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
+import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icon_config.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icon_knobs.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icon_preview.dart';
-import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// One preset per step of the size scale.
@@ -56,25 +56,11 @@ class _IconsPageState extends State<IconsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Not ShowcaseScaffold: it wraps its children in a padded ListView, and
-    // the playground's panes run edge to edge and own their own scrolling.
-    return Scaffold(
-      appBar: FlowinAppBar(
-        height: kFlowinAppBarHeight + context.spacing.xxs,
-        leading: FlowinIconButton.text(
-          icon: FDIcons.back.toIcon(),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        trailing: const ThemeModeToggle(),
-        footer: Padding(
-          padding: EdgeInsetsGeometry.only(top: context.spacing.xxs),
-          child: const Divider(
-            height: FlowinDesignBorders.regular,
-            thickness: FlowinDesignBorders.regular,
-          ),
-        ),
-        child: Text('Icons', style: context.textTheme.titleMedium),
-      ),
+    // A self-laid-out body: the playground's panes run edge to edge and own
+    // their own scrolling, so the bar draws the hairline that separates them.
+    return ShowcaseScaffold(
+      title: 'Icons',
+      dividedAppBar: true,
       body: FlowinPlayground<IconConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
