@@ -60,7 +60,12 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
             key: ValueKey('${config.isScrollable}-${config.showDivider}'),
             isScrollable: config.isScrollable,
             showDivider: config.showDivider,
-            chipsPadding: EdgeInsets.all(context.spacing.sm),
+            // Horizontal only: a scrollable chip row is a fixed 48 tall, so
+            // vertical padding comes out of the chips rather than around
+            // them and crushes them until their labels spill out.
+            chipsPadding: EdgeInsets.symmetric(
+              horizontal: context.spacing.sm,
+            ),
             items: [
               for (final page in const ['Board', 'Timeline', 'Settings'])
                 FlowinChipGroupViewPage.child(
