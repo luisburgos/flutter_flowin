@@ -4,7 +4,6 @@ import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flowin_showcase/pages/cards/card_knobs.dart';
 import 'package:flowin_showcase/pages/cards/card_preview.dart';
-import 'package:flowin_showcase/pages/cards/dividers_section.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The width the card is previewed at.
@@ -13,12 +12,6 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// than any real caller gives it and the corner treatment stops being legible
 /// against the card's own length.
 const _cardMaxWidth = 420.0;
-
-/// The height the playground is given above the dividers section.
-///
-/// The playground splits into two panes that each want to fill their parent,
-/// so inside a scrolling column it needs a bounded height to lay out at all.
-const _playgroundHeight = 560.0;
 
 /// One preset per job a card is actually doing.
 const _presets = <FlowinPlaygroundPreset<CardConfig>>[
@@ -41,6 +34,15 @@ const _presets = <FlowinPlaygroundPreset<CardConfig>>[
     label: 'Filled from data',
     summary: 'A colour the theme cannot see, kept readable by the card.',
     config: CardConfig(fill: CardFill.dataDark, bordered: true),
+  ),
+  FlowinPlaygroundPreset(
+    label: 'Contrast',
+    summary: 'What the resolver buys: the same fill, resolved and inherited.',
+    config: CardConfig(
+      fill: CardFill.dataDark,
+      bordered: true,
+      compareContrast: true,
+    ),
   ),
   FlowinPlaygroundPreset(
     label: 'Media',
@@ -66,36 +68,20 @@ class _CardsPageState extends State<CardsPage> {
     return ShowcaseScaffold(
       title: 'Cards & surfaces',
       dividedAppBar: true,
-      body: ListView(
-        children: [
-          SizedBox(
-            height: _playgroundHeight,
-            child: FlowinPlayground<CardConfig>(
-              config: _config,
-              onChanged: (c) => setState(() => _config = c),
-              presets: _presets,
-              previewMaxWidth: _cardMaxWidth,
-              // Surface, not the default tint: the tint is outlineVariant,
-              // which is both the card's own themed fill and the colour its
-              // border is drawn in, so a themed or outlined card would vanish
-              // into the stage.
-              previewBackground: context.colorScheme.surface,
-              previewBuilder: (context, config) => CardDemo(config: config),
-              knobsBuilder: (context, config, onChanged) =>
-                  CardKnobs(config: config, onChanged: onChanged),
-            ),
-          ),
-          const Divider(height: FlowinDesignBorders.regular),
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              context.spacing.lg,
-              context.spacing.lg,
-              context.spacing.lg,
-              context.spacing.xxl,
-            ),
-            child: const DividersSection(),
-          ),
-        ],
+      body: FlowinPlayground<CardConfig>(
+        config: _config,
+        onChanged: (c) => setState(() => _config = c),
+        presets: _presets,
+        previewMaxWidth: _cardMaxWidth,
+        // Surface, not the default tint: the tint is outlineVariant, which is
+        // both the card's own themed fill and the colour its border is drawn
+        // in, so a themed or outlined card would vanish into the stage.
+        previewBackground: context.colorScheme.surface,
+        previewBuilder: (context, config) => config.compareContrast
+            ? CardContrastDemo(config: config)
+            : CardDemo(config: config),
+        knobsBuilder: (context, config, onChanged) =>
+            CardKnobs(config: config, onChanged: onChanged),
       ),
     );
   }

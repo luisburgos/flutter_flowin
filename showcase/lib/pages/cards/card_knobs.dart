@@ -39,10 +39,16 @@ class CardKnobs extends StatelessWidget {
           'card cannot see, so it is never resolved against',
     );
     final seedsTheResolver = FlowinKnobRelevance.when(
-      isRelevant: config.resolveForeground,
+      isRelevant: config.resolveForeground || config.compareContrast,
       reason:
           'the preference is what the resolver starts from, and nothing '
           'is being resolved',
+    );
+    final resolverIsChosen = FlowinKnobRelevance.when(
+      isRelevant: !config.compareContrast,
+      reason:
+          'the comparison shows both settings at once, so it drives this '
+          'rather than the knob',
     );
 
     return Column(
@@ -96,8 +102,14 @@ class CardKnobs extends StatelessWidget {
           relevantWhen: resolvesAgainstFill,
           children: [
             FlowinPlaygroundSwitchKnob(
+              label: 'Compare with inherited',
+              value: config.compareContrast,
+              onChanged: (v) => onChanged(config.copyWith(compareContrast: v)),
+            ),
+            FlowinPlaygroundSwitchKnob(
               label: 'Resolve against fill',
               value: config.resolveForeground,
+              relevantWhen: resolverIsChosen,
               onChanged: (v) =>
                   onChanged(config.copyWith(resolveForeground: v)),
             ),
