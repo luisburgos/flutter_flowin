@@ -3,7 +3,11 @@ import 'package:flowin_showcase/pages/buttons_page.dart';
 import 'package:flowin_showcase/pages/cards_page.dart';
 import 'package:flowin_showcase/pages/chips_page.dart';
 import 'package:flowin_showcase/pages/form_page.dart';
-import 'package:flowin_showcase/pages/foundations_page.dart';
+import 'package:flowin_showcase/pages/foundations/colors_page.dart';
+import 'package:flowin_showcase/pages/foundations/icons/icons_page.dart';
+import 'package:flowin_showcase/pages/foundations/radius_page.dart';
+import 'package:flowin_showcase/pages/foundations/spacing_page.dart';
+import 'package:flowin_showcase/pages/foundations/typography_page.dart';
 import 'package:flowin_showcase/pages/navigation_page.dart';
 import 'package:flowin_showcase/pages/profile_example_page.dart';
 import 'package:flowin_showcase/pages/sheets/sheets_page.dart';
@@ -85,10 +89,34 @@ class ShowcaseEntry {
 /// screen", and mixing the two makes both harder to scan.
 final foundationEntries = <ShowcaseEntry>[
   ShowcaseEntry(
-    title: 'Foundations',
-    subtitle: 'Colors, spacing, radius, typography, icons',
+    title: 'Typography',
+    subtitle: 'Baseline (Inter) and brand (Supreme) type scales',
+    icon: FDIcons.edit,
+    builder: (_) => const TypographyPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Colors',
+    subtitle: 'The palette mapped onto Material ColorScheme roles',
     icon: FDIcons.paint,
-    builder: (_) => const FoundationsPage(),
+    builder: (_) => const ColorsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Spacing',
+    subtitle: 'Semantic steps read from context.spacing',
+    icon: FDIcons.arrowRightLeft,
+    builder: (_) => const SpacingPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Radius',
+    subtitle: 'The corner-radius scale',
+    icon: FDIcons.board,
+    builder: (_) => const RadiusPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Icons',
+    subtitle: 'The semantic set, at any step of the size scale',
+    icon: FDIcons.setNeutral,
+    builder: (_) => const IconsPage(),
   ),
 ];
 

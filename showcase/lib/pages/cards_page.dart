@@ -265,6 +265,31 @@ class _ForegroundOnFillDemo extends StatelessWidget {
               ),
           ],
         ),
+        ShowcaseSection(
+          chipLabel: 'Divider',
+          title: 'Dividers',
+          description:
+              'There is no Flowin divider component: the native Divider and '
+              'VerticalDivider are styled entirely by the theme dividerTheme.',
+          children: [
+            const Text('Above the divider'),
+            const Divider(),
+            const Text('Below the divider'),
+            SizedBox(height: context.spacing.md),
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: context.spacing.md,
+                children: const [
+                  Text('Left'),
+                  VerticalDivider(),
+                  Text('Right'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
