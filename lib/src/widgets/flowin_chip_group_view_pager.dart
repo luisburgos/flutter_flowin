@@ -51,6 +51,7 @@ class FlowinChipGroupViewPager extends StatefulWidget {
     this.chipSpacing,
     this.chipRunSpacing,
     this.chipWrapAlignment = WrapAlignment.start,
+    this.showDivider = true,
     super.key,
   }) : assert(
          items.length > 0,
@@ -110,6 +111,14 @@ class FlowinChipGroupViewPager extends StatefulWidget {
   /// Optional padding forwarded to the chip row. When null, the chip row's own
   /// default padding applies.
   final EdgeInsets? chipsPadding;
+
+  /// Whether a hairline separates the chip row from the pages below it.
+  ///
+  /// The divider earns its place when the pages carry their own surface, since
+  /// it marks where the chrome ends. Turn it off when the chip row already
+  /// sits against a boundary — an app bar's own hairline above it, or pages
+  /// that supply one — so the two do not stack into a double rule.
+  final bool showDivider;
 
   /// Optional inter-chip spacing forwarded to the chip row. When null, the chip
   /// row's own default spacing applies.
@@ -188,7 +197,7 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
           chipRunSpacing: widget.chipRunSpacing,
           wrapAlignment: widget.chipWrapAlignment,
         ),
-        const Divider(),
+        if (widget.showDivider) const Divider(),
         Expanded(
           child: PageView.builder(
             controller: _pageController,

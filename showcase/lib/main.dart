@@ -3,7 +3,11 @@ import 'package:flowin_showcase/pages/buttons_page.dart';
 import 'package:flowin_showcase/pages/cards_page.dart';
 import 'package:flowin_showcase/pages/chips_page.dart';
 import 'package:flowin_showcase/pages/form_page.dart';
-import 'package:flowin_showcase/pages/foundations_page.dart';
+import 'package:flowin_showcase/pages/foundations/colors_page.dart';
+import 'package:flowin_showcase/pages/foundations/icons/icons_page.dart';
+import 'package:flowin_showcase/pages/foundations/radius_page.dart';
+import 'package:flowin_showcase/pages/foundations/spacing_page.dart';
+import 'package:flowin_showcase/pages/foundations/typography_page.dart';
 import 'package:flowin_showcase/pages/navigation_page.dart';
 import 'package:flowin_showcase/pages/profile_example_page.dart';
 import 'package:flowin_showcase/pages/sheets/sheets_page.dart';
@@ -78,18 +82,50 @@ class ShowcaseEntry {
   final WidgetBuilder builder;
 }
 
+/// The design tokens every component is built from.
+///
+/// Separated from [componentEntries] because a token is not a widget: these
+/// pages answer "what values exist" rather than "what can I place on a
+/// screen", and mixing the two makes both harder to scan.
+final foundationEntries = <ShowcaseEntry>[
+  ShowcaseEntry(
+    title: 'Typography',
+    subtitle: 'Baseline (Inter) and brand (Supreme) type scales',
+    icon: FDIcons.edit,
+    builder: (_) => const TypographyPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Colors',
+    subtitle: 'The palette mapped onto Material ColorScheme roles',
+    icon: FDIcons.paint,
+    builder: (_) => const ColorsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Spacing',
+    subtitle: 'Semantic steps read from context.spacing',
+    icon: FDIcons.arrowRightLeft,
+    builder: (_) => const SpacingPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Radius',
+    subtitle: 'The corner-radius scale',
+    icon: FDIcons.board,
+    builder: (_) => const RadiusPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Icons',
+    subtitle: 'The semantic set, at any step of the size scale',
+    icon: FDIcons.setNeutral,
+    builder: (_) => const IconsPage(),
+  ),
+];
+
 /// The component catalogue — one entry per widget family.
 ///
 /// Filed by what a thing *is*, not what it is used for, so a reader who arrives
 /// with a component name in hand finds it where they expect. Realistic
 /// compositions live in [exampleEntries] instead.
 final componentEntries = <ShowcaseEntry>[
-  ShowcaseEntry(
-    title: 'Foundations',
-    subtitle: 'Colors, spacing, radius, typography, icons',
-    icon: FDIcons.paint,
-    builder: (_) => const FoundationsPage(),
-  ),
   ShowcaseEntry(
     title: 'Buttons',
     subtitle: 'Button, IconButton, ItemButton — all variants and sizes',
@@ -176,7 +212,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         leading: FDIcons.scanFace.toIcon(),
         trailing: const ThemeModeToggle(),
         tabs: const [
-          FlowinTabItem(label: 'Components'),
+          FlowinTabItem(label: 'Library'),
           FlowinTabItem(label: 'Examples'),
         ],
       ),
@@ -186,7 +222,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabs,
               children: [
-                _EntryList(entries: componentEntries),
+                const _LibraryTab(),
                 _EntryList(entries: exampleEntries),
               ],
             ),
@@ -201,6 +237,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
+/// The Library tab: foundations and components, paged by chip.
+///
+/// Two lists rather than one, because a token and a widget answer different
+/// questions — "what values exist" versus "what can I place on a screen" — and
+/// a reader is usually after one or the other, not both.
+class _LibraryTab extends StatelessWidget {
+  const _LibraryTab();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlowinChipGroupViewPager(
+      // Wrap layout: two chips always fit, so nothing scrolls out of reach.
+      isScrollable: false,
+      // The tab bar above already draws a hairline, so the pager's own would
+      // be a second rule a few pixels below the first.
+      showDivider: false,
+      // Top padding only, unlike the paged scaffold: there the chips sit below
+      // an app bar that already gives them room, while here they butt straight
+      // against the tab bar. Nothing on the bottom — the pager adds its own
+      // gap below the chip row, and the list its own padding above the first
+      // entry, so a third would read as a trough.
+      chipsPadding: EdgeInsets.only(
+        left: context.spacing.md,
+        right: context.spacing.md,
+        top: context.spacing.sm,
+      ),
+      items: [
+        FlowinChipGroupViewPage.child(
+          label: 'Foundations',
+          child: _EntryList(entries: foundationEntries),
+        ),
+        FlowinChipGroupViewPage.child(
+          label: 'Components',
+          child: _EntryList(entries: componentEntries),
+        ),
+      ],
+    );
+  }
+}
+
 /// A list of showcase entries routing to their pages.
 class _EntryList extends StatelessWidget {
   const _EntryList({required this.entries});
@@ -210,7 +286,15 @@ class _EntryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.all(context.spacing.md),
+      // Tighter on top: whatever sits above the list — a chip row on Library,
+      // the tab bar on Examples — already supplies its own gap, so a full step
+      // here would double it.
+      padding: EdgeInsets.fromLTRB(
+        context.spacing.md,
+        context.spacing.xs,
+        context.spacing.md,
+        context.spacing.md,
+      ),
       itemCount: entries.length,
       separatorBuilder: (_, _) => SizedBox(height: context.spacing.xs),
       itemBuilder: (context, index) {
