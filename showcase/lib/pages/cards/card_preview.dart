@@ -16,8 +16,30 @@ const _dataLight = Color(0xFFFFFFFF);
 /// same request is kept in one case and dropped in the other.
 const _cream = Color(0xFFFFF8E1);
 
-/// The height the card is previewed at.
-const _cardHeight = 96.0;
+/// Draws the bounds a card's margin holds it away from.
+///
+/// Margin is space *outside* the card, so on an empty stage it is invisible —
+/// the card just appears smaller, which is what the padding knob does too.
+/// A dashed edge marks where the card would sit at zero margin, so the two
+/// knobs read as the different things they are.
+class CardMarginBounds extends StatelessWidget {
+  /// {@macro card_margin_bounds}
+  const CardMarginBounds({required this.child, super.key});
+
+  /// The card, margin and all.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: context.colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(FlowinDesignRadius.radius400),
+      ),
+      child: child,
+    );
+  }
+}
 
 /// The card under test, built from a [CardConfig].
 ///
@@ -87,7 +109,14 @@ class CardDemo extends StatelessWidget {
               ),
             ),
           )
+        // Min height, so an intrinsic card is the height of its content rather
+        // than of whatever the stage would give it. One line deliberately: it
+        // clears the compact step with its default inset, so the demo does not
+        // open already overflowing. Turning the padding up past what a pinned
+        // height can hold is a real thing to discover, but it should be
+        // something a reader reaches rather than the state they arrive in.
         : Row(
+            mainAxisSize: MainAxisSize.min,
             spacing: context.spacing.xs,
             children: [
               FDIcons.done.toIcon(size: FlowinDesignIconSize.sm),
@@ -102,14 +131,17 @@ class CardDemo extends StatelessWidget {
     // corners it is being clipped to.
     final padding = config.clipChild
         ? EdgeInsets.zero
-        : switch (config.padding) {
-            CardPadding.none => EdgeInsets.zero,
-            CardPadding.snug => EdgeInsets.all(context.spacing.xs),
-            CardPadding.comfortable => EdgeInsets.all(context.spacing.md),
-          };
+        : config.padding.all(context);
 
     return FlowinCard(
-      size: const Size(double.infinity, _cardHeight),
+      // Null rather than a zero height when intrinsic: FlowinCard reads
+      // `size?.height`, so only a null Size leaves the height unset — and
+      // `Size.fromWidth` would pass 0, collapsing the card rather than sizing
+      // it. Dropping the width with it costs nothing, since the card already
+      // stretches to its parent without one.
+      size: config.intrinsicHeight
+          ? null
+          : Size(double.infinity, config.height.value),
       borderRadius: _borderRadius,
       backgroundColor: _backgroundColor,
       borderSide: borderSide,
@@ -117,6 +149,7 @@ class CardDemo extends StatelessWidget {
       resolveForeground: resolveOverride ?? config.resolveForeground,
       foregroundColor: config.preferCream ? _cream : null,
       clipChild: config.clipChild,
+      margin: config.margin.all(context),
       padding: padding,
       child: child,
     );

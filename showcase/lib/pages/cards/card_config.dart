@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// Which corner treatment the previewed card carries.
@@ -15,23 +16,27 @@ enum CardRadius {
   asymmetric,
 }
 
-/// How much room the card leaves around its content.
+/// The heights the previewed card can be pinned to.
 ///
-/// A card's padding is its own parameter rather than the child's, so a caller
-/// picking one is choosing how much the surface breathes rather than how the
-/// content is laid out.
-enum CardPadding {
-  /// No inset — the content sits against the card's edge.
-  ///
-  /// What a caller wants when the child paints its own surface, and what
-  /// clipping is for.
-  none,
+/// Its own scale rather than [SpacingStep]: the spacing scale tops out at 48,
+/// which is shorter than a card with a single line of content and its default
+/// padding, so reusing it would offer mostly heights that clip. These are
+/// space tokens still — a card height is a sizing decision, but the values it
+/// lands on are the system's, not arbitrary pixels.
+enum CardHeight {
+  /// 64 — a compact row.
+  compact(FlowinDesignSpace.space1600),
 
-  /// A tight inset, for dense rows where vertical space is scarce.
-  snug,
+  /// 96 — the height a single-line card sits at comfortably.
+  regular(FlowinDesignSpace.space2400),
 
-  /// The inset a standalone card usually wants.
-  comfortable,
+  /// 160 — room for a title, body and an action.
+  tall(FlowinDesignSpace.space4000);
+
+  const CardHeight(this.value);
+
+  /// The height in logical pixels.
+  final double value;
 }
 
 /// Which fill the previewed card carries.
@@ -70,7 +75,10 @@ class CardConfig {
     this.preferCream = false,
     this.clipChild = false,
     this.compareContrast = false,
-    this.padding = CardPadding.comfortable,
+    this.padding = SpacingStep.md,
+    this.margin = SpacingStep.none,
+    this.intrinsicHeight = false,
+    this.height = CardHeight.regular,
   });
 
   /// The corner treatment.
@@ -115,7 +123,26 @@ class CardConfig {
   /// Inert while [clipChild] is on: a clipped child is meant to reach the
   /// card's corners, and an inset would hold it away from the very edges it is
   /// being clipped to.
-  final CardPadding padding;
+  final SpacingStep padding;
+
+  /// How much room the card keeps outside itself.
+  ///
+  /// Distinct from [padding] in who it pushes away: padding holds the content
+  /// off the card's edge, margin holds the card off its neighbours. Both are
+  /// the card's own parameters, and reading them side by side is the clearest
+  /// way to see which is which.
+  final SpacingStep margin;
+
+  /// Whether the card takes its height from its content.
+  ///
+  /// The question behind `size`: most callers never pin a height and let the
+  /// content decide, which is what a null `size` does. Pinning one is the
+  /// exception — a row that has to align with its neighbours — so the demo
+  /// shows both rather than only the pinned case it happened to be built for.
+  final bool intrinsicHeight;
+
+  /// The height the card is pinned to when not [intrinsicHeight].
+  final CardHeight height;
 
   /// A copy with the given fields replaced.
   CardConfig copyWith({
@@ -127,7 +154,10 @@ class CardConfig {
     bool? preferCream,
     bool? clipChild,
     bool? compareContrast,
-    CardPadding? padding,
+    SpacingStep? padding,
+    SpacingStep? margin,
+    bool? intrinsicHeight,
+    CardHeight? height,
   }) => CardConfig(
     radius: radius ?? this.radius,
     fill: fill ?? this.fill,
@@ -138,6 +168,9 @@ class CardConfig {
     clipChild: clipChild ?? this.clipChild,
     compareContrast: compareContrast ?? this.compareContrast,
     padding: padding ?? this.padding,
+    margin: margin ?? this.margin,
+    intrinsicHeight: intrinsicHeight ?? this.intrinsicHeight,
+    height: height ?? this.height,
   );
 
   @override
@@ -151,7 +184,10 @@ class CardConfig {
       other.preferCream == preferCream &&
       other.clipChild == clipChild &&
       other.compareContrast == compareContrast &&
-      other.padding == padding;
+      other.padding == padding &&
+      other.margin == margin &&
+      other.intrinsicHeight == intrinsicHeight &&
+      other.height == height;
 
   @override
   int get hashCode => Object.hash(
@@ -164,5 +200,8 @@ class CardConfig {
     clipChild,
     compareContrast,
     padding,
+    margin,
+    intrinsicHeight,
+    height,
   );
 }
