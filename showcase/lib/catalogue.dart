@@ -1,5 +1,7 @@
 import 'package:flowin_showcase/components/showcase/showcase_entry.dart';
-import 'package:flowin_showcase/pages/buttons_page.dart';
+import 'package:flowin_showcase/pages/buttons/buttons_page.dart';
+import 'package:flowin_showcase/pages/buttons/icon_buttons_page.dart';
+import 'package:flowin_showcase/pages/buttons/item_buttons_page.dart';
 import 'package:flowin_showcase/pages/cards_page.dart';
 import 'package:flowin_showcase/pages/chips_page.dart';
 import 'package:flowin_showcase/pages/form_page.dart';
@@ -59,9 +61,21 @@ final foundationEntries = <ShowcaseEntry>[
 final componentEntries = <ShowcaseEntry>[
   ShowcaseEntry(
     title: 'Buttons',
-    subtitle: 'Button, IconButton, ItemButton — all variants and sizes',
+    subtitle: 'Labelled actions across every variant, size and state',
     icon: FDIcons.done,
     builder: (_) => const ButtonsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Icon buttons',
+    subtitle: 'Circular, icon-only actions',
+    icon: FDIcons.plus,
+    builder: (_) => const IconButtonsPage(),
+  ),
+  ShowcaseEntry(
+    title: 'Item buttons',
+    subtitle: 'Full-width, left-aligned list and menu rows',
+    icon: FDIcons.timer,
+    builder: (_) => const ItemButtonsPage(),
   ),
   ShowcaseEntry(
     title: 'Chips',
