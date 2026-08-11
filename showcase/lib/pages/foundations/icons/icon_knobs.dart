@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flowin_showcase/pages/foundations/icons/icon_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -23,7 +23,12 @@ class IconKnobs extends StatelessWidget {
         FlowinPlaygroundKnobGroup(
           title: 'Size',
           children: [
-            FlowinShowcaseDropdown<FlowinDesignIconSize>(
+            // A slider, not a dropdown: the size scale is ordered, and sweeping
+            // it is how a reader finds the step where a glyph stops being
+            // legible. The whole grid resizes at once, so the sweep reads as a
+            // single continuous change rather than six separate choices.
+            FlowinPlaygroundStepKnob<FlowinDesignIconSize>(
+              label: 'Icon size',
               value: config.size,
               values: FlowinDesignIconSize.values,
               // The pixel value is the fact a reader needs; the token name

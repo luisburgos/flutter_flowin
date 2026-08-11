@@ -1,5 +1,6 @@
 import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flowin_showcase/pages/fields/swatch_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -70,10 +71,16 @@ class SwatchKnobs extends StatelessWidget {
           title: 'Size',
           relevantWhen: exposesNoSize,
           children: [
-            FlowinPlaygroundSwitchKnob(
-              label: 'Large',
-              value: config.large,
-              onChanged: (v) => onChanged(config.copyWith(large: v)),
+            // A slider, not a switch: the ring and gap are fixed token widths
+            // that do not scale with the swatch, so sweeping the diameter is
+            // how a reader watches the selection ring go from dominant to
+            // hairline. Two hardcoded sizes showed only the endpoints.
+            FlowinPlaygroundStepKnob<SwatchSize>(
+              label: 'Diameter',
+              value: config.size,
+              values: SwatchSize.values,
+              labelOf: (v) => '${v.name} — ${v.value.toInt()}px',
+              onChanged: (v) => onChanged(config.copyWith(size: v)),
             ),
           ],
         ),

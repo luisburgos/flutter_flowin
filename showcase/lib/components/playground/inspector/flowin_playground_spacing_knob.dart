@@ -1,4 +1,5 @@
 import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
+import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// A step of the Flowin spacing scale, as a knob picks it.
@@ -54,15 +55,10 @@ enum SpacingStep {
 
 /// A knob that steps along the Flowin spacing scale.
 ///
-/// A slider rather than a dropdown, because these values are an *ordered
-/// scale* and a dropdown presents its choices as an unordered set. The
-/// ordering is the part worth showing: a reader wants to sweep the scale and
-/// watch where a layout starts to break, which picking one item at a time
-/// discourages.
-///
-/// Snapped to the scale's own steps rather than free pixels. A playground that
-/// let a caller dial 17px would be demonstrating a value the design system
-/// does not have.
+/// A thin wrapper over [FlowinPlaygroundStepKnob]: the slider mechanics are
+/// the same for any ordered scale, and only the readout is spacing-specific.
+/// The steps resolve against the theme rather than quoting constants, so a
+/// demo cannot go stale if the scale moves.
 class FlowinPlaygroundSpacingKnob extends StatelessWidget {
   /// {@macro flowin_playground_spacing_knob}
   const FlowinPlaygroundSpacingKnob({
@@ -87,42 +83,15 @@ class FlowinPlaygroundSpacingKnob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!relevantWhen.isRelevant) return const SizedBox.shrink();
-
-    const steps = SpacingStep.values;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // The token name and its resolved value together: the name alone does
-        // not say how big md is, and the number alone does not say which step
-        // a caller would write.
-        Row(
-          children: [
-            Expanded(child: Text(label, style: context.textTheme.bodyLarge)),
-            Text(
-              '${value.name} — ${value.resolve(context).toInt()}px',
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-        // Raw Material, deliberately, like the other knobs: the package has no
-        // slider, and a knob is scaffolding for driving a demo rather than
-        // anything being demonstrated.
-        //
-        // Divisions are one fewer than the steps: they count the intervals
-        // between positions, not the positions themselves, so passing the step
-        // count would put a detent between every pair of real values.
-        Slider(
-          value: value.index.toDouble(),
-          max: (steps.length - 1).toDouble(),
-          divisions: steps.length - 1,
-          label: value.name,
-          onChanged: (v) => onChanged(steps[v.round()]),
-        ),
-      ],
+    return FlowinPlaygroundStepKnob<SpacingStep>(
+      label: label,
+      value: value,
+      values: SpacingStep.values,
+      // Resolved here rather than in the generic knob: only a spacing step
+      // knows it has a themed value to look up.
+      labelOf: (step) => '${step.name} — ${step.resolve(context).toInt()}px',
+      relevantWhen: relevantWhen,
+      onChanged: onChanged,
     );
   }
 }
