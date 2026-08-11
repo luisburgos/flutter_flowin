@@ -46,19 +46,21 @@ class SheetKnobs extends StatelessWidget {
             ),
           ],
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: FlowinDesignSpace.space600,
+        FlowinPlaygroundKnobGroup(
+          title: 'Body',
           children: [
             FlowinPlaygroundChoiceKnob<BodyChoice>(
-              label: 'Body',
               value: config.body,
               values: BodyChoice.values,
               labelOf: (v) => v.label,
               onChanged: (v) => onChanged(config.copyWith(body: v)),
             ),
+          ],
+        ),
+        FlowinPlaygroundKnobGroup(
+          title: 'Footer',
+          children: [
             FlowinPlaygroundChoiceKnob<FooterChoice>(
-              label: 'Footer',
               value: config.footer,
               values: FooterChoice.values,
               labelOf: (v) => v.label,
