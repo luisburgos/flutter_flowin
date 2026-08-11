@@ -3,8 +3,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroup] preview.
 ///
-/// `height` stays deliberately undriven: it is a free double with no token
-/// scale behind it, so a knob would invent values the system does not have.
+/// Deliberately-undriven parameters are recorded in flowin_pm#35.
 @immutable
 class ChipGroupConfig {
   /// {@macro chip_group_config}
