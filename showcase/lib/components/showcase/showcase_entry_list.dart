@@ -4,18 +4,19 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The narrowest a tile may be laid out at.
 ///
-/// Below this a two-line subtitle starts wrapping to three or four lines and
-/// the column stops reading as a scannable list, so the grid drops a column
-/// rather than squeezing one further. Derived from the longest subtitle in the
-/// catalogue (about 60 characters) staying within two lines.
+/// Below this a subtitle starts wrapping past two lines and the column stops
+/// reading as a scannable list, so the grid drops a column rather than
+/// squeezing one further. The longest subtitles in the catalogue run to about
+/// 60 characters and do take two lines at this width — the tile is sized to
+/// stay readable there, not to keep every subtitle on one line.
 const _minTileWidth = 280.0;
 
 /// The most columns the grid will use.
 ///
-/// A catalogue is scanned by title, and past three columns the eye has to
-/// sweep further than it saves — the row becomes a paragraph. Capped rather
-/// than left to divide the available width so an ultrawide window does not
-/// spread eight entries into one thin line.
+/// Capped rather than left to divide the available width: without a ceiling an
+/// ultrawide window would spread the catalogue into one thin line of tiles,
+/// and a row scanned by title stops being scannable once it reads as a
+/// paragraph.
 const _maxColumns = 4;
 
 /// A list of showcase entries, each routing to its page.
