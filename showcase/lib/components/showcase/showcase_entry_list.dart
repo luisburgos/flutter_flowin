@@ -8,7 +8,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// the column stops reading as a scannable list, so the grid drops a column
 /// rather than squeezing one further. Derived from the longest subtitle in the
 /// catalogue (about 60 characters) staying within two lines.
-const _minTileWidth = 320.0;
+const _minTileWidth = 280.0;
 
 /// The most columns the grid will use.
 ///
@@ -16,7 +16,7 @@ const _minTileWidth = 320.0;
 /// sweep further than it saves — the row becomes a paragraph. Capped rather
 /// than left to divide the available width so an ultrawide window does not
 /// spread eight entries into one thin line.
-const _maxColumns = 3;
+const _maxColumns = 4;
 
 /// A list of showcase entries, each routing to its page.
 ///
