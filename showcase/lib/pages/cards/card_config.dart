@@ -15,6 +15,25 @@ enum CardRadius {
   asymmetric,
 }
 
+/// How much room the card leaves around its content.
+///
+/// A card's padding is its own parameter rather than the child's, so a caller
+/// picking one is choosing how much the surface breathes rather than how the
+/// content is laid out.
+enum CardPadding {
+  /// No inset — the content sits against the card's edge.
+  ///
+  /// What a caller wants when the child paints its own surface, and what
+  /// clipping is for.
+  none,
+
+  /// A tight inset, for dense rows where vertical space is scarce.
+  snug,
+
+  /// The inset a standalone card usually wants.
+  comfortable,
+}
+
 /// Which fill the previewed card carries.
 ///
 /// The distinction that matters is not which colour but where it came from:
@@ -51,6 +70,7 @@ class CardConfig {
     this.preferCream = false,
     this.clipChild = false,
     this.compareContrast = false,
+    this.padding = CardPadding.comfortable,
   });
 
   /// The corner treatment.
@@ -90,6 +110,13 @@ class CardConfig {
   /// half of it. Turning this on renders the same card both ways at once.
   final bool compareContrast;
 
+  /// How much room the card leaves around its content.
+  ///
+  /// Inert while [clipChild] is on: a clipped child is meant to reach the
+  /// card's corners, and an inset would hold it away from the very edges it is
+  /// being clipped to.
+  final CardPadding padding;
+
   /// A copy with the given fields replaced.
   CardConfig copyWith({
     CardRadius? radius,
@@ -100,6 +127,7 @@ class CardConfig {
     bool? preferCream,
     bool? clipChild,
     bool? compareContrast,
+    CardPadding? padding,
   }) => CardConfig(
     radius: radius ?? this.radius,
     fill: fill ?? this.fill,
@@ -109,6 +137,7 @@ class CardConfig {
     preferCream: preferCream ?? this.preferCream,
     clipChild: clipChild ?? this.clipChild,
     compareContrast: compareContrast ?? this.compareContrast,
+    padding: padding ?? this.padding,
   );
 
   @override
@@ -121,7 +150,8 @@ class CardConfig {
       other.resolveForeground == resolveForeground &&
       other.preferCream == preferCream &&
       other.clipChild == clipChild &&
-      other.compareContrast == compareContrast;
+      other.compareContrast == compareContrast &&
+      other.padding == padding;
 
   @override
   int get hashCode => Object.hash(
@@ -133,5 +163,6 @@ class CardConfig {
     preferCream,
     clipChild,
     compareContrast,
+    padding,
   );
 }

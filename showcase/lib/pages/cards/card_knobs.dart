@@ -11,6 +11,13 @@ String _radiusLabel(CardRadius radius) => switch (radius) {
   CardRadius.asymmetric => 'Asymmetric',
 };
 
+/// Display text for each padding choice.
+String _paddingLabel(CardPadding padding) => switch (padding) {
+  CardPadding.none => 'None',
+  CardPadding.snug => 'Snug',
+  CardPadding.comfortable => 'Comfortable',
+};
+
 /// Display text for each fill choice.
 String _fillLabel(CardFill fill) => switch (fill) {
   CardFill.themed => 'From the theme',
@@ -50,6 +57,12 @@ class CardKnobs extends StatelessWidget {
           'the comparison shows both settings at once, so it drives this '
           'rather than the knob',
     );
+    final contentIsInset = FlowinKnobRelevance.when(
+      isRelevant: !config.clipChild,
+      reason:
+          'a clipped child is meant to reach the corners it is clipped to, '
+          'so it takes no inset',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,6 +87,18 @@ class CardKnobs extends StatelessWidget {
               values: CardFill.values,
               labelOf: _fillLabel,
               onChanged: (v) => onChanged(config.copyWith(fill: v)),
+            ),
+          ],
+        ),
+        FlowinPlaygroundKnobGroup(
+          title: 'Padding',
+          relevantWhen: contentIsInset,
+          children: [
+            FlowinShowcaseDropdown<CardPadding>(
+              value: config.padding,
+              values: CardPadding.values,
+              labelOf: _paddingLabel,
+              onChanged: (v) => onChanged(config.copyWith(padding: v)),
             ),
           ],
         ),
