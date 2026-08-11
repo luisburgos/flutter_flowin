@@ -87,16 +87,26 @@ class CardDemo extends StatelessWidget {
               ),
             ),
           )
-        : Padding(
-            padding: EdgeInsets.all(context.spacing.md),
-            child: Row(
-              spacing: context.spacing.xs,
-              children: [
-                FDIcons.done.toIcon(size: FlowinDesignIconSize.sm),
-                const Expanded(child: Text('Card content')),
-              ],
-            ),
+        : Row(
+            spacing: context.spacing.xs,
+            children: [
+              FDIcons.done.toIcon(size: FlowinDesignIconSize.sm),
+              const Expanded(child: Text('Card content')),
+            ],
           );
+
+    // The card's own padding rather than a Padding around the child: the inset
+    // is the card's parameter, and wrapping the child instead would leave the
+    // knob demonstrating a widget the caller supplies rather than the one on
+    // show. A clipped child takes none regardless — it is meant to reach the
+    // corners it is being clipped to.
+    final padding = config.clipChild
+        ? EdgeInsets.zero
+        : switch (config.padding) {
+            CardPadding.none => EdgeInsets.zero,
+            CardPadding.snug => EdgeInsets.all(context.spacing.xs),
+            CardPadding.comfortable => EdgeInsets.all(context.spacing.md),
+          };
 
     return FlowinCard(
       size: const Size(double.infinity, _cardHeight),
@@ -107,6 +117,7 @@ class CardDemo extends StatelessWidget {
       resolveForeground: resolveOverride ?? config.resolveForeground,
       foregroundColor: config.preferCream ? _cream : null,
       clipChild: config.clipChild,
+      padding: padding,
       child: child,
     );
   }

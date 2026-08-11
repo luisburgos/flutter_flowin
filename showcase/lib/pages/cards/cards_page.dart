@@ -45,13 +45,18 @@ const _presets = <FlowinPlaygroundPreset<CardConfig>>[
     ),
   ),
   FlowinPlaygroundPreset(
+    label: 'Dense',
+    summary: 'A tight inset, for a card repeated down a list.',
+    config: CardConfig(padding: CardPadding.snug),
+  ),
+  FlowinPlaygroundPreset(
     label: 'Media',
     summary: 'Content painted to the edges, held inside the smooth corners.',
     config: CardConfig(radius: CardRadius.large, clipChild: true),
   ),
 ];
 
-/// A playground for [FlowinCard], with the theme's dividers below it.
+/// A playground for [FlowinCard].
 class CardsPage extends StatefulWidget {
   /// {@macro cards_page}
   const CardsPage({super.key});
