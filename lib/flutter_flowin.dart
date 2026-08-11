@@ -8,13 +8,15 @@ library;
 
 export 'package:flutter/material.dart';
 
+export 'src/components/action_sheet/flowin_action_sheet.dart';
+export 'src/components/action_sheet/footer/flowin_action_sheet_footer.dart';
+export 'src/components/action_sheet/header/flowin_action_sheet_header.dart';
 export 'src/extensions/build_context_extensions.dart';
 export 'src/foundations/foundations.dart';
 export 'src/theme/flowin_semantic_colors.dart';
 export 'src/theme/flowin_spacing.dart';
 export 'src/theme/flowin_theme.dart';
 export 'src/theme/flowin_tokens.dart';
-export 'src/widgets/flowin_action_sheet.dart';
 export 'src/widgets/flowin_app_bar.dart';
 export 'src/widgets/flowin_button.dart';
 export 'src/widgets/flowin_card.dart';
