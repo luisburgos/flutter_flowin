@@ -16,6 +16,7 @@ dependencies:
       url: https://github.com/luisburgos/ios_color_picker
       ref: master
   lucide_icons_flutter: ^3.1.15
+  meta: ^1.17.0
 
 dev_dependencies:
   flutter_test:

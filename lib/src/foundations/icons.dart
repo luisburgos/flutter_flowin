@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/icon_size.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:meta/meta.dart';
 
 /// {@template fd_icon}
 /// Renders a Flowin semantic icon ([FDIcons]) at a [FlowinDesignIconSize],
@@ -107,12 +108,12 @@ enum FDIcons {
 
   /// Forces the backing icon library to initialize.
   ///
-  /// Apps built on `FlowinTheme` do not need to call this: the theme calls it
-  /// while building, which is early enough and shallow enough. Call it once
-  /// from `main()`, before `runApp`, only when rendering Flowin icons on the
-  /// web *without* a Flowin theme.
+  /// Internal: `FlowinTheme` calls this while building, which covers every
+  /// supported way of rendering Flowin icons. Rendering them with no Flowin
+  /// theme anywhere in the tree is not a supported configuration, so there is
+  /// nothing for a consumer to call.
   ///
-  /// **Why this is needed.** The `lucide_icons_flutter` library declares ~28k
+  /// **Why this exists.** The `lucide_icons_flutter` library declares ~28k
   /// `static const IconData` fields in a single class. In debug web builds
   /// (DDC), a library is initialized lazily behind a `Proxy` on first property
   /// access, and that initialization recursively links the library's
@@ -127,7 +128,8 @@ enum FDIcons {
   /// that one-time cost off the deep stack, so every later access finds it
   /// already initialized. Release web builds (dart2js/Wasm) and all native
   /// targets are unaffected, where this is a cheap no-op.
-  static void warmUp() {
+  @internal
+  static void internalWarmUp() {
     // The specific icon is irrelevant: one access initializes the library.
     FDIcons.board.iconData;
   }
