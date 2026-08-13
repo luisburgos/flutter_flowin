@@ -46,6 +46,10 @@ coverage
 # FVM Version Cache
 .fvm/
 
+# Example app build output
+example/build/
+example/.dart_tool/
+
 # Showcase experiment build output
 showcase/build/
 showcase/.dart_tool/

@@ -55,16 +55,16 @@ jobs:
       # keeps the 100% gate meaningful: it measures the code we actually wrote.
       coverage_excludes: "lib/src/vendor/**"
 
-  # The showcase is a separate package, excluded from the root analysis
-  # options, so the job above never sees it. Without this it breaks silently
-  # whenever the library's API changes.
+  # The showcase and the example are separate packages, excluded from the root
+  # analysis options, so the job above never sees them. Without this they break
+  # silently whenever the library's API changes.
   sub_packages:
     needs: flutter_version
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        package: [showcase]
+        package: [showcase, example]
     defaults:
       run:
         working-directory: ${{ matrix.package }}
