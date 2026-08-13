@@ -90,13 +90,21 @@ open coverage/index.html
 from [Conventional Commit][conventional_commits_link] subjects by
 [conventional-changelog][conventional_changelog_link].
 
-First-time setup, then regenerate the newest release section after tagging a
-version:
+First-time setup, then regenerate the newest release section:
 
 ```sh
 npm install        # once, to fetch the changelog tooling
 npm run changelog
 ```
+
+**Bump the version before generating, not after.** The `-s` flag in the script
+means "same release": the generator writes a section for the version currently
+in `pubspec.yaml`, collecting every commit since the previous tag. Running it
+before the bump files new work under the version already released.
+
+It also *prepends* rather than merges, so running it twice for the same version
+produces two headings. To rewrite a section, clear the file (or delete the
+heading) and regenerate.
 
 Unlike the sibling Flutter apps, which use the stock `angular` preset, this
 package extends `conventionalcommits` via
