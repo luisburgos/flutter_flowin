@@ -14,11 +14,12 @@ import 'package:flowin_showcase/app_info/i_app_info_service.dart';
 /// same version, so the two agree today — but they agree by convention, not by
 /// construction, and nothing stops the shell from being versioned separately.
 /// Reading the package's own version keeps the label correct either way.
-const flowinVersion = '0.2.0';
+const flowinVersion = '0.1.0';
 
 /// The design system's build number, mirroring the `+<build>` suffix in the
-/// package's `pubspec.yaml`.
-const flowinBuildNumber = '2';
+/// package's `pubspec.yaml`. Empty when the version carries no suffix, as it
+/// does today: a build number is meaningless for a library.
+const flowinBuildNumber = '';
 
 /// Reports the version of `flutter_flowin` the showcase is built against.
 class FlowinAppInfoService implements IAppInfoService {
