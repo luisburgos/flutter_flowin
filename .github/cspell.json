@@ -20,6 +20,7 @@
   "useGitignore": true,
   "words": [
     "changelogrc",
+    "diffable",
     "Flowin",
     "flutter_flowin",
     "fvm",
