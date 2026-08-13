@@ -29,7 +29,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 final foundationEntries = <ShowcaseEntry>[
   ShowcaseEntry(
     title: 'Typography',
-    subtitle: 'Baseline (Inter) and brand (Supreme) type scales',
+    subtitle: 'The Inter type scale, mapped onto Material roles',
     icon: FDIcons.edit,
     builder: (_) => const TypographyPage(),
   ),

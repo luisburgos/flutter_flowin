@@ -9,12 +9,6 @@ import 'package:flutter/material.dart';
 /// looks close enough to Inter on iOS to pass unnoticed.
 const String interFontFamily = 'packages/flutter_flowin/Inter';
 
-/// The Supreme family as registered by the Flutter asset bundle.
-///
-/// Package-declared fonts are namespaced `packages/<package>/<family>`; see
-/// [interFontFamily].
-const String supremeFontFamily = 'packages/flutter_flowin/Supreme';
-
 /// {@template flowin_baseline_text_tokens}
 /// The baseline Flowin text styles, built on the Inter typeface.
 ///
@@ -124,78 +118,6 @@ class FlowinBaselineTextTokens {
   );
 }
 
-/// {@template flowin_brand_text_tokens}
-/// The expressive Flowin brand text styles, built on the custom `Supreme`
-/// typeface (registered via `pubspec.yaml`).
-/// {@endtemplate}
-class FlowinBrandTextTokens {
-  /// {@macro flowin_brand_text_tokens}
-  const FlowinBrandTextTokens();
-
-  /// Display / XL.
-  static TextStyle get displayXL => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 160,
-    fontWeight: FontWeight.w700,
-    height: 1,
-    letterSpacing: -2,
-  );
-
-  /// Display / LG.
-  static TextStyle get displayLG => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 80,
-    fontWeight: FontWeight.w700,
-    height: 1,
-    letterSpacing: -1,
-  );
-
-  /// Headline / large.
-  static TextStyle get headlineLarge => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 48,
-    fontWeight: FontWeight.w700,
-    height: 56 / 48,
-    letterSpacing: 0,
-  );
-
-  /// Headline / small.
-  static TextStyle get headlineSmall => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 24,
-    fontWeight: FontWeight.w700,
-    height: 32 / 24,
-    letterSpacing: 0.2,
-  );
-
-  /// Title / medium.
-  static TextStyle get titleMedium => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 16,
-    fontWeight: FontWeight.w700,
-    height: 24 / 16,
-    letterSpacing: 0.2,
-  );
-
-  /// Title / small.
-  static TextStyle get titleSmall => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 14,
-    fontWeight: FontWeight.w700,
-    height: 20 / 14,
-    letterSpacing: 0.2,
-  );
-
-  /// Body / large.
-  static TextStyle get bodyLarge => const TextStyle(
-    fontFamily: supremeFontFamily,
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    height: 24 / 16,
-    letterSpacing: 0.5,
-  );
-}
-
 /// Caption styles that have no Material [TextTheme] slot, exposed as
 /// extension getters so call sites read `textTheme.captionLarge`.
 extension FlowinBaselineTextTheme on TextTheme {
@@ -204,31 +126,6 @@ extension FlowinBaselineTextTheme on TextTheme {
 
   /// Caption / medium.
   TextStyle get captionMedium => FlowinBaselineTextTokens.captionMedium;
-}
-
-/// The expressive Supreme brand styles, exposed as extension getters so call
-/// sites read `textTheme.brandDisplayXL`.
-extension FlowinBrandTextTheme on TextTheme {
-  /// Display / XL.
-  TextStyle get brandDisplayXL => FlowinBrandTextTokens.displayXL;
-
-  /// Display / LG.
-  TextStyle get brandDisplayLG => FlowinBrandTextTokens.displayLG;
-
-  /// Headline / large.
-  TextStyle get brandHeadlineLarge => FlowinBrandTextTokens.headlineLarge;
-
-  /// Headline / small.
-  TextStyle get brandHeadlineSmall => FlowinBrandTextTokens.headlineSmall;
-
-  /// Title / medium.
-  TextStyle get brandTitleMedium => FlowinBrandTextTokens.titleMedium;
-
-  /// Title / small.
-  TextStyle get brandTitleSmall => FlowinBrandTextTokens.titleSmall;
-
-  /// Body / large.
-  TextStyle get brandBodyLarge => FlowinBrandTextTokens.bodyLarge;
 }
 
 /// {@template flowin_typefaces}

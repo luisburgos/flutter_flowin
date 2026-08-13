@@ -26,7 +26,6 @@ void main() {
       // Package-declared fonts resolve as `packages/<package>/<family>`;
       // the bare family name silently falls back to the platform font.
       expect(interFontFamily, 'packages/flutter_flowin/Inter');
-      expect(supremeFontFamily, 'packages/flutter_flowin/Supreme');
     });
 
     group('FlowinBaselineTextTokens', () {
@@ -123,75 +122,6 @@ void main() {
       });
     });
 
-    group('FlowinBrandTextTokens', () {
-      test('can be constructed', () {
-        expect(FlowinBrandTextTokens(), isA<FlowinBrandTextTokens>());
-      });
-
-      test('displayXL has the expected metrics', () {
-        final style = FlowinBrandTextTokens.displayXL;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 160);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 1);
-        expect(style.letterSpacing, -2);
-      });
-
-      test('displayLG has the expected metrics', () {
-        final style = FlowinBrandTextTokens.displayLG;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 80);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 1);
-        expect(style.letterSpacing, -1);
-      });
-
-      test('headlineLarge has the expected metrics', () {
-        final style = FlowinBrandTextTokens.headlineLarge;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 48);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 56 / 48);
-        expect(style.letterSpacing, 0);
-      });
-
-      test('headlineSmall has the expected metrics', () {
-        final style = FlowinBrandTextTokens.headlineSmall;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 24);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 32 / 24);
-        expect(style.letterSpacing, 0.2);
-      });
-
-      test('titleMedium has the expected metrics', () {
-        final style = FlowinBrandTextTokens.titleMedium;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 16);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 24 / 16);
-        expect(style.letterSpacing, 0.2);
-      });
-
-      test('titleSmall has the expected metrics', () {
-        final style = FlowinBrandTextTokens.titleSmall;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 14);
-        expect(style.fontWeight, FontWeight.w700);
-        expect(style.height, 20 / 14);
-        expect(style.letterSpacing, 0.2);
-      });
-
-      test('bodyLarge has the expected metrics', () {
-        final style = FlowinBrandTextTokens.bodyLarge;
-        expect(style.fontFamily, supremeFontFamily);
-        expect(style.fontSize, 16);
-        expect(style.fontWeight, FontWeight.w500);
-        expect(style.height, 24 / 16);
-        expect(style.letterSpacing, 0.5);
-      });
-    });
-
     group('FlowinBaselineTextTheme extension', () {
       test('exposes the caption tokens on TextTheme', () {
         const textTheme = TextTheme();
@@ -203,25 +133,6 @@ void main() {
           textTheme.captionMedium,
           FlowinBaselineTextTokens.captionMedium,
         );
-      });
-    });
-
-    group('FlowinBrandTextTheme extension', () {
-      test('exposes the brand tokens on TextTheme', () {
-        const textTheme = TextTheme();
-        expect(textTheme.brandDisplayXL, FlowinBrandTextTokens.displayXL);
-        expect(textTheme.brandDisplayLG, FlowinBrandTextTokens.displayLG);
-        expect(
-          textTheme.brandHeadlineLarge,
-          FlowinBrandTextTokens.headlineLarge,
-        );
-        expect(
-          textTheme.brandHeadlineSmall,
-          FlowinBrandTextTokens.headlineSmall,
-        );
-        expect(textTheme.brandTitleMedium, FlowinBrandTextTokens.titleMedium);
-        expect(textTheme.brandTitleSmall, FlowinBrandTextTokens.titleSmall);
-        expect(textTheme.brandBodyLarge, FlowinBrandTextTokens.bodyLarge);
       });
     });
 

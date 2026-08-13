@@ -2,8 +2,8 @@ import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/components/showcase/showcase_section.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
-/// The two type families: the baseline mapped onto Material's roles, and the
-/// brand styles reachable through TextTheme extensions.
+/// The baseline type scale, mapped onto Material's [TextTheme] roles, plus the
+/// caption styles Material has no slot for.
 class TypographyPage extends StatelessWidget {
   /// {@macro typography_page}
   const TypographyPage({super.key});
@@ -32,21 +32,6 @@ class TypographyPage extends StatelessWidget {
             Text('labelSmall — 12/600', style: text.labelSmall),
             Text('captionLarge — 12/500', style: text.captionLarge),
             Text('captionMedium — 10/400', style: text.captionMedium),
-          ],
-        ),
-        ShowcaseSection(
-          chipLabel: 'Brand',
-          title: 'Brand typography (Supreme)',
-          description: 'Expressive styles reachable via TextTheme extensions.',
-          children: [
-            Text(
-              'Display LG',
-              style: text.brandDisplayLG.copyWith(fontSize: 48),
-            ),
-            Text('Headline large', style: text.brandHeadlineLarge),
-            Text('Headline small', style: text.brandHeadlineSmall),
-            Text('Title medium', style: text.brandTitleMedium),
-            Text('Body large', style: text.brandBodyLarge),
           ],
         ),
       ],
