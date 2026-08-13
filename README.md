@@ -9,28 +9,45 @@ with a component library of buttons, inputs, chips, tabs, cards and sheets.
 
 ## Installation 💻
 
-**❗ In order to start using Flutter Flowin you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
+```sh
+flutter pub add flutter_flowin
+```
 
-**❗ This project pins its Flutter SDK with [FVM][fvm_link], so you also need FVM installed — see [fvm.app][fvm_link]. Run every Flutter/Dart command through `fvm` (e.g. `fvm flutter test`) so you use the pinned SDK rather than whatever is first on your `PATH`.**
-
-This package is not published to pub.dev (`publish_to: none`), so depend on it
-by git reference:
+Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_flowin:
-    git:
-      url: https://github.com/luisburgos/flutter_flowin.git
-      ref: 0.1.0
+  flutter_flowin: ^0.1.0
 ```
 
-Or by path, when working on the package and a consuming app side by side:
+Then hand the theme to your `MaterialApp` — that is the whole setup:
+
+```dart
+import 'package:flutter_flowin/flutter_flowin.dart';
+
+MaterialApp(
+  theme: FlowinTheme.light,
+  darkTheme: FlowinTheme.dark,
+  home: const HomeScreen(),
+);
+```
+
+The package re-exports Flutter's material library, so that single import is all
+a Flowin screen needs. See [`example/`](example) for a complete app.
+
+### Working on the package
+
+To develop the package and a consuming app side by side, depend on it by path:
 
 ```yaml
 dependencies:
   flutter_flowin:
     path: ../flutter_flowin
 ```
+
+Contributors also need [FVM][fvm_link], which pins this project's Flutter SDK.
+Run every Flutter/Dart command through it (e.g. `fvm flutter test`) so you use
+the pinned SDK rather than whatever is first on your `PATH`.
 
 ---
 
@@ -183,7 +200,6 @@ open coverage/index.html
 [conventional_changelog_link]: https://github.com/conventional-changelog/conventional-changelog
 [conventional_commits_link]: https://www.conventionalcommits.org
 [cspell_link]: https://cspell.org
-[flutter_install_link]: https://docs.flutter.dev/get-started/install
 [fvm_link]: https://fvm.app
 [github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
 [lefthook_link]: https://lefthook.dev
