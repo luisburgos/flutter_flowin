@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
+import 'package:flutter_flowin/src/vendor/ios_color_picker/show_ios_color_picker.dart';
 import 'package:flutter_flowin/src/widgets/flowin_color_radial_button.dart';
 import 'package:flutter_flowin/src/widgets/flowin_input_field.dart';
-import 'package:ios_color_picker/show_ios_color_picker.dart';
 
 /// Whether two colors denote the same canonical 32-bit ARGB value.
 ///
@@ -50,7 +50,7 @@ class FlowinColorPickerField extends StatefulWidget {
 }
 
 class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
-  final _iosColorPickerController = IOSColorPickerController();
+  final _colorPicker = VendoredIOSColorPicker();
   Color? _selectedColor;
 
   @override
@@ -75,7 +75,7 @@ class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
 
   @override
   void dispose() {
-    _iosColorPickerController.dispose();
+    _colorPicker.dispose();
     super.dispose();
   }
 
@@ -88,7 +88,7 @@ class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
   }
 
   void _openCustomPicker() {
-    _iosColorPickerController.showIOSCustomColorPicker(
+    _colorPicker.show(
       startingColor: _selectedColor,
       onColorChanged: _setSelectedColor,
       context: context,
