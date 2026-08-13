@@ -1,0 +1,7 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    # Sibling app with its own analysis_options.yaml — analyzed on its own,
+    # not as part of the package.
+    - "showcase/**"

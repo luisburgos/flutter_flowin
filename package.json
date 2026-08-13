@@ -1,0 +1,12 @@
+{
+  "name": "flutter_flowin",
+  "version": "0.2.0+2",
+  "private": true,
+  "scripts": {
+    "changelog": "conventional-changelog -n ./changelog.config.js -i CHANGELOG.md -s"
+  },
+  "devDependencies": {
+    "conventional-changelog-cli": "^5.0.0",
+    "conventional-changelog-conventionalcommits": "^9.3.1"
+  }
+}
