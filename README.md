@@ -139,7 +139,7 @@ npm run changelog
 
 Unlike the sibling Flutter apps, which use the stock `angular` preset, this
 package extends `conventionalcommits` via
-[`changelog.config.js`](changelog.config.js) so that `docs`, `test`, `build`,
+[`.changelogrc.js`](.changelogrc.js) so that `docs`, `test`, `build`,
 `ci`, `refactor`, and `chore` get their own sections instead of being dropped.
 The apps only surface `feat` / `fix` / `perf` / `revert`, which suits release
 notes for end users. This package is consumed by those apps, so tooling and
