@@ -49,6 +49,11 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_version: ${{ needs.flutter_version.outputs.version }}
+      # Third-party source vendored verbatim from ios_color_picker, held to
+      # its authors' style rather than ours (see lib/src/vendor/**/README.md).
+      # It is excluded from analysis for the same reason, so excluding it here
+      # keeps the 100% gate meaningful: it measures the code we actually wrote.
+      coverage_excludes: "lib/src/vendor/**"
 
   # The showcase is a separate package, excluded from the root analysis
   # options, so the job above never sees it. Without this it breaks silently
