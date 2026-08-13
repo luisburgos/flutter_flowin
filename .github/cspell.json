@@ -19,6 +19,7 @@
   ],
   "useGitignore": true,
   "words": [
+    "changelogrc",
     "Flowin",
     "flutter_flowin",
     "fvm",
