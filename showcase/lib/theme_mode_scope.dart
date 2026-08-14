@@ -5,15 +5,25 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// A [ValueNotifier] rather than page-local state so the toggle reads and
 /// writes one source of truth: switching the theme from a nested page updates
 /// the app root and every other page at once, with no state to keep in sync.
+///
+/// Starts at [ThemeMode.system]; the first toggle makes the mode explicit.
 class ThemeModeController extends ValueNotifier<ThemeMode> {
   /// {@macro theme_mode_controller}
-  ThemeModeController([super.initial = ThemeMode.light]);
+  ThemeModeController([super.initial = ThemeMode.system]);
 
-  /// Whether the app is currently rendering the dark theme.
-  bool get isDark => value == ThemeMode.dark;
+  /// Whether the dark theme is rendering.
+  ///
+  /// Takes the ambient brightness because under [ThemeMode.system] the answer
+  /// is the platform's, not [value]'s.
+  bool isDark(Brightness platformBrightness) => switch (value) {
+    ThemeMode.dark => true,
+    ThemeMode.light => false,
+    ThemeMode.system => platformBrightness == Brightness.dark,
+  };
 
-  /// Flips between the light and dark themes.
-  void toggle() => value = isDark ? ThemeMode.light : ThemeMode.dark;
+  /// Flips to the opposite of what is currently on screen.
+  void toggle(Brightness platformBrightness) =>
+      value = isDark(platformBrightness) ? ThemeMode.light : ThemeMode.dark;
 }
 
 /// Publishes a [ThemeModeController] to the widget tree.
@@ -50,9 +60,13 @@ class ThemeModeToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = ThemeModeScope.of(context);
+    // Via MediaQuery so the icon updates if the device appearance changes.
+    final brightness = MediaQuery.platformBrightnessOf(context);
+    final isDark = controller.isDark(brightness);
+
     return FlowinIconButton.text(
-      icon: Icon(controller.isDark ? Icons.light_mode : Icons.dark_mode),
-      onPressed: controller.toggle,
+      icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+      onPressed: () => controller.toggle(brightness),
     );
   }
 }
