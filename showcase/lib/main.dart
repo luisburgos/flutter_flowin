@@ -37,7 +37,7 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
       child: ListenableBuilder(
         listenable: _themeMode,
         builder: (context, _) => MaterialApp(
-          title: 'Flowin Showcase',
+          title: 'Flowin UI',
           debugShowCheckedModeBanner: false,
           theme: FlowinTheme.light,
           darkTheme: FlowinTheme.dark,

@@ -97,10 +97,12 @@ npm install        # once, to fetch the changelog tooling
 npm run changelog
 ```
 
-**Bump the version before generating, not after.** The `-s` flag in the script
-means "same release": the generator writes a section for the version currently
-in `pubspec.yaml`, collecting every commit since the previous tag. Running it
-before the bump files new work under the version already released.
+**Bump the version before generating, not after** — and bump it in **both**
+`pubspec.yaml` and `package.json`. The `-s` flag in the script means "same
+release": the generator writes a section for the version currently in
+`package.json`, not the pubspec, collecting every commit since the previous tag.
+Leaving `package.json` behind silently regenerates the *previous* version's
+section instead of opening a new one.
 
 It also *prepends* rather than merges, so running it twice for the same version
 produces two headings. To rewrite a section, clear the file (or delete the
