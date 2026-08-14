@@ -237,6 +237,52 @@ void main() {
     });
   });
 
+  group('FlowinActionSheetHeader spacing', () {
+    testWidgets('is unchanged when the close button is hidden', (
+      tester,
+    ) async {
+      Future<(double, double)> metricsFor({required bool displayClose}) async {
+        await tester.pumpApp(
+          FlowinActionSheet(
+            title: 'Descriptive title',
+            subtitle: 'A subtitle',
+            displayClose: displayClose,
+            margin: EdgeInsets.zero,
+          ),
+        );
+        final sheet = tester.getRect(find.byType(FlowinActionSheet));
+        final title = tester.getRect(find.text('Descriptive title'));
+        final subtitle = tester.getRect(find.text('A subtitle'));
+
+        return (title.top - sheet.top, subtitle.top - title.bottom);
+      }
+
+      // The close button's box is a tap target inflated by VisualDensity. While
+      // it set the row height, hiding it collapsed the header — costing the
+      // sheet 32px and all but closing the title-to-subtitle gap.
+      final withClose = await metricsFor(displayClose: true);
+      final withoutClose = await metricsFor(displayClose: false);
+
+      expect(withoutClose, withClose);
+    });
+  });
+
+  group('FlowinActionSheetHeader close button', () {
+    testWidgets('lays out at its natural size', (tester) async {
+      await tester.pumpApp(
+        FlowinActionSheet(title: 'Title', margin: EdgeInsets.zero),
+      );
+
+      // The bar reports a fixed height so the button's tap target cannot set
+      // the header's shape — but the button still has to lay out at its own
+      // size. Constraining it instead of the row squashed the tonal circle
+      // down to the glyph.
+      final button = tester.getRect(find.byType(FlowinIconButton));
+
+      expect(button.height, button.width);
+    });
+  });
+
   group('showFlowinActionSheet keyboard inset', () {
     const screen = Size(400, 800);
 

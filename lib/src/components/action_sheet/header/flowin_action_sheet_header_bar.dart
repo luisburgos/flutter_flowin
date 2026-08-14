@@ -22,32 +22,51 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
   /// The control that closes the line, typically the close button.
   final Widget trailing;
 
+  /// The bar's height.
+  ///
+  /// Fixed rather than measured from its children. [trailing] is an icon
+  /// button, and Material wraps one in a tap target inflated by
+  /// `VisualDensity` — larger than the control drawn inside it, and
+  /// platform-dependent. Measuring the row let that invisible box set the
+  /// header's shape: the bar grew taller than the control, the leading mark
+  /// trailed slack that pushed the supporting text away, and the whole header
+  /// changed size when the button was hidden.
+  ///
+  /// One control tall, since the bar holds a single line or mark. The button
+  /// keeps its own tap target; it simply no longer dictates the layout.
+  static const double height = FlowinDesignSpace.space1200;
+
   @override
   Widget build(BuildContext context) {
-    // Measures the row so [leading] can align against the tallest child rather
-    // than shrink-wrapping its own text. Remove it and the alignment below
-    // silently stops doing anything.
-    return IntrinsicHeight(
-      child: Padding(
-        // [trailing] carries no inset, so this gutter is the only thing holding
-        // it off the card edge. Narrower than the left: the control is meant to
-        // sit closer to the edge than the text.
-        padding: const EdgeInsets.only(
-          left: FlowinDesignSpace.space800,
-          right: FlowinDesignSpace.space400,
-        ),
-        child: Row(
-          children: [
-            // Centred: [trailing] sets the row height with its tap target,
-            // which is taller than the control drawn inside it.
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: leading,
+    // OverflowBox lets [trailing] lay out at its natural size — an icon
+    // button's tap target is taller than the control it draws — while the bar
+    // reports only [height]. Sizing the row to the button instead let that
+    // invisible box dictate the header's shape.
+    return SizedBox(
+      height: height,
+      child: OverflowBox(
+        maxHeight: double.infinity,
+        child: Padding(
+          // [trailing] carries no inset, so this gutter is the only thing
+          // holding it off the card edge. Narrower than the left: the control
+          // is meant to sit closer to the edge than the text.
+          padding: const EdgeInsets.only(
+            left: FlowinDesignSpace.space800,
+            right: FlowinDesignSpace.space400,
+          ),
+          child: Row(
+            children: [
+              // Centred so the leading mark reads level with [trailing],
+              // whose glyph sits in the middle of its own box.
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: leading,
+                ),
               ),
-            ),
-            trailing,
-          ],
+              trailing,
+            ],
+          ),
         ),
       ),
     );
