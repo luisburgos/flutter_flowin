@@ -1,18 +1,96 @@
 # Contributing to Flutter Flowin
 
-## Getting set up
+## What this is
+
+Flowin is a design system: design tokens, a Material-mapped theme, and the
+component library built on them, published to
+[pub.dev](https://pub.dev/packages/flutter_flowin).
+
+It is a published package, so its public API is a commitment: a breaking change
+costs everyone who has adopted it. Treat additions as cheap and removals as
+expensive.
+
+Four directories are easy to confuse:
+
+| Directory | What it is |
+|---|---|
+| `lib/` | the package itself — the only code that ships to consumers |
+| `showcase/` | a companion app cataloguing every component, published to [GitHub Pages](https://luisburgos.github.io/flutter_flowin/) |
+| `example/` | one small app that pub.dev renders on the package's Example tab |
+| `lib/src/vendor/` | third-party source vendored verbatim — see below before touching it |
+
+---
+
+## Opening an issue
+
+**Issues live in [`flowin_pm`](https://github.com/luisburgos/flowin_pm/issues),
+not in this repository.** That is where the work for every Flowin project is
+tracked, so an issue filed here will likely be missed.
+
+Include the package version, the Flutter version, and what you expected to
+happen. If it is visual, the
+[showcase](https://luisburgos.github.io/flutter_flowin/) is the fastest way to
+show it.
+
+---
+
+## Making a change
+
+### Branch from `main`
+
+Name the branch for the kind of change, matching the commit type:
+`feat/…`, `fix/…`, `chore/…`, `refactor/…`, `docs/…`.
+
+### Write Conventional Commit subjects
+
+[Conventional Commits][conventional_commits_link] are **required, not
+preferred**: `CHANGELOG.md` is generated from commit subjects, so a vague or
+malformed subject becomes a vague or malformed release note that cannot be
+edited afterwards without rewriting history.
+
+```
+feat(chips): add a leading icon slot
+fix(theme): restore the disabled border color
+```
+
+Use `!` or a `BREAKING CHANGE:` footer for anything that breaks the public API.
+
+### Open a pull request
+
+This repository **squash-merges only**, so the **PR title becomes the commit
+subject on `main`** — it is permanent history, not a label. It must be a valid
+Conventional Commit subject; CI enforces this with `semantic_pull_request`, and
+a merge is blocked until it passes.
+
+The body is worth writing properly. It is the record of *why* a change was
+made, which the diff cannot carry.
+
+### Where the code goes
+
+Component and token work belongs in `lib/`, with the showcase updated in the
+same change so the catalogue never lags the library.
+
+`lib/src/vendor/` is third-party source, vendored verbatim under its own
+license. It is deliberately excluded from analysis and coverage so it stays
+diffable against upstream. **Do not reformat it to match house style** — see
+the README in that directory for what was taken and why.
+
+---
+
+## Setup
 
 This project pins its Flutter SDK with [FVM][fvm_link] (`.fvmrc` → Flutter
-`3.44.0`). **Run all Flutter/Dart commands through `fvm`** (e.g.
-`fvm flutter test`, `fvm dart format .`) so you use the pinned SDK rather than
-whatever is first on your `PATH`.
+`3.44.0`). **Run every Flutter and Dart command through `fvm`** — for example
+`fvm flutter test` — so you use the pinned SDK rather than whatever is first on
+your `PATH`.
 
 ```sh
 fvm install        # fetch the pinned Flutter SDK declared in .fvmrc
-lefthook install   # wire the git hooks (see https://lefthook.dev to install the binary)
+lefthook install   # wire the git hooks (see https://lefthook.dev for the binary)
+npm install        # changelog tooling, needed only when cutting a release
 ```
 
-To work on the package and a consuming app side by side, depend on it by path:
+To develop the package and a consuming app side by side, depend on it by path:
 
 ```yaml
 dependencies:
@@ -22,60 +100,45 @@ dependencies:
 
 ---
 
-## The pre-push hook 🪝
+## Checks
 
-A **pre-push git hook** (managed by [lefthook][lefthook_link]) mirrors the CI
-gates — `dart format`, `flutter analyze`, `flutter test`, and a markdown
-spell-check ([cspell][cspell_link]) — and **blocks the push** if any fail, so
-problems are caught locally before a PR is opened.
+Four gates guard every change, and they run in two places.
 
-The Flutter/Dart commands run via `fvm`. The spell-check uses a local/global
-`cspell` if available and falls back to `npx cspell`; if neither is installed it
-is skipped locally, and CI still enforces it.
+| Gate | Command |
+|---|---|
+| Format | `fvm dart format .` |
+| Analyze | `fvm flutter analyze` |
+| Test, with 100% coverage | `fvm exec very_good test --coverage --min-coverage 100 --exclude-coverage "lib/src/vendor/**"` |
+| Spell-check (Markdown) | `npx cspell --config .github/cspell.json "**/*.md" --exclude CHANGELOG.md` |
 
-The configuration lives in [`lefthook.yml`](lefthook.yml). To run it on demand
-without pushing:
+A **pre-push hook** ([lefthook][lefthook_link]) runs all four and blocks the
+push if any fail, so problems surface before a PR exists. To run it on demand:
 
 ```sh
 lefthook run pre-push
 ```
 
----
+CI runs the same gates on every pull request, via
+[Very Good Workflows][very_good_workflows_link]. Because `showcase/` and
+`example/` are separate packages excluded from the root analysis options, a
+`sub_packages` job analyzes and tests each of them too — without it they break
+silently whenever the library's API changes.
 
-## Continuous Integration 🤖
+Two exclusions are deliberate, and both are mirrored in CI and the hook so they
+cannot drift:
 
-The [GitHub Actions workflow][github_actions_link] is powered by
-[Very Good Workflows][very_good_workflows_link]. On each pull request and push
-it formats, lints and tests the code, using
-[Very Good Analysis][very_good_analysis_link] for a strict set of analysis
-options. Coverage is enforced by [Very Good Workflows][very_good_coverage_link].
+- **`lib/src/vendor/` is excluded from coverage.** The 100% gate should measure
+  the code we wrote, not vendored third-party UI.
+- **`CHANGELOG.md` is excluded from spell-check.** It holds verbatim commit
+  subjects, so a historical typo would fail the build on a word nobody can edit.
 
-The `showcase/` and `example/` apps are separate packages, excluded from the
-root analysis options, so a dedicated `sub_packages` job analyzes and tests each
-of them. Without it they break silently whenever the library's API changes.
-
----
-
-## Running tests 🧪
-
-Install [very_good_cli][very_good_cli_link] once:
+Install [very_good_cli][very_good_cli_link] once for the coverage gate:
 
 ```sh
 dart pub global activate very_good_cli
 ```
 
-Then:
-
-```sh
-very_good test --coverage
-```
-
-Coverage is enforced at 100%. `lib/src/vendor/` is excluded — it holds
-third-party source vendored verbatim, held to its authors' style so it stays
-diffable against upstream, and the gate should measure the code we wrote. Both
-the CI workflow and the pre-push hook carry that exclusion so they cannot drift.
-
-To view the report, use [lcov](https://github.com/linux-test-project/lcov):
+To read the report, use [lcov](https://github.com/linux-test-project/lcov):
 
 ```sh
 genhtml coverage/lcov.info -o coverage/
@@ -84,90 +147,71 @@ open coverage/index.html
 
 ---
 
-## Changelog 📓
-
-[`CHANGELOG.md`](CHANGELOG.md) is **generated, not hand-edited**. It is built
-from [Conventional Commit][conventional_commits_link] subjects by
-[conventional-changelog][conventional_changelog_link].
-
-One-time setup:
-
-```sh
-npm install        # fetch the changelog tooling
-```
-
-### Cutting a release
+## Releasing
 
 The version lives in four files and the changelog is generated from commits, so
 the order matters. **Bump first, generate second** — the generator writes a
 section for whatever version it finds, so running it early files new work under
 the release already published.
 
-1. **Bump the version in all four places**, to the same value:
+### 1. Bump the version in all four places, to the same value
 
-   | File | Read by |
-   |---|---|
-   | `pubspec.yaml` | pub.dev and the published package |
-   | `package.json` | conventional-changelog |
-   | `showcase/pubspec.yaml` | the showcase app |
-   | `flowinVersion` in `showcase/lib/app_info/flowin_app_info_service.dart` | the showcase's version label |
+| File | Read by |
+|---|---|
+| `pubspec.yaml` | pub.dev and the published package |
+| `package.json` | conventional-changelog |
+| `showcase/pubspec.yaml` | the showcase app |
+| `flowinVersion` in `showcase/lib/app_info/flowin_app_info_service.dart` | the showcase's version label |
 
-   `showcase/test/app_version_test.dart` fails if the last three drift from the
-   first. **Nothing checks `package.json`** — see the warning below.
-
-2. **Regenerate the changelog:**
-
-   ```sh
-   npm run changelog
-   ```
-
-3. **Commit, merge, then tag the merge commit** and push the tag. The tag is
-   what bounds the next release's commit range.
-
-4. **Publish:**
-
-   ```sh
-   fvm dart pub publish
-   ```
-
-   Published versions are immutable: a version can never be replaced or
-   deleted, only retracted within 7 days, which hides it rather than removing
-   it. Metadata like `homepage` and `topics` therefore only reaches pub.dev
-   with a new release.
+`showcase/test/app_version_test.dart` fails if any of them drift apart.
 
 > **`package.json` is the one to remember.** The `-s` flag means "same
 > release", and being a Node tool the generator reads the version from
-> `package.json` — *not* `pubspec.yaml`. Leave it behind and the command still
-> succeeds, silently rewriting the previous version's section instead of
-> opening a new one. It is the only one of the four with no test guarding it.
+> `package.json` — *not* `pubspec.yaml`. Left behind, the command still
+> succeeds: it silently rewrites the previous version's section instead of
+> opening a new one.
 
-The generator also *prepends* rather than merges, so running it twice for one
-version produces two headings. To rewrite a section, delete the old heading (or
-clear the file) and regenerate.
+### 2. Regenerate the changelog
 
-Unlike the sibling Flutter apps, which use the stock `angular` preset, this
-package extends `conventionalcommits` via
-[`.changelogrc.js`](.changelogrc.js) so that `docs`, `test`, `build`, `ci`,
-`refactor`, and `chore` get their own sections instead of being dropped. The
-apps only surface `feat` / `fix` / `perf` / `revert`, which suits release notes
-for end users. This package is consumed by those apps, so tooling and
-documentation work is worth recording too. Only `style` is hidden.
+```sh
+npm run changelog
+```
 
-Two notes:
+It *prepends* rather than merges, so running it twice for one version produces
+two headings. To rewrite a section, delete the old heading and regenerate.
 
-- The tooling is a real `devDependency` rather than an `npx` one-off, because
-  the config file has to `require` the preset and `npx`'s isolated install
-  directory is not on that resolution path. `node_modules/` is gitignored.
-- The file is excluded from the spell-check gate in both CI and the pre-push
-  hook, because it holds verbatim commit subjects rather than authored prose.
+### 3. Merge, then tag the merge commit
 
-[conventional_changelog_link]: https://github.com/conventional-changelog/conventional-changelog
+```sh
+git tag <version> && git push origin <version>
+```
+
+The tag bounds the next release's commit range, so it has to exist before the
+next changelog run.
+
+### 4. Publish
+
+```sh
+fvm dart pub publish
+```
+
+Published versions are **immutable**: a version can never be replaced or
+deleted, only retracted within 7 days, which hides it rather than removing it.
+Metadata such as `homepage`, `description` and `topics` therefore only reaches
+pub.dev with a new release.
+
+### About the changelog preset
+
+`CHANGELOG.md` is **generated, not hand-edited**. This package extends
+`conventionalcommits` via [`.changelogrc.js`](.changelogrc.js) so that `docs`,
+`test`, `build`, `ci`, `refactor` and `chore` each get their own section
+instead of being dropped. The stock preset surfaces only
+`feat` / `fix` / `perf` / `revert`, which suits an application's release notes
+but hides the tooling and documentation work that matters to a package's
+consumers. That file's header comment carries the full rationale.
+
 [conventional_commits_link]: https://www.conventionalcommits.org
-[cspell_link]: https://cspell.org
 [fvm_link]: https://fvm.app
-[github_actions_link]: https://docs.github.com/en/actions/learn-github-actions
 [lefthook_link]: https://lefthook.dev
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
 [very_good_cli_link]: https://pub.dev/packages/very_good_cli
-[very_good_coverage_link]: https://github.com/marketplace/actions/very-good-coverage
 [very_good_workflows_link]: https://github.com/VeryGoodOpenSource/very_good_workflows
