@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flowin_showcase/app_info/app_version_info.dart';
@@ -42,16 +43,29 @@ void main() {
   });
 
   group('showcase pubspec', () {
-    test('declares the same version as the package', () {
-      String versionIn(String path) => RegExp(
-        r'^version:\s*(\S+)',
-        multiLine: true,
-      ).firstMatch(File(path).readAsStringSync())!.group(1)!;
+    String versionIn(String path) => RegExp(
+      r'^version:\s*(\S+)',
+      multiLine: true,
+    ).firstMatch(File(path).readAsStringSync())!.group(1)!;
 
+    test('declares the same version as the package', () {
       // The showcase is versioned in lockstep with the design system it
       // catalogues: a screenshot or bug report naming one names the other.
       // Nothing enforces that in the tooling, so it is asserted here.
       expect(versionIn('pubspec.yaml'), versionIn('../pubspec.yaml'));
+    });
+
+    test('package.json declares the same version as the package', () {
+      // conventional-changelog reads the version from package.json, not the
+      // pubspec, and writes a section for whatever it finds. Left behind at a
+      // previous version the command still succeeds — it silently rewrites the
+      // released section instead of opening a new one. Nothing else catches
+      // that, so it is asserted here alongside the showcase's own version.
+      final packageJson =
+          jsonDecode(File('../package.json').readAsStringSync())
+              as Map<String, dynamic>;
+
+      expect(packageJson['version'], versionIn('../pubspec.yaml'));
     });
   });
 

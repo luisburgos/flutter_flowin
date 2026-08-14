@@ -90,21 +90,60 @@ open coverage/index.html
 from [Conventional Commit][conventional_commits_link] subjects by
 [conventional-changelog][conventional_changelog_link].
 
-First-time setup, then regenerate the newest release section:
+One-time setup:
 
 ```sh
-npm install        # once, to fetch the changelog tooling
-npm run changelog
+npm install        # fetch the changelog tooling
 ```
 
-**Bump the version before generating, not after.** The `-s` flag in the script
-means "same release": the generator writes a section for the version currently
-in `pubspec.yaml`, collecting every commit since the previous tag. Running it
-before the bump files new work under the version already released.
+### Cutting a release
 
-It also *prepends* rather than merges, so running it twice for the same version
-produces two headings. To rewrite a section, clear the file (or delete the
-heading) and regenerate.
+The version lives in four files and the changelog is generated from commits, so
+the order matters. **Bump first, generate second** — the generator writes a
+section for whatever version it finds, so running it early files new work under
+the release already published.
+
+1. **Bump the version in all four places**, to the same value:
+
+   | File | Read by |
+   |---|---|
+   | `pubspec.yaml` | pub.dev and the published package |
+   | `package.json` | conventional-changelog |
+   | `showcase/pubspec.yaml` | the showcase app |
+   | `flowinVersion` in `showcase/lib/app_info/flowin_app_info_service.dart` | the showcase's version label |
+
+   `showcase/test/app_version_test.dart` fails if the last three drift from the
+   first. **Nothing checks `package.json`** — see the warning below.
+
+2. **Regenerate the changelog:**
+
+   ```sh
+   npm run changelog
+   ```
+
+3. **Commit, merge, then tag the merge commit** and push the tag. The tag is
+   what bounds the next release's commit range.
+
+4. **Publish:**
+
+   ```sh
+   fvm dart pub publish
+   ```
+
+   Published versions are immutable: a version can never be replaced or
+   deleted, only retracted within 7 days, which hides it rather than removing
+   it. Metadata like `homepage` and `topics` therefore only reaches pub.dev
+   with a new release.
+
+> **`package.json` is the one to remember.** The `-s` flag means "same
+> release", and being a Node tool the generator reads the version from
+> `package.json` — *not* `pubspec.yaml`. Leave it behind and the command still
+> succeeds, silently rewriting the previous version's section instead of
+> opening a new one. It is the only one of the four with no test guarding it.
+
+The generator also *prepends* rather than merges, so running it twice for one
+version produces two headings. To rewrite a section, delete the old heading (or
+clear the file) and regenerate.
 
 Unlike the sibling Flutter apps, which use the stock `angular` preset, this
 package extends `conventionalcommits` via

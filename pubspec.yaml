@@ -1,8 +1,16 @@
 name: flutter_flowin
 description: A Flutter design system built on design tokens and a Material-mapped theme, with a component library of buttons, inputs, chips, tabs, cards and sheets.
 version: 0.1.0
-homepage: https://github.com/luisburgos/flutter_flowin
+homepage: https://luisburgos.github.io/flutter_flowin/
 repository: https://github.com/luisburgos/flutter_flowin
+
+# Max 5, lowercase alphanumeric or hyphens, 2-32 chars each.
+topics:
+  - design-system
+  - user-interface
+  - material-alternative
+  - design
+  - components
 
 environment:
   sdk: ^3.11.0
