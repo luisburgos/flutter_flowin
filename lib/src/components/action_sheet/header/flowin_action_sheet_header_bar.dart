@@ -34,7 +34,7 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
   ///
   /// One control tall, since the bar holds a single line or mark. The button
   /// keeps its own tap target; it simply no longer dictates the layout.
-  static final double height = FlowinDesignControlSize.xs.value;
+  static const double height = FlowinDesignSpace.space1200;
 
   @override
   Widget build(BuildContext context) {
