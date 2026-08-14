@@ -31,6 +31,32 @@
 
   <title>Flowin UI</title>
   <link rel="manifest" href="manifest.json">
+
+  <!--
+    Paints the page before Flutter does. Between the first byte and the first
+    frame the canvas is empty, so whatever the browser has painted is what the
+    reader sees, and a bare body is white. Opening in dark mode that white is a
+    flash bright enough to be uncomfortable, which is why dark is the default
+    here rather than the other way round.
+
+    The two colors are ColorScheme.surface from FlowinDesignSchemes, duplicated
+    because HTML cannot read Dart. They are the theme's own background, so the
+    hand-off from this page to the first frame is invisible rather than a
+    change of shade.
+
+    The media query mirrors the app's ThemeMode.system: the browser knows the
+    device appearance before Flutter starts, so matching it here means neither
+    mode flashes.
+  -->
+  <style>
+    :root { color-scheme: light dark; }
+    /* FlowinDesignColors.neutral800 — ColorScheme.dark.surface. */
+    html, body { margin: 0; background-color: #181818; }
+    @media (prefers-color-scheme: light) {
+      /* FlowinDesignColors.white — ColorScheme.light.surface. */
+      html, body { background-color: #FFFFFF; }
+    }
+  </style>
 </head>
 <body>
   <!--
