@@ -24,9 +24,9 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Measures the row so [leading] can bottom-align against the tallest child
-    // rather than shrink-wrapping its own text. Remove it and the alignment
-    // below silently stops doing anything.
+    // Measures the row so [leading] can align against the tallest child rather
+    // than shrink-wrapping its own text. Remove it and the alignment below
+    // silently stops doing anything.
     return IntrinsicHeight(
       child: Padding(
         // [trailing] carries no inset, so this gutter is the only thing holding
@@ -38,9 +38,11 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
         ),
         child: Row(
           children: [
+            // Centred: [trailing] sets the row height with its tap target,
+            // which is taller than the control drawn inside it.
             Expanded(
               child: Align(
-                alignment: Alignment.bottomLeft,
+                alignment: Alignment.centerLeft,
                 child: leading,
               ),
             ),
