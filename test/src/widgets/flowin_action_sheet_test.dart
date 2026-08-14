@@ -267,6 +267,48 @@ void main() {
     });
   });
 
+  group('FlowinActionSheetHeader title and subtitle', () {
+    Future<double> gapFor(WidgetTester tester, {required bool hasIcon}) async {
+      await tester.pumpApp(
+        FlowinActionSheet(
+          title: 'Descriptive title',
+          subtitle: 'A subtitle',
+          headerIcon: hasIcon ? FDIcons.board.toIcon() : null,
+          margin: EdgeInsets.zero,
+        ),
+      );
+      final title = tester.getRect(find.text('Descriptive title'));
+      final subtitle = tester.getRect(find.text('A subtitle'));
+
+      return subtitle.top - title.bottom;
+    }
+
+    testWidgets('sit one supporting-block gap apart under an icon', (
+      tester,
+    ) async {
+      // An icon displaces the title into the supporting block, so the pair is
+      // spaced by that block's own column spacing.
+      expect(await gapFor(tester, hasIcon: true), FlowinDesignSpace.space50);
+    });
+
+    testWidgets("sit further apart without one, by the bar's slack", (
+      tester,
+    ) async {
+      // Without an icon the title stays in the bar, which is a fixed height
+      // (space1200) and taller than the title's 32px line box, so the title
+      // trails half that difference as slack. The rendered gap is that slack
+      // plus the header column's spacing — wider than the icon variant's, and
+      // asserted so the difference cannot drift unnoticed.
+      const titleLineHeight = 32.0;
+      const slack = (FlowinDesignSpace.space1200 - titleLineHeight) / 2;
+
+      expect(
+        await gapFor(tester, hasIcon: false),
+        FlowinDesignSpace.space50 + slack,
+      );
+    });
+  });
+
   group('FlowinActionSheetHeader close button', () {
     testWidgets('lays out at its natural size', (tester) async {
       await tester.pumpApp(
