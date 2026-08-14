@@ -7,6 +7,11 @@
 A Flutter design system built on design tokens and a Material-mapped theme,
 with a component library of buttons, inputs, chips, tabs, cards and sheets.
 
+### 🔎 [**Try the live showcase →**](https://luisburgos.github.io/flutter_flowin/)
+
+Every component and token, in light and dark, running in your browser. No
+install required.
+
 ## Installation 💻
 
 ```sh
@@ -88,9 +93,13 @@ final shadow = context.flowinTokens.shadow;
 
 ## Showcase 🖼️
 
-The [`showcase/`](showcase) app is a runnable gallery of every component —
-buttons, inputs, color pickers, chips, tabs, app bars, cards, and action
-sheets — grouped by area, with a live light/dark toggle:
+The showcase is a gallery of every component — buttons, inputs, color pickers,
+chips, tabs, app bars, cards, and action sheets — grouped by area, with a live
+light/dark toggle. It is deployed on every push to `main`:
+
+**<https://luisburgos.github.io/flutter_flowin/>**
+
+To run it locally from [`showcase/`](showcase):
 
 ```sh
 cd showcase && fvm flutter run
