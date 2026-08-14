@@ -205,6 +205,38 @@ void main() {
     });
   });
 
+  group('FlowinActionSheetHeader alignment', () {
+    testWidgets('the title sits level with the close button', (tester) async {
+      await tester.pumpApp(
+        FlowinActionSheetHeader(title: 'Settings'),
+      );
+
+      // The close button's rendered box is its minimum tap target, which is
+      // taller than the control drawn inside it — so it sets the row height.
+      // Aligning the title to the bottom of that box dropped it half a tap
+      // target below the glyph it should read as level with.
+      final title = tester.getRect(find.text('Settings'));
+      final close = tester.getRect(find.byType(FlowinIconButton));
+
+      expect(title.center.dy, close.center.dy);
+    });
+
+    testWidgets('the icon sits level with the close button', (tester) async {
+      await tester.pumpApp(
+        FlowinActionSheetHeader(
+          title: 'Settings',
+          subtitle: 'A subtitle',
+          icon: FDIcons.settings.toIcon(),
+        ),
+      );
+
+      final icon = tester.getRect(find.byType(Icon).first);
+      final close = tester.getRect(find.byType(FlowinIconButton));
+
+      expect(icon.center.dy, close.center.dy);
+    });
+  });
+
   group('showFlowinActionSheet keyboard inset', () {
     const screen = Size(400, 800);
 
