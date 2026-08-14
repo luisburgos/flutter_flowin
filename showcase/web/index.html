@@ -31,6 +31,19 @@
 
   <title>Flowin UI</title>
   <link rel="manifest" href="manifest.json">
+
+  <!--
+    Covers the white gap before Flutter's first frame. ColorScheme.surface,
+    copied from FlowinDesignSchemes. Dark is the default because a white flash
+    into dark-adapted eyes is the uncomfortable direction.
+  -->
+  <style>
+    :root { color-scheme: light dark; }
+    html, body { margin: 0; background-color: #181818; } /* dark.surface */
+    @media (prefers-color-scheme: light) {
+      html, body { background-color: #FFFFFF; } /* light.surface */
+    }
+  </style>
 </head>
 <body>
   <!--

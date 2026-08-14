@@ -3,7 +3,7 @@
     "short_name": "Flowin",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#F9F9F9",
+    "background_color": "#181818",
     "theme_color": "#181818",
     "description": "A live showcase of the Flowin Flutter design system components.",
     "orientation": "portrait-primary",
