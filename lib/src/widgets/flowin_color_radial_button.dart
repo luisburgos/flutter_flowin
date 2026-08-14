@@ -57,6 +57,9 @@ class FlowinColorRadialButton extends StatelessWidget {
        );
 
   /// The swatch color.
+  ///
+  /// For [FlowinColorRadialButton.gradient] this is the picked color, shown in
+  /// the inner disc while [selected] rather than filling the whole swatch.
   final Color color;
 
   /// The diameter of the swatch.
@@ -78,8 +81,10 @@ class FlowinColorRadialButton extends StatelessWidget {
   /// constructor.
   ///
   /// Private because it selects the fill *mechanism* rather than styling one:
-  /// when set, [color] is ignored and the swatch painter does not run. Callers
-  /// choose a fill by choosing a constructor; [isGradient] reports which.
+  /// when set, the sweep gradient is painted instead of running the swatch
+  /// painter, and [color] narrows to filling the inner disc while [selected].
+  /// Callers choose a fill by choosing a constructor; [isGradient] reports
+  /// which.
   final BoxDecoration? _outerCircleDecoration;
 
   /// Whether this swatch renders the custom-colour gradient sweep rather than
@@ -102,6 +107,11 @@ class FlowinColorRadialButton extends StatelessWidget {
     // A gradient swatch keeps its DecoratedBox: the sweep gradient has to be
     // painted by the decoration, and it is clipped to the ring-plus-disc shape
     // when selected so the gap stays transparent there too.
+    //
+    // Selected, the inner disc is overpainted with [color]: the gradient ring
+    // stays as the "custom colour" affordance while the centre reports which
+    // colour was actually picked. Unselected there is nothing to report — the
+    // swatch is an invitation to choose — so the gradient fills it whole.
     final Widget swatch = _outerCircleDecoration != null
         ? ClipPath(
             clipper: selected
@@ -111,7 +121,22 @@ class FlowinColorRadialButton extends StatelessWidget {
                     innerSize: innerSize,
                   )
                 : const _CircleClipper(),
-            child: DecoratedBox(decoration: _outerCircleDecoration),
+            child: DecoratedBox(
+              decoration: _outerCircleDecoration,
+              child: selected
+                  ? Center(
+                      child: SizedBox.square(
+                        dimension: innerSize,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
           )
         : CustomPaint(
             painter: _SwatchPainter(

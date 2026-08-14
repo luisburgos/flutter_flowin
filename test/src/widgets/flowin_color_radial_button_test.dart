@@ -146,6 +146,50 @@ void main() {
       expect(path.contains(const Offset(14, 14)), isTrue);
     });
 
+    testWidgets('a selected gradient swatch shows the picked color', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        FlowinColorRadialButton.gradient(
+          color: Colors.purple,
+          selected: true,
+        ),
+      );
+
+      // The gradient ring stays as the custom-color affordance, but the inner
+      // disc has to report which color was actually picked — otherwise the
+      // swatch looks identical whatever the user chose.
+      final discs = tester
+          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+          .where((box) {
+            final decoration = box.decoration;
+            return decoration is BoxDecoration &&
+                decoration.color == Colors.purple;
+          });
+
+      expect(discs, hasLength(1));
+    });
+
+    testWidgets('an unselected gradient swatch shows only the gradient', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        FlowinColorRadialButton.gradient(color: Colors.purple),
+      );
+
+      // Nothing has been picked yet, so the swatch is an invitation to choose
+      // rather than a report of a value.
+      final discs = tester
+          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
+          .where((box) {
+            final decoration = box.decoration;
+            return decoration is BoxDecoration &&
+                decoration.color == Colors.purple;
+          });
+
+      expect(discs, isEmpty);
+    });
+
     testWidgets('an unselected gradient swatch clips to a plain circle', (
       tester,
     ) async {
