@@ -22,32 +22,47 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
   /// The control that closes the line, typically the close button.
   final Widget trailing;
 
+  /// The bar's minimum height.
+  ///
+  /// Fixed rather than inherited from [trailing]. The close button's rendered
+  /// box is a tap target inflated by `VisualDensity`, so letting it set the
+  /// height made the header's spacing both dependent on whether the button was
+  /// shown — hiding it collapsed the row and cost the sheet 32px — and
+  /// different across platforms, since `VisualDensity` is platform-adaptive.
+  ///
+  /// The value matches what the button used to produce, so the spacing is
+  /// unchanged in the common case and now holds without it.
+  static const double minHeight = 64;
+
   @override
   Widget build(BuildContext context) {
     // Measures the row so [leading] can align against the tallest child rather
     // than shrink-wrapping its own text. Remove it and the alignment below
     // silently stops doing anything.
     return IntrinsicHeight(
-      child: Padding(
-        // [trailing] carries no inset, so this gutter is the only thing holding
-        // it off the card edge. Narrower than the left: the control is meant to
-        // sit closer to the edge than the text.
-        padding: const EdgeInsets.only(
-          left: FlowinDesignSpace.space800,
-          right: FlowinDesignSpace.space400,
-        ),
-        child: Row(
-          children: [
-            // Centred: [trailing] sets the row height with its tap target,
-            // which is taller than the control drawn inside it.
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: leading,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: minHeight),
+        child: Padding(
+          // [trailing] carries no inset, so this gutter is the only thing
+          // holding it off the card edge. Narrower than the left: the control
+          // is meant to sit closer to the edge than the text.
+          padding: const EdgeInsets.only(
+            left: FlowinDesignSpace.space800,
+            right: FlowinDesignSpace.space400,
+          ),
+          child: Row(
+            children: [
+              // Centred so the leading mark reads level with [trailing],
+              // whose glyph sits in the middle of its own box.
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: leading,
+                ),
               ),
-            ),
-            trailing,
-          ],
+              trailing,
+            ],
+          ),
         ),
       ),
     );
