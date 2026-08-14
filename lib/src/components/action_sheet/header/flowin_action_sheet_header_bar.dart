@@ -22,26 +22,30 @@ class FlowinActionSheetHeaderBar extends StatelessWidget {
   /// The control that closes the line, typically the close button.
   final Widget trailing;
 
-  /// The bar's minimum height.
+  /// The bar's height.
   ///
-  /// Fixed rather than inherited from [trailing]. The close button's rendered
-  /// box is a tap target inflated by `VisualDensity`, so letting it set the
-  /// height made the header's spacing both dependent on whether the button was
-  /// shown — hiding it collapsed the row and cost the sheet 32px — and
-  /// different across platforms, since `VisualDensity` is platform-adaptive.
+  /// Fixed rather than measured from its children. [trailing] is an icon
+  /// button, and Material wraps one in a tap target inflated by
+  /// `VisualDensity` — larger than the control drawn inside it, and
+  /// platform-dependent. Measuring the row let that invisible box set the
+  /// header's shape: the bar grew taller than the control, the leading mark
+  /// trailed slack that pushed the supporting text away, and the whole header
+  /// changed size when the button was hidden.
   ///
-  /// The value matches what the button used to produce, so the spacing is
-  /// unchanged in the common case and now holds without it.
-  static const double minHeight = 64;
+  /// One control tall, since the bar holds a single line or mark. The button
+  /// keeps its own tap target; it simply no longer dictates the layout.
+  static final double height = FlowinDesignControlSize.xs.value;
 
   @override
   Widget build(BuildContext context) {
-    // Measures the row so [leading] can align against the tallest child rather
-    // than shrink-wrapping its own text. Remove it and the alignment below
-    // silently stops doing anything.
-    return IntrinsicHeight(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: minHeight),
+    // OverflowBox lets [trailing] lay out at its natural size — an icon
+    // button's tap target is taller than the control it draws — while the bar
+    // reports only [height]. Sizing the row to the button instead let that
+    // invisible box dictate the header's shape.
+    return SizedBox(
+      height: height,
+      child: OverflowBox(
+        maxHeight: double.infinity,
         child: Padding(
           // [trailing] carries no inset, so this gutter is the only thing
           // holding it off the card edge. Narrower than the left: the control

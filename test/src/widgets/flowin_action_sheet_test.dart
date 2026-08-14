@@ -267,6 +267,22 @@ void main() {
     });
   });
 
+  group('FlowinActionSheetHeader close button', () {
+    testWidgets('lays out at its natural size', (tester) async {
+      await tester.pumpApp(
+        FlowinActionSheet(title: 'Title', margin: EdgeInsets.zero),
+      );
+
+      // The bar reports a fixed height so the button's tap target cannot set
+      // the header's shape — but the button still has to lay out at its own
+      // size. Constraining it instead of the row squashed the tonal circle
+      // down to the glyph.
+      final button = tester.getRect(find.byType(FlowinIconButton));
+
+      expect(button.height, button.width);
+    });
+  });
+
   group('showFlowinActionSheet keyboard inset', () {
     const screen = Size(400, 800);
 
