@@ -1,3 +1,23 @@
+## [0.1.1](https://github.com/luisburgos/flutter_flowin/compare/0.1.0...0.1.1) (2026-08-14)
+
+### Bug Fixes
+
+* **action-sheet:** centre the header title with the close button ([#51](https://github.com/luisburgos/flutter_flowin/issues/51)) ([7e8eca2](https://github.com/luisburgos/flutter_flowin/commit/7e8eca2231f7a4f367fb50107f19d789a742f458))
+* **action-sheet:** stop the close button dictating the header's layout ([#52](https://github.com/luisburgos/flutter_flowin/issues/52)) ([5188be2](https://github.com/luisburgos/flutter_flowin/commit/5188be2c96ed0f8595d502c5537552877c00cb5b))
+* **color-picker:** show the picked color in the custom swatch ([#50](https://github.com/luisburgos/flutter_flowin/issues/50)) ([847b831](https://github.com/luisburgos/flutter_flowin/commit/847b8315d901385b3db2f026166cc5b96e7880fd))
+* **showcase:** open in the device's appearance, not always light ([#49](https://github.com/luisburgos/flutter_flowin/issues/49)) ([9052189](https://github.com/luisburgos/flutter_flowin/commit/905218931b980950477641f83c2eca5f341b0be9))
+* **showcase:** paint the page dark before Flutter's first frame ([#54](https://github.com/luisburgos/flutter_flowin/issues/54)) ([5c9af54](https://github.com/luisburgos/flutter_flowin/commit/5c9af54834185abbc151bd2b84d00487c90c28fd))
+
+### Documentation
+
+* **action-sheet:** explain the header's two title-to-subtitle gaps ([#53](https://github.com/luisburgos/flutter_flowin/issues/53)) ([201050f](https://github.com/luisburgos/flutter_flowin/commit/201050f3a33af18e0c1e79964730f2c2b3062682))
+* **contributing:** restructure around how a contribution actually happens ([#47](https://github.com/luisburgos/flutter_flowin/issues/47)) ([a29962c](https://github.com/luisburgos/flutter_flowin/commit/a29962c43a778116934455348aba08074458af65))
+* **readme:** surface the live showcase above the fold ([#48](https://github.com/luisburgos/flutter_flowin/issues/48)) ([da10c21](https://github.com/luisburgos/flutter_flowin/commit/da10c21bbbafd0d66db7b59db08bc363760f4760))
+
+### Chores
+
+* **pubspec:** homepage, topics, and the release procedure ([#46](https://github.com/luisburgos/flutter_flowin/issues/46)) ([71a09a5](https://github.com/luisburgos/flutter_flowin/commit/71a09a55dc25f5ee68fbe209a8300c237f218bfe))
+
 ## 0.1.0 (2026-08-13)
 
 Initial release of the Flowin design system: design tokens, a Material-mapped
