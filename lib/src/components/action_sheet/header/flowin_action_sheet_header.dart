@@ -70,9 +70,22 @@ class FlowinActionSheetHeader extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      // Wider gap under an icon than under a title: the title already carries
-      // its own line-height padding, so the two need different gaps to read as
-      // the same distance.
+      // The gap below the bar, which is not the whole gap the eye sees.
+      //
+      // With an icon, the title has moved into the supporting block, so this
+      // separates the icon from that block and the title-to-subtitle distance
+      // is the block's own spacing — space50.
+      //
+      // Without one the title is still in the bar, which is a fixed height and
+      // taller than a line of text, so the title trails half that difference
+      // as slack. The rendered title-to-subtitle gap is that slack plus this
+      // value, currently 10 against the 2 an icon gives.
+      //
+      // Left as it is: closing the difference means either shortening the bar,
+      // which tightens the header's top inset, or subtracting the slack here,
+      // which couples this widget to the bar's internal geometry. Neither is
+      // worth it for 8px, but the numbers are asserted so the difference stays
+      // where it was put rather than drifting.
       spacing: hasIcon ? FlowinDesignSpace.space200 : FlowinDesignSpace.space50,
       children: [
         FlowinActionSheetHeaderBar(
