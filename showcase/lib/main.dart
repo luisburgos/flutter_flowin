@@ -49,6 +49,14 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
   }
 }
 
+/// The widest the tab content may lay out.
+///
+/// Four columns at the list's minimum tile width, plus gaps and padding, land
+/// just under this; anything wider only stretches the tiles, and a stretched
+/// tile distorts its fixed-height cover art. The app bar and version label
+/// stay full-width — it is the content that caps, not the chrome.
+const double _kContentMaxWidth = 1200;
+
 /// The showcase index: a component catalogue and a set of realistic examples,
 /// split across two tabs.
 ///
@@ -90,12 +98,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Column(
         children: [
           Expanded(
-            child: TabBarView(
-              controller: _tabs,
-              children: [
-                const _LibraryTab(),
-                ShowcaseEntryList(entries: exampleEntries),
-              ],
+            // Centered under a max width so an ultrawide window widens the
+            // margins instead of the cards. The chip row lives inside the
+            // pager, so it caps and centers together with the lists.
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: _kContentMaxWidth,
+                ),
+                child: TabBarView(
+                  controller: _tabs,
+                  children: [
+                    const _LibraryTab(),
+                    ShowcaseEntryList(entries: exampleEntries),
+                  ],
+                ),
+              ),
             ),
           ),
           // Below the tabs rather than inside them: the version belongs to the
