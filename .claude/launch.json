@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "showcase-web",
+      "cwd": "showcase",
+      "runtimeExecutable": "fvm",
+      "runtimeArgs": [
+        "flutter",
+        "run",
+        "-d",
+        "web-server",
+        "--web-port",
+        "8642"
+      ],
+      "port": 8642
+    }
+  ]
+}

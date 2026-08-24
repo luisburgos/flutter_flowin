@@ -59,3 +59,6 @@ showcase/ios/Flutter/ephemeral/
 
 # Node tooling for the changelog generator (see package.json).
 node_modules/
+
+# Claude Code config is shared; only personal local overrides stay out.
+.claude/settings.local.json
