@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip_group.dart';
+import 'package:flutter_flowin/src/widgets/flowin_fade_page.dart';
 
 /// {@template flowin_chip_group_view_page}
 /// One tab in a [FlowinChipGroupViewPager]: a chip [label] plus a lazily-built
@@ -233,10 +234,16 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
                 );
               }
               if (widget.transition == FlowinPageTransition.fade) {
-                page = _FadePage(
-                  controller: _pageController,
+                page = FlowinFadePage(
+                  listenable: _pageController,
+                  // Before the first layout the controller has no page yet;
+                  // the initial index is where that first layout will land.
+                  positionOf: () =>
+                      _pageController.hasClients &&
+                          _pageController.position.haveDimensions
+                      ? _pageController.page!
+                      : _initialIndex.toDouble(),
                   index: index,
-                  fallbackPage: _initialIndex,
                   child: page,
                 );
               }
@@ -245,52 +252,6 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Cross-fades one page in place while the [PageView] scrolls beneath it.
-///
-/// The page view still owns the motion — its scroll position drives this — but
-/// each page counter-translates by exactly its slide offset, so it holds still
-/// and only its opacity follows the scroll. A page mid-fade ignores pointers,
-/// since the counter-translation overlaps it with its neighbour.
-class _FadePage extends StatelessWidget {
-  const _FadePage({
-    required this.controller,
-    required this.index,
-    required this.fallbackPage,
-    required this.child,
-  });
-
-  final PageController controller;
-  final int index;
-
-  /// The page to assume before the controller has dimensions (first layout).
-  final int fallbackPage;
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        final hasPage =
-            controller.hasClients && controller.position.haveDimensions;
-        final page = hasPage ? controller.page! : fallbackPage.toDouble();
-        final delta = page - index;
-        final opacity = (1 - delta.abs()).clamp(0.0, 1.0);
-        final width = hasPage ? controller.position.viewportDimension : 0.0;
-        return Transform.translate(
-          offset: Offset(delta * width, 0),
-          child: IgnorePointer(
-            ignoring: opacity < 1,
-            child: Opacity(opacity: opacity, child: child),
-          ),
-        );
-      },
-      child: child,
     );
   }
 }

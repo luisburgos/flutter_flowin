@@ -94,6 +94,12 @@ const _deliberatelyUncatalogued = <String, String>{
       'Internal to FlowinActionSheet; never built directly by a consumer.',
   'FlowinInlineColorPicker':
       'The row inside FlowinColorPickerField; swept through that widget.',
+  'FlowinFadePage':
+      'A behavioural wrapper with no look of its own — it only fades and '
+      'holds whatever page it is given, so a static card would show nothing. '
+      'The showcase exercises it live: the Library pager (transition: fade) '
+      'and FadeTabView both build it, and the package pins its contract in '
+      'flowin_chip_group_view_pager_test.dart.',
 };
 
 /// The demo pages an entry routes to rather than builds inline.

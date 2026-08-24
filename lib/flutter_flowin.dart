@@ -25,6 +25,7 @@ export 'src/widgets/flowin_chip_group.dart';
 export 'src/widgets/flowin_chip_group_view_pager.dart';
 export 'src/widgets/flowin_color_picker_field.dart';
 export 'src/widgets/flowin_color_radial_button.dart';
+export 'src/widgets/flowin_fade_page.dart';
 export 'src/widgets/flowin_icon_button.dart';
 export 'src/widgets/flowin_input_field.dart';
 export 'src/widgets/flowin_item_button.dart';
