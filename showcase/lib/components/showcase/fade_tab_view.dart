@@ -1,4 +1,5 @@
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:flutter_flowin/primitives.dart';
 
 /// A [TabBarView] whose pages cross-fade in place instead of sliding.
 ///
