@@ -31,7 +31,12 @@ class FadeTabView extends StatelessWidget {
             listenable: animation,
             positionOf: () => animation.value,
             index: index,
-            child: children[index],
+            // Kept alive so a tab keeps its scroll position and chip
+            // selection across switches instead of rebuilding from scratch.
+            child: FlowinKeepAlivePage(
+              key: PageStorageKey<String>('showcase_tab_$index'),
+              child: children[index],
+            ),
           ),
       ],
     );

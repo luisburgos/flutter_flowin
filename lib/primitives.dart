@@ -10,3 +10,4 @@
 library;
 
 export 'src/widgets/flowin_fade_page.dart';
+export 'src/widgets/flowin_keep_alive_page.dart';
