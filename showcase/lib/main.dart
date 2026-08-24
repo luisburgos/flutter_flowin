@@ -84,16 +84,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = FlowinTabAppBar(
+      primary: !kIsWeb,
+      controller: _tabs,
+      leading: FDIcons.scanFace.toIcon(),
+      trailing: const ThemeModeToggle(),
+      tabs: const [
+        FlowinTabItem(label: 'Library'),
+        FlowinTabItem(label: 'Examples'),
+      ],
+    );
+
     return Scaffold(
-      appBar: FlowinTabAppBar(
-        primary: !kIsWeb,
-        controller: _tabs,
-        leading: FDIcons.scanFace.toIcon(),
-        trailing: const ThemeModeToggle(),
-        tabs: const [
-          FlowinTabItem(label: 'Library'),
-          FlowinTabItem(label: 'Examples'),
-        ],
+      // The bar caps to the same width as the content: uncapped, an
+      // ultrawide window strands the leading icon and the toggle at the
+      // screen's far corners and stretches each tab across half of it.
+      appBar: PreferredSize(
+        preferredSize: appBar.preferredSize,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _kContentMaxWidth),
+            child: appBar,
+          ),
+        ),
       ),
       body: Column(
         children: [
