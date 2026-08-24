@@ -89,6 +89,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       controller: _tabs,
       leading: FDIcons.scanFace.toIcon(),
       trailing: const ThemeModeToggle(),
+      // Silenced because the capped bar would cut it at the content edge;
+      // the full-width hairline is painted behind, below.
+      dividerColor: Colors.transparent,
       tabs: const [
         FlowinTabItem(label: 'Library'),
         FlowinTabItem(label: 'Examples'),
@@ -98,14 +101,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       // The bar caps to the same width as the content: uncapped, an
       // ultrawide window strands the leading icon and the toggle at the
-      // screen's far corners and stretches each tab across half of it.
+      // screen's far corners and stretches each tab across half of it. The
+      // hairline is the exception — an edge is chrome, not content, so it
+      // spans the window: a full-width divider sits behind the capped bar
+      // at the same bottom edge the bar's own (now transparent) footer
+      // occupies, keeping every spacing pixel identical.
       appBar: PreferredSize(
         preferredSize: appBar.preferredSize,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _kContentMaxWidth),
-            child: appBar,
-          ),
+        child: Stack(
+          children: [
+            const Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Divider(height: 1, thickness: 1),
+            ),
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: _kContentMaxWidth),
+                child: appBar,
+              ),
+            ),
+          ],
         ),
       ),
       body: Column(
