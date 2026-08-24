@@ -50,6 +50,7 @@ a Flowin screen needs. See [`example/`](example) for a complete app.
 - **Design foundations** — primitive tokens for colors, typography, spacing, radius, borders, shadows, icons, and icon sizing, plus an accessible-color helper for contrast-safe pairings
 - **BuildContext extensions** — `context.flowinTokens`, `context.spacing`, `context.semanticColors`, alongside `context.theme`, `context.colorScheme`, and `context.textTheme`
 - **Component library** — buttons, inputs, color pickers, chips and chip groups, tabs, app bars, cards, and action sheets
+- **Primitives entry point** — behavioral building blocks with no visual identity of their own (e.g. `FlowinFadePage`, the cross-fade page transition) via `package:flutter_flowin/primitives.dart`, kept below the catalogued component surface
 
 ## Usage 🚀
 

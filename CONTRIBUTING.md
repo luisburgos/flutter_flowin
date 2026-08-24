@@ -19,6 +19,19 @@ Four directories are easy to confuse:
 | `example/` | one small app that pub.dev renders on the package's Example tab |
 | `lib/src/vendor/` | third-party source vendored verbatim — see below before touching it |
 
+The package has **two entry points**, and which one exports a widget is a
+design decision, not a convenience:
+
+| Barrel | What belongs there |
+|---|---|
+| `lib/flutter_flowin.dart` | the **catalogued surface** — components with a look of their own. Everything exported here must have a showcase card; the showcase's catalogue-coverage test enforces it |
+| `lib/primitives.dart` | **primitives** — public behavioral building blocks with no visual identity (e.g. `FlowinFadePage`), consumed by catalogued components and by apps composing their own. Not swept by the catalogue test |
+
+The layering reads: foundations (tokens) → primitives (behavior) →
+components (catalogued) → apps. If a new export would need an *excuse* in the
+catalogue-coverage exclusion list rather than a card, it probably belongs in
+`primitives.dart` instead.
+
 ---
 
 ## Opening an issue
