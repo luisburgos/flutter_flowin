@@ -3,6 +3,17 @@ import 'dart:math' as math;
 import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
+/// How a [LowframerScribble] writes its line.
+enum LowframerScribbleStyle {
+  /// Irregular handwriting: crest heights and cycle widths vary per
+  /// segment, like a quickly scribbled sentence.
+  wave,
+
+  /// A drawn wave: uniform rhythm and height, with only the faint tremor
+  /// of a hand — the wave a marker draws, not a plotter.
+  sketch,
+}
+
 /// A line of handwriting with no words in it.
 ///
 /// Where [LowframerBox.line] stands in for typeset text, this stands in for
@@ -27,6 +38,7 @@ class LowframerScribble extends StatelessWidget {
     this.wavelength = 10,
     this.seed = 0,
     this.fontStyle = FontStyle.normal,
+    this.style = LowframerScribbleStyle.sketch,
     super.key,
   }) : assert(wavelength > 0, 'wavelength must be positive'),
        assert(strokeWidth > 0, 'strokeWidth must be positive');
@@ -53,6 +65,9 @@ class LowframerScribble extends StatelessWidget {
   /// Mirrors [TextStyle.fontStyle]: [FontStyle.italic] slants the stroke.
   final FontStyle fontStyle;
 
+  /// The handwriting style the stroke is drawn in.
+  final LowframerScribbleStyle style;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -65,6 +80,7 @@ class LowframerScribble extends StatelessWidget {
           wavelength: wavelength,
           seed: seed,
           fontStyle: fontStyle,
+          style: style,
         ),
       ),
     );
@@ -78,6 +94,7 @@ class _ScribblePainter extends CustomPainter {
     required this.wavelength,
     required this.seed,
     required this.fontStyle,
+    required this.style,
   });
 
   final Color color;
@@ -85,6 +102,7 @@ class _ScribblePainter extends CustomPainter {
   final double wavelength;
   final int seed;
   final FontStyle fontStyle;
+  final LowframerScribbleStyle style;
 
   /// A deterministic hash in [0, 1) from a segment index and the seed — the
   /// shader-style fractional-sine trick, so no [math.Random] state is
@@ -129,7 +147,19 @@ class _ScribblePainter extends CustomPainter {
 
     while (!done) {
       segment++;
-      final hw = halfWave * (0.7 + 0.6 * _hash(segment));
+      // Sketch keeps the rhythm uniform — only a faint hand-tremor on each
+      // cycle — where wave varies both freely per segment.
+      final (hwJitter, ampJitter) = switch (style) {
+        LowframerScribbleStyle.wave => (
+          0.7 + 0.6 * _hash(segment),
+          0.45 + 0.55 * _hash(segment + 31),
+        ),
+        LowframerScribbleStyle.sketch => (
+          0.94 + 0.12 * _hash(segment),
+          0.88 + 0.12 * _hash(segment + 31),
+        ),
+      };
+      final hw = halfWave * hwJitter;
       var nextX = x + hw;
       // The sentence runs the full line: the last curve stretches to the
       // edge rather than leaving a stub of empty space after it.
@@ -137,8 +167,17 @@ class _ScribblePainter extends CustomPainter {
         nextX = endX;
         done = true;
       }
-      final amp = baseAmp * (0.45 + 0.55 * _hash(segment + 31)) * (up ? -1 : 1);
-      path.quadraticBezierTo((x + nextX) / 2, midY + amp * 2, nextX, midY);
+      final amp = baseAmp * ampJitter * (up ? -1 : 1);
+      // The tremor: crest position and landing point shift by fractions of
+      // a pixel, which is what separates drawn ink from plotted output.
+      final wobbleX = (_hash(segment + 57) - 0.5) * hw * 0.15;
+      final wobbleY = (_hash(segment + 91) - 0.5) * strokeWidth * 0.4;
+      path.quadraticBezierTo(
+        (x + nextX) / 2 + wobbleX,
+        midY + amp * 2,
+        nextX,
+        midY + (done ? 0 : wobbleY),
+      );
       x = nextX;
       up = !up;
     }
@@ -152,5 +191,6 @@ class _ScribblePainter extends CustomPainter {
       strokeWidth != oldDelegate.strokeWidth ||
       wavelength != oldDelegate.wavelength ||
       seed != oldDelegate.seed ||
-      fontStyle != oldDelegate.fontStyle;
+      fontStyle != oldDelegate.fontStyle ||
+      style != oldDelegate.style;
 }
