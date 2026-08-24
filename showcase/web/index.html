@@ -127,6 +127,12 @@
       splash.addEventListener("transitionend", function () {
         splash.remove();
       });
+      // Belt and suspenders: a browser that forces animations off gives the
+      // fade zero duration, and transitionend never fires for zero-duration
+      // transitions. remove() is idempotent, so both paths firing is fine.
+      setTimeout(function () {
+        splash.remove();
+      }, 400);
     });
   </script>
 </body>
