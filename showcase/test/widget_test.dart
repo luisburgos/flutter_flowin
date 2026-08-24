@@ -49,6 +49,26 @@ void main() {
     }
   });
 
+  testWidgets('the Library tab keeps its state across tab switches', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ShowcaseApp());
+
+    // Move the Library pager off its initial page...
+    await tester.tap(find.text('Foundations'));
+    await tester.pumpAndSettle();
+    expect(find.text('Typography'), findsOneWidget);
+
+    // ...switch tabs away and back...
+    await tester.tap(find.text('Examples'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Library'));
+    await tester.pumpAndSettle();
+
+    // ...and the pager is still on Foundations, not reset to Components.
+    expect(find.text('Typography'), findsOneWidget);
+  });
+
   testWidgets('the Examples tab lists every example page', (tester) async {
     await tester.pumpWidget(const ShowcaseApp());
 

@@ -84,9 +84,9 @@ class FlowinAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: Row(
               children: [
-                _Slot(child: leading),
+                _EdgeSlot(child: leading),
                 if (child != null) Expanded(child: child!) else const Spacer(),
-                _Slot(child: trailing),
+                _EdgeSlot(child: trailing),
               ],
             ),
           ),
@@ -100,8 +100,12 @@ class FlowinAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class _Slot extends StatelessWidget {
-  const _Slot({this.child});
+/// Reserves the bar's minimum content square at an edge.
+///
+/// An empty slot still holds its ground, so the centre slot stays centred
+/// whether or not a leading or trailing control is present.
+class _EdgeSlot extends StatelessWidget {
+  const _EdgeSlot({this.child});
 
   final Widget? child;
 

@@ -5,6 +5,7 @@ import 'package:flutter_flowin/src/foundations/foundations.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip_group.dart';
 import 'package:flutter_flowin/src/widgets/flowin_fade_page.dart';
+import 'package:flutter_flowin/src/widgets/flowin_keep_alive_page.dart';
 
 /// {@template flowin_chip_group_view_page}
 /// One tab in a [FlowinChipGroupViewPager]: a chip [label] plus a lazily-built
@@ -228,7 +229,7 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
             itemBuilder: (context, index) {
               var page = widget.items[index].builder(context);
               if (widget.keepPagesAlive) {
-                page = _KeepAlive(
+                page = FlowinKeepAlivePage(
                   key: PageStorageKey<String>('flowin_chip_page_$index'),
                   child: page,
                 );
@@ -253,26 +254,5 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
         ),
       ],
     );
-  }
-}
-
-class _KeepAlive extends StatefulWidget {
-  const _KeepAlive({required this.child, super.key});
-
-  final Widget child;
-
-  @override
-  State<_KeepAlive> createState() => _KeepAliveState();
-}
-
-class _KeepAliveState extends State<_KeepAlive>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.child;
   }
 }
