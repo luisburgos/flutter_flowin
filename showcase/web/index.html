@@ -43,9 +43,71 @@
     @media (prefers-color-scheme: light) {
       html, body { background-color: #FFFFFF; } /* light.surface */
     }
+
+    /*
+      The splash loader: a rainbow equalizer wave, alive while main.dart.js
+      downloads and compiles. Removed on Flutter's own first-frame event
+      rather than a timer, so it can never outlive or undercut the app.
+    */
+    #splash {
+      position: fixed;
+      inset: 0;
+      /* Above Flutter's compositing layers for its whole short life. */
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      opacity: 1;
+      transition: opacity 200ms ease-out;
+      pointer-events: none;
+    }
+    #splash.done { opacity: 0; }
+    #splash span {
+      width: 6px;
+      height: 40px;
+      border-radius: 999px;
+      animation: splash-wave 1s ease-in-out infinite;
+    }
+    /*
+      The hue steps stop short of wrapping back to red so the row reads as a
+      spectrum, not a loop. Each bar gets its own period and a negative
+      phase: co-prime-ish durations drift in and out of sync, so the row
+      shows several peaks and valleys at once — an audio waveform, not a
+      single travelling ripple.
+    */
+    #splash span:nth-child(1) { background: hsl(0, 70%, 55%); animation-duration: 1.5s; animation-delay: -0.3s; }
+    #splash span:nth-child(2) { background: hsl(40, 70%, 55%); animation-duration: 1.2s; animation-delay: -0.8s; }
+    #splash span:nth-child(3) { background: hsl(80, 70%, 50%); animation-duration: 1.8s; animation-delay: -0.2s; }
+    #splash span:nth-child(4) { background: hsl(120, 60%, 45%); animation-duration: 1.35s; animation-delay: -1.1s; }
+    #splash span:nth-child(5) { background: hsl(160, 70%, 45%); animation-duration: 1.1s; animation-delay: -0.5s; }
+    #splash span:nth-child(6) { background: hsl(200, 70%, 50%); animation-duration: 1.65s; animation-delay: -1s; }
+    #splash span:nth-child(7) { background: hsl(240, 70%, 60%); animation-duration: 1.25s; animation-delay: -0.25s; }
+    #splash span:nth-child(8) { background: hsl(280, 70%, 55%); animation-duration: 1.55s; animation-delay: -0.7s; }
+    #splash span:nth-child(9) { background: hsl(320, 70%, 55%); animation-duration: 1.4s; animation-delay: -1.2s; }
+    /*
+      Two peaks of different heights per cycle, with a mid-cycle dip: even a
+      single bar reads as level bouncing, and the desynced row reads as
+      music. The amplitude steps are kept gentle and the periods long so the
+      motion sways rather than jitters.
+    */
+    @keyframes splash-wave {
+      0%, 100% { transform: scaleY(0.3); }
+      30% { transform: scaleY(0.95); }
+      50% { transform: scaleY(0.55); }
+      70% { transform: scaleY(0.85); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #splash span { animation: none; transform: scaleY(0.6); }
+    }
   </style>
 </head>
 <body>
+  <div id="splash" aria-label="Loading" role="progressbar">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
@@ -55,5 +117,23 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // Flutter dispatches this exactly when it paints its first frame; a
+    // timer would either flash past a fast load or lie through a slow one.
+    window.addEventListener("flutter-first-frame", function () {
+      var splash = document.getElementById("splash");
+      if (!splash) return;
+      splash.classList.add("done");
+      splash.addEventListener("transitionend", function () {
+        splash.remove();
+      });
+      // Belt and suspenders: a browser that forces animations off gives the
+      // fade zero duration, and transitionend never fires for zero-duration
+      // transitions. remove() is idempotent, so both paths firing is fine.
+      setTimeout(function () {
+        splash.remove();
+      }, 400);
+    });
+  </script>
 </body>
 </html>
