@@ -28,15 +28,6 @@ class ChipPagersCoverArt extends StatelessWidget {
               radius: 5,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 4,
-            children: [
-              LowframerBox.pill(color: palette.fillStrong, width: 5, height: 5),
-              LowframerBox.pill(color: palette.fill, width: 5, height: 5),
-              LowframerBox.pill(color: palette.fill, width: 5, height: 5),
-            ],
-          ),
         ],
       ),
     );

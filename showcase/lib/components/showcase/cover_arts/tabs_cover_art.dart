@@ -16,6 +16,9 @@ class TabsCoverArt extends StatelessWidget {
         children: [
           Row(
             spacing: 12,
+            // Top-aligned so every label sits on the same line; the selected
+            // tab's underline hangs below without pushing its label off axis.
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 spacing: 4,
@@ -33,7 +36,6 @@ class TabsCoverArt extends StatelessWidget {
               LowframerBox.line(color: palette.fill, width: 30),
             ],
           ),
-          const SizedBox(height: 2),
           Expanded(
             child: LowframerBox(
               color: palette.fill,

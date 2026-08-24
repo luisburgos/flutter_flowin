@@ -157,9 +157,9 @@ class LowframerBox extends StatelessWidget {
     required this.width,
     this.height = 12,
     this.borderColor,
+    this.child,
     super.key,
-  }) : radius = 999,
-       child = null;
+  }) : radius = 999;
 
   /// The fill color.
   final Color color;

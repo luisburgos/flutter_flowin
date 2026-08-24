@@ -15,7 +15,6 @@ class ChipGroupsCoverArt extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8,
         children: [
-          LowframerBox.line(color: palette.fillStrong, width: 28),
           Row(
             spacing: 6,
             children: [
