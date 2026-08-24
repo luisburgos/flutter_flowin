@@ -26,6 +26,19 @@ class FlowinChipGroupViewPage {
   final WidgetBuilder builder;
 }
 
+/// How a [FlowinChipGroupViewPager] moves between pages.
+enum FlowinPageTransition {
+  /// Pages slide horizontally, the [PageView] default.
+  slide,
+
+  /// Pages cross-fade in place.
+  ///
+  /// The scroll still drives the transition — swiping scrubs the fade — but
+  /// each page holds its position instead of sliding, so the change reads as
+  /// content swapping rather than a carousel moving.
+  fade,
+}
+
 /// {@template flowin_chip_group_view_pager}
 /// A [FlowinChipGroup] wired to a [PageView]: tapping a chip animates to its
 /// page, and swiping pages updates the selected chip.
@@ -52,6 +65,7 @@ class FlowinChipGroupViewPager extends StatefulWidget {
     this.chipRunSpacing,
     this.chipWrapAlignment = WrapAlignment.start,
     this.showDivider = true,
+    this.transition = FlowinPageTransition.slide,
     super.key,
   }) : assert(
          items.length > 0,
@@ -132,6 +146,9 @@ class FlowinChipGroupViewPager extends StatefulWidget {
   /// [isScrollable] is false.
   final WrapAlignment chipWrapAlignment;
 
+  /// How pages move when the selection changes.
+  final FlowinPageTransition transition;
+
   @override
   State<FlowinChipGroupViewPager> createState() =>
       _FlowinChipGroupViewPagerState();
@@ -208,16 +225,72 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
               widget.onIndexChanged?.call(index);
             },
             itemBuilder: (context, index) {
-              final page = widget.items[index].builder(context);
-              if (!widget.keepPagesAlive) return page;
-              return _KeepAlive(
-                key: PageStorageKey<String>('flowin_chip_page_$index'),
-                child: page,
-              );
+              var page = widget.items[index].builder(context);
+              if (widget.keepPagesAlive) {
+                page = _KeepAlive(
+                  key: PageStorageKey<String>('flowin_chip_page_$index'),
+                  child: page,
+                );
+              }
+              if (widget.transition == FlowinPageTransition.fade) {
+                page = _FadePage(
+                  controller: _pageController,
+                  index: index,
+                  fallbackPage: _initialIndex,
+                  child: page,
+                );
+              }
+              return page;
             },
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Cross-fades one page in place while the [PageView] scrolls beneath it.
+///
+/// The page view still owns the motion — its scroll position drives this — but
+/// each page counter-translates by exactly its slide offset, so it holds still
+/// and only its opacity follows the scroll. A page mid-fade ignores pointers,
+/// since the counter-translation overlaps it with its neighbour.
+class _FadePage extends StatelessWidget {
+  const _FadePage({
+    required this.controller,
+    required this.index,
+    required this.fallbackPage,
+    required this.child,
+  });
+
+  final PageController controller;
+  final int index;
+
+  /// The page to assume before the controller has dimensions (first layout).
+  final int fallbackPage;
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        final hasPage =
+            controller.hasClients && controller.position.haveDimensions;
+        final page = hasPage ? controller.page! : fallbackPage.toDouble();
+        final delta = page - index;
+        final opacity = (1 - delta.abs()).clamp(0.0, 1.0);
+        final width = hasPage ? controller.position.viewportDimension : 0.0;
+        return Transform.translate(
+          offset: Offset(delta * width, 0),
+          child: IgnorePointer(
+            ignoring: opacity < 1,
+            child: Opacity(opacity: opacity, child: child),
+          ),
+        );
+      },
+      child: child,
     );
   }
 }

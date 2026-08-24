@@ -58,6 +58,64 @@ void main() {
     });
   });
 
+  group('FlowinPageTransition.fade', () {
+    testWidgets('pages hold their position and settle fully opaque', (
+      tester,
+    ) async {
+      await tester.pumpApp(
+        _sized(
+          FlowinChipGroupViewPager(
+            items: _pages(),
+            transition: FlowinPageTransition.fade,
+          ),
+        ),
+      );
+
+      final page1Center = tester.getCenter(find.text('Page 1'));
+
+      await tester.tap(find.text('Timeline'));
+      // First frame starts the animation; the second lands mid-transition,
+      // where the incoming page is already laid out at its final position —
+      // the counter-translation cancels the slide.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 140));
+      expect(tester.getCenter(find.text('Page 2')), page1Center);
+
+      await tester.pumpAndSettle();
+      expect(tester.getCenter(find.text('Page 2')), page1Center);
+
+      // Settled: the visible page is fully opaque and interactive.
+      final opacities = tester
+          .widgetList<Opacity>(
+            find.ancestor(
+              of: find.text('Page 2'),
+              matching: find.byType(Opacity),
+            ),
+          )
+          .toList();
+      expect(opacities.first.opacity, 1);
+    });
+
+    testWidgets('selection still lands on the tapped chip', (tester) async {
+      int? changedIndex;
+      await tester.pumpApp(
+        _sized(
+          FlowinChipGroupViewPager(
+            items: _pages(),
+            transition: FlowinPageTransition.fade,
+            onIndexChanged: (index) => changedIndex = index,
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Settings'));
+      await tester.pumpAndSettle();
+
+      expect(changedIndex, 2);
+      expect(find.text('Page 3'), findsOneWidget);
+    });
+  });
+
   group('FlowinChipGroupViewPager controlled mode (#15)', () {
     testWidgets('external chipGroupController drives selection', (
       tester,
