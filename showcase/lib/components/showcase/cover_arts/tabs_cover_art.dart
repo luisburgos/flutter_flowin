@@ -36,7 +36,6 @@ class TabsCoverArt extends StatelessWidget {
               LowframerBox.line(color: palette.fill, width: 30),
             ],
           ),
-          const SizedBox(height: 2),
           Expanded(
             child: LowframerBox(
               color: palette.fill,
