@@ -17,11 +17,11 @@ class AppBarsCoverArt extends StatelessWidget {
         children: [
           Row(
             children: [
-              LowframerBox.pill(color: palette.accent, width: 12),
+              LowframerBox.pill(color: palette.fill, width: 12),
               const Spacer(),
               LowframerBox.line(color: palette.fillStrong, width: 40),
               const Spacer(),
-              LowframerBox.pill(color: palette.fill, width: 12),
+              LowframerBox.pill(color: palette.accent, width: 12),
             ],
           ),
           LowframerBox(color: palette.fillStrong, height: 1, radius: 0),
