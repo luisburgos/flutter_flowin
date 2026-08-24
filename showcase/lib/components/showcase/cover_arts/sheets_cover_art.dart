@@ -14,7 +14,6 @@ class SheetsCoverArt extends StatelessWidget {
     return LowframerWindow(
       child: Column(
         children: [
-          LowframerBox.line(color: palette.fill, width: 80),
           const Spacer(),
           LowframerBox(
             color: palette.background,
