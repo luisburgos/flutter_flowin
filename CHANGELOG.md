@@ -1,3 +1,25 @@
+## [0.2.0](https://github.com/luisburgos/flutter_flowin/compare/0.1.1...0.2.0) (2026-08-24)
+
+### Features
+
+* cross-fade page transitions for the chip pager and showcase tabs ([#60](https://github.com/luisburgos/flutter_flowin/issues/60)) ([7130f20](https://github.com/luisburgos/flutter_flowin/commit/7130f203b27f3885cd668021092ca52bfcaab683))
+* **showcase:** add LowframerScribble and write the Typography art with it ([#63](https://github.com/luisburgos/flutter_flowin/issues/63)) ([e3bf77e](https://github.com/luisburgos/flutter_flowin/commit/e3bf77e44cde0090313052cbbb74b800ee09c091))
+* **showcase:** animate the web splash as a rainbow sound wave ([#57](https://github.com/luisburgos/flutter_flowin/issues/57)) ([1afc0b7](https://github.com/luisburgos/flutter_flowin/commit/1afc0b76f55f825dd1668e66a32ed7f1310b15e7))
+* **showcase:** cap the tab content width on large screens ([#59](https://github.com/luisburgos/flutter_flowin/issues/59)) ([05d8c42](https://github.com/luisburgos/flutter_flowin/commit/05d8c420cb9d33dc21bb94cbba6ff2bb9789e746))
+* **showcase:** give every catalogue card a lowframer cover art ([#58](https://github.com/luisburgos/flutter_flowin/issues/58)) ([3200258](https://github.com/luisburgos/flutter_flowin/commit/320025827f3eec0fb93d02f3251ba66cb003375b))
+
+### Bug Fixes
+
+* **showcase:** match the cover arts to their components' real anatomy ([#62](https://github.com/luisburgos/flutter_flowin/issues/62)) ([a7b6d8c](https://github.com/luisburgos/flutter_flowin/commit/a7b6d8ce886f020bba65e43e148b44803c05efd3))
+
+### Refactors
+
+* extract FlowinKeepAlivePage and adopt it in the showcase tabs ([#61](https://github.com/luisburgos/flutter_flowin/issues/61)) ([1ba4f72](https://github.com/luisburgos/flutter_flowin/commit/1ba4f72843387ad5dd8e7143b56821bf6a3491c9))
+
+### Chores
+
+* **showcase:** put Components before Foundations in the Library pager ([#56](https://github.com/luisburgos/flutter_flowin/issues/56)) ([e37082b](https://github.com/luisburgos/flutter_flowin/commit/e37082beba70ab8cb865068d33f235a4467d5e77))
+* track the shared .claude config ([154cddb](https://github.com/luisburgos/flutter_flowin/commit/154cddba45cac4717e4bbc85e7b47a279d5f1142))
 ## [0.1.1](https://github.com/luisburgos/flutter_flowin/compare/0.1.0...0.1.1) (2026-08-14)
 
 ### Bug Fixes
