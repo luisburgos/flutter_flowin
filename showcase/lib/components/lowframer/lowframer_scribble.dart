@@ -10,7 +10,8 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// pen lifting between them. [height] and [strokeWidth] together read as the
 /// writing's size, and [wavelength] is its frequency — tight cycles scrawl,
 /// wide ones read as lazy cursive. [seed] varies the handwriting, so two
-/// lines with the same knobs still read as different sentences.
+/// lines with the same knobs still read as different sentences. [fontStyle]
+/// mirrors [TextStyle.fontStyle]: italic slants the whole stroke.
 ///
 /// Deterministic on purpose: every irregularity — amplitude, cycle width,
 /// word lengths, gaps — comes from a hash of the segment index and [seed],
@@ -25,6 +26,7 @@ class LowframerScribble extends StatelessWidget {
     this.strokeWidth = 2,
     this.wavelength = 10,
     this.seed = 0,
+    this.fontStyle = FontStyle.normal,
     super.key,
   }) : assert(wavelength > 0, 'wavelength must be positive'),
        assert(strokeWidth > 0, 'strokeWidth must be positive');
@@ -48,6 +50,9 @@ class LowframerScribble extends StatelessWidget {
   /// Varies the handwriting deterministically; same seed, same stroke.
   final int seed;
 
+  /// Mirrors [TextStyle.fontStyle]: [FontStyle.italic] slants the stroke.
+  final FontStyle fontStyle;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -59,6 +64,7 @@ class LowframerScribble extends StatelessWidget {
           strokeWidth: strokeWidth,
           wavelength: wavelength,
           seed: seed,
+          fontStyle: fontStyle,
         ),
       ),
     );
@@ -71,12 +77,14 @@ class _ScribblePainter extends CustomPainter {
     required this.strokeWidth,
     required this.wavelength,
     required this.seed,
+    required this.fontStyle,
   });
 
   final Color color;
   final double strokeWidth;
   final double wavelength;
   final int seed;
+  final FontStyle fontStyle;
 
   /// A deterministic hash in [0, 1) from a segment index and the seed — the
   /// shader-style fractional-sine trick, so no [math.Random] state is
@@ -96,6 +104,17 @@ class _ScribblePainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round;
 
     final midY = size.height / 2;
+
+    if (fontStyle == FontStyle.italic) {
+      // Shear about the midline so the slant costs no horizontal drift: a
+      // point at the midline stays put, crests lean right, valleys left —
+      // the same oblique a TextStyle italic applies to upright glyphs.
+      canvas
+        ..translate(0, midY)
+        ..transform((Matrix4.identity()..setEntry(0, 1, -0.3)).storage)
+        ..translate(0, -midY);
+    }
+
     final baseAmp = math.max(0, (size.height - strokeWidth) / 2).toDouble();
     final halfWave = wavelength / 2;
     final endX = size.width - strokeWidth / 2;
@@ -138,5 +157,6 @@ class _ScribblePainter extends CustomPainter {
       color != oldDelegate.color ||
       strokeWidth != oldDelegate.strokeWidth ||
       wavelength != oldDelegate.wavelength ||
-      seed != oldDelegate.seed;
+      seed != oldDelegate.seed ||
+      fontStyle != oldDelegate.fontStyle;
 }

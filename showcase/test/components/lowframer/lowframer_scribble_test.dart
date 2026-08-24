@@ -59,5 +59,33 @@ void main() {
       final second = painterOf();
       expect(second.shouldRepaint(first), isTrue);
     });
+
+    testWidgets('italic slants via fontStyle, mirroring TextStyle', (
+      tester,
+    ) async {
+      CustomPainter painterOf() => tester
+          .widget<CustomPaint>(
+            find.descendant(
+              of: find.byType(LowframerScribble),
+              matching: find.byType(CustomPaint),
+            ),
+          )
+          .painter!;
+
+      Widget build(FontStyle fontStyle) => MaterialApp(
+        home: Center(
+          child: LowframerScribble(color: Colors.black, fontStyle: fontStyle),
+        ),
+      );
+
+      await tester.pumpWidget(build(FontStyle.normal));
+      final upright = painterOf();
+
+      await tester.pumpWidget(build(FontStyle.italic));
+      final italic = painterOf();
+
+      expect(find.byType(LowframerScribble), findsOneWidget);
+      expect(italic.shouldRepaint(upright), isTrue);
+    });
   });
 }
