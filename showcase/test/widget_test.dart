@@ -13,20 +13,7 @@ void main() {
     expect(find.text('Library'), findsOneWidget);
     expect(find.text('Examples'), findsOneWidget);
 
-    // Foundations is the chip pager's first page. Scoped to the list because
-    // the chip carries the same label as its only entry today.
-    for (final entry in foundationEntries) {
-      expect(
-        find.descendant(
-          of: find.byType(ListView),
-          matching: find.text(entry.title),
-        ),
-        findsOneWidget,
-      );
-    }
-
-    await tester.tap(find.text('Components'));
-    await tester.pumpAndSettle();
+    // Components is the chip pager's first page.
     for (final entry in componentEntries) {
       // The list runs past the default test viewport, so scroll each into
       // view rather than asserting on what happens to be painted.
@@ -36,6 +23,20 @@ void main() {
         scrollable: find.byType(Scrollable).last,
       );
       expect(find.text(entry.title), findsOneWidget);
+    }
+
+    await tester.tap(find.text('Foundations'));
+    await tester.pumpAndSettle();
+    // Scoped to the list because the chip carries the same label as its only
+    // entry today.
+    for (final entry in foundationEntries) {
+      expect(
+        find.descendant(
+          of: find.byType(ListView),
+          matching: find.text(entry.title),
+        ),
+        findsOneWidget,
+      );
     }
   });
 

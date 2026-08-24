@@ -136,12 +136,12 @@ class _LibraryTab extends StatelessWidget {
       ),
       items: [
         FlowinChipGroupViewPage.child(
-          label: 'Foundations',
-          child: ShowcaseEntryList(entries: foundationEntries),
-        ),
-        FlowinChipGroupViewPage.child(
           label: 'Components',
           child: ShowcaseEntryList(entries: componentEntries),
+        ),
+        FlowinChipGroupViewPage.child(
+          label: 'Foundations',
+          child: ShowcaseEntryList(entries: foundationEntries),
         ),
       ],
     );
