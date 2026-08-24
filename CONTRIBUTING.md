@@ -167,7 +167,7 @@ the order matters. **Bump first, generate second** — the generator writes a
 section for whatever version it finds, so running it early files new work under
 the release already published.
 
-### 1. Bump the version in all four places, to the same value
+### 1. Bump the version in all five places, to the same value
 
 | File | Read by |
 |---|---|
@@ -175,6 +175,7 @@ the release already published.
 | `package.json` | conventional-changelog |
 | `showcase/pubspec.yaml` | the showcase app |
 | `flowinVersion` in `showcase/lib/app_info/flowin_app_info_service.dart` | the showcase's version label |
+| the `flutter_flowin: ^X.Y.Z` install snippet in `README.md` | everyone reading the package's front page |
 
 `showcase/test/app_version_test.dart` fails if any of them drift apart.
 
@@ -202,10 +203,18 @@ git tag <version> && git push origin <version>
 The tag bounds the next release's commit range, so it has to exist before the
 next changelog run.
 
-### 4. Publish
+### 4. Publish — only after an explicit go
+
+Publishing is the release's one irreversible step, so it has a human gate:
+run the dry-run, show its output, and **wait for an explicit approval of the
+publish itself** — approval of the release *process* ("cut the release") is
+not approval of the upload. This applies doubly to agents driving the
+runbook: steps 1–3 are theirs to execute, step 4 is not, however clean the
+dry-run looks.
 
 ```sh
-fvm dart pub publish
+fvm dart pub publish --dry-run   # review this together first
+fvm dart pub publish             # only after the explicit go
 ```
 
 Published versions are **immutable**: a version can never be replaced or
