@@ -28,8 +28,17 @@ void main() {
     await tester.tap(find.text('Foundations'));
     await tester.pumpAndSettle();
     // Scoped to the list because the chip carries the same label as its only
-    // entry today.
+    // entry today. Scrolled because the cover arts push later entries past
+    // the default test viewport.
     for (final entry in foundationEntries) {
+      await tester.scrollUntilVisible(
+        find.descendant(
+          of: find.byType(ListView),
+          matching: find.text(entry.title),
+        ),
+        120,
+        scrollable: find.byType(Scrollable).last,
+      );
       expect(
         find.descendant(
           of: find.byType(ListView),
