@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip_group.dart';
+import 'package:flutter_flowin/src/widgets/flowin_fade_page.dart';
 
 /// {@template flowin_chip_group_view_page}
 /// One tab in a [FlowinChipGroupViewPager]: a chip [label] plus a lazily-built
@@ -24,6 +25,19 @@ class FlowinChipGroupViewPage {
 
   /// Builds the page content.
   final WidgetBuilder builder;
+}
+
+/// How a [FlowinChipGroupViewPager] moves between pages.
+enum FlowinPageTransition {
+  /// Pages slide horizontally, the [PageView] default.
+  slide,
+
+  /// Pages cross-fade in place.
+  ///
+  /// The scroll still drives the transition — swiping scrubs the fade — but
+  /// each page holds its position instead of sliding, so the change reads as
+  /// content swapping rather than a carousel moving.
+  fade,
 }
 
 /// {@template flowin_chip_group_view_pager}
@@ -52,6 +66,7 @@ class FlowinChipGroupViewPager extends StatefulWidget {
     this.chipRunSpacing,
     this.chipWrapAlignment = WrapAlignment.start,
     this.showDivider = true,
+    this.transition = FlowinPageTransition.slide,
     super.key,
   }) : assert(
          items.length > 0,
@@ -132,6 +147,9 @@ class FlowinChipGroupViewPager extends StatefulWidget {
   /// [isScrollable] is false.
   final WrapAlignment chipWrapAlignment;
 
+  /// How pages move when the selection changes.
+  final FlowinPageTransition transition;
+
   @override
   State<FlowinChipGroupViewPager> createState() =>
       _FlowinChipGroupViewPagerState();
@@ -208,12 +226,28 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
               widget.onIndexChanged?.call(index);
             },
             itemBuilder: (context, index) {
-              final page = widget.items[index].builder(context);
-              if (!widget.keepPagesAlive) return page;
-              return _KeepAlive(
-                key: PageStorageKey<String>('flowin_chip_page_$index'),
-                child: page,
-              );
+              var page = widget.items[index].builder(context);
+              if (widget.keepPagesAlive) {
+                page = _KeepAlive(
+                  key: PageStorageKey<String>('flowin_chip_page_$index'),
+                  child: page,
+                );
+              }
+              if (widget.transition == FlowinPageTransition.fade) {
+                page = FlowinFadePage(
+                  listenable: _pageController,
+                  // Before the first layout the controller has no page yet;
+                  // the initial index is where that first layout will land.
+                  positionOf: () =>
+                      _pageController.hasClients &&
+                          _pageController.position.haveDimensions
+                      ? _pageController.page!
+                      : _initialIndex.toDouble(),
+                  index: index,
+                  child: page,
+                );
+              }
+              return page;
             },
           ),
         ),

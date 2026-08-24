@@ -1,5 +1,6 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
+import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
 import 'package:flowin_showcase/components/showcase/showcase_entry_list.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 constraints: const BoxConstraints(
                   maxWidth: _kContentMaxWidth,
                 ),
-                child: TabBarView(
+                child: FadeTabView(
                   controller: _tabs,
                   children: [
                     const _LibraryTab(),
@@ -135,6 +136,8 @@ class _LibraryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlowinChipGroupViewPager(
+      // Pages swap in place rather than sliding, matching the tab view above.
+      transition: FlowinPageTransition.fade,
       // Wrap layout: two chips always fit, so nothing scrolls out of reach.
       isScrollable: false,
       // The tab bar above already draws a hairline, so the pager's own would
