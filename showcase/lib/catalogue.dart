@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/showcase/cover_arts/cover_arts.dart';
 import 'package:flowin_showcase/components/showcase/showcase_entry.dart';
 import 'package:flowin_showcase/pages/buttons/buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/icon_buttons_page.dart';
@@ -32,30 +33,35 @@ final foundationEntries = <ShowcaseEntry>[
     subtitle: 'The Inter type scale, mapped onto Material roles',
     icon: FDIcons.edit,
     builder: (_) => const TypographyPage(),
+    coverArt: (_) => const TypographyCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Colors',
     subtitle: 'The palette mapped onto Material ColorScheme roles',
     icon: FDIcons.paint,
     builder: (_) => const ColorsPage(),
+    coverArt: (_) => const ColorsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Spacing',
     subtitle: 'Semantic steps read from context.spacing',
     icon: FDIcons.arrowRightLeft,
     builder: (_) => const SpacingPage(),
+    coverArt: (_) => const SpacingCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Radius',
     subtitle: 'The corner-radius scale',
     icon: FDIcons.board,
     builder: (_) => const RadiusPage(),
+    coverArt: (_) => const RadiusCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Icons',
     subtitle: 'The semantic set, at any step of the size scale',
     icon: FDIcons.setNeutral,
     builder: (_) => const IconsPage(),
+    coverArt: (_) => const IconsCoverArt(),
   ),
 ];
 
@@ -70,84 +76,98 @@ final componentEntries = <ShowcaseEntry>[
     subtitle: 'Labelled actions across every variant, size and state',
     icon: FDIcons.done,
     builder: (_) => const ButtonsPage(),
+    coverArt: (_) => const ButtonsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Icon buttons',
     subtitle: 'Circular, icon-only actions',
     icon: FDIcons.plus,
     builder: (_) => const IconButtonsPage(),
+    coverArt: (_) => const IconButtonsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Item buttons',
     subtitle: 'Full-width, left-aligned list and menu rows',
     icon: FDIcons.timer,
     builder: (_) => const ItemButtonsPage(),
+    coverArt: (_) => const ItemButtonsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Chips',
     subtitle: 'Selectable labels across every variant and state',
     icon: FDIcons.board,
     builder: (_) => const ChipsPage(),
+    coverArt: (_) => const ChipsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Chip groups',
     subtitle: 'A row of chips with one selected, scrolling or wrapped',
     icon: FDIcons.arrowRightLeft,
     builder: (_) => const ChipGroupsPage(),
+    coverArt: (_) => const ChipGroupsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Chip view pagers',
     subtitle: 'Chips that page between whole views',
     icon: FDIcons.timeline,
     builder: (_) => const ChipPagersPage(),
+    coverArt: (_) => const ChipPagersCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Input fields',
     subtitle: 'A label and a bordered surface around any content',
     icon: FDIcons.board,
     builder: (_) => const InputFieldsPage(),
+    coverArt: (_) => const InputFieldsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Text fields',
     subtitle: 'Typed entry, on its own or under a label',
     icon: FDIcons.edit,
     builder: (_) => const TextFieldsPage(),
+    coverArt: (_) => const TextFieldsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Colour swatches',
     subtitle: 'Picking a colour, as a single swatch or a whole field',
     icon: FDIcons.paint,
     builder: (_) => const SwatchesPage(),
+    coverArt: (_) => const SwatchesCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Cards & surfaces',
     subtitle: 'Smooth-cornered surfaces, and keeping their content readable',
     icon: FDIcons.timeline,
     builder: (_) => const CardsPage(),
+    coverArt: (_) => const CardsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Dividers',
     subtitle: 'Theme-styled rules between stacked or side-by-side content',
     icon: FDIcons.arrowRightLeft,
     builder: (_) => const DividersPage(),
+    coverArt: (_) => const DividersCoverArt(),
   ),
   ShowcaseEntry(
     title: 'App bars',
     subtitle: 'Page chrome, shown in place because that is the only way',
     icon: FDIcons.arrowRightLeft,
     builder: (_) => const AppBarsPage(),
+    coverArt: (_) => const AppBarsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Tabs',
     subtitle: 'Switching between peer sections, fixed or scrolling',
     icon: FDIcons.settings,
     builder: (_) => const TabsPage(),
+    coverArt: (_) => const TabsCoverArt(),
   ),
   ShowcaseEntry(
     title: 'Action sheets',
     subtitle: 'Modal sheets, headers, footers, confirmation flows',
     icon: FDIcons.more,
     builder: (_) => const SheetsPage(),
+    coverArt: (_) => const SheetsCoverArt(),
   ),
 ];
 
@@ -162,5 +182,6 @@ final exampleEntries = <ShowcaseEntry>[
     subtitle: 'Labelled fields feeding a live preview, with a submit action',
     icon: FDIcons.scanFace,
     builder: (_) => const ProfileExamplePage(),
+    coverArt: (_) => const ProfileExampleCoverArt(),
   ),
 ];

@@ -1,3 +1,4 @@
+import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flowin_showcase/components/showcase/showcase_entry.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -11,8 +12,12 @@ class ShowcaseEntryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final coverArt = entry.coverArt;
+
     return FlowinItemButton.tonal(
-      icon: entry.icon.toIcon(),
+      // The art replaces the icon rather than joining it: with an
+      // illustration on the card a second pictogram is redundant weight.
+      icon: coverArt == null ? entry.icon.toIcon() : null,
       onPressed: () => Navigator.of(
         context,
       ).push(MaterialPageRoute<void>(builder: entry.builder)),
@@ -20,6 +25,12 @@ class ShowcaseEntryTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (coverArt != null) ...[
+            // The cover panel spans the card and centers the art itself;
+            // the text below stays left-aligned as a scannable label.
+            LowframerCover(child: coverArt(context)),
+            SizedBox(height: context.spacing.sm),
+          ],
           Text(entry.title, style: context.textTheme.titleSmall),
           Text(
             entry.subtitle,

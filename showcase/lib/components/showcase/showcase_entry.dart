@@ -8,6 +8,7 @@ class ShowcaseEntry {
     required this.subtitle,
     required this.icon,
     required this.builder,
+    this.coverArt,
   });
 
   /// The page title.
@@ -21,4 +22,10 @@ class ShowcaseEntry {
 
   /// Builds the destination page.
   final WidgetBuilder builder;
+
+  /// Builds an optional lowframer cover art rendered on the entry's card.
+  ///
+  /// When present the card leads with the art instead of [icon]; entries
+  /// without one keep the icon-only look, so migration is per-card.
+  final WidgetBuilder? coverArt;
 }
