@@ -123,30 +123,40 @@ class _ScribblePainter extends CustomPainter {
     var x = strokeWidth / 2;
     var segment = 0;
     var up = true;
+    var done = false;
 
-    while (x < endX) {
+    while (!done) {
       // A word: a run of half-waves with the pen down.
-      final wordHalfWaves = 3 + (_hash(segment) * 5).floor();
+      final wordHalfWaves = 4 + (_hash(segment) * 5).floor();
       path.moveTo(x, midY);
-      var drewAny = false;
-      for (var i = 0; i < wordHalfWaves && x < endX; i++) {
+      var i = 0;
+      while (true) {
         segment++;
         final hw = halfWave * (0.7 + 0.6 * _hash(segment));
-        // Stop rather than squeeze: a truncated final curve reads as the
-        // stroke being cut mid-letter.
-        if (!drewAny && x + hw > endX) return;
-        if (x + hw > endX && (endX - x) < hw * 0.5) break;
-        final nextX = math.min(x + hw, endX);
+        var nextX = x + hw;
+        // The sentence runs the full line: the last curve stretches to the
+        // edge rather than leaving a stub of empty space after it.
+        if (nextX > endX - hw * 0.35) {
+          nextX = endX;
+          done = true;
+        }
         final amp =
             baseAmp * (0.45 + 0.55 * _hash(segment + 31)) * (up ? -1 : 1);
         path.quadraticBezierTo((x + nextX) / 2, midY + amp * 2, nextX, midY);
         x = nextX;
         up = !up;
-        drewAny = true;
+        i++;
+        if (done) break;
+        // Lift the pen only when a whole next word still fits; otherwise
+        // keep writing this one to the edge, so no fragment is stranded.
+        if (i >= wordHalfWaves) {
+          if (x + wavelength * 1.6 > endX) continue;
+          break;
+        }
       }
       // The pen lifts between words.
       segment++;
-      x += wavelength * (0.45 + 0.4 * _hash(segment));
+      x += wavelength * (0.25 + 0.2 * _hash(segment));
     }
 
     canvas.drawPath(path, paint);
