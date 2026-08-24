@@ -1,8 +1,9 @@
 import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
-/// The Action sheets card art: a sheet rising over dimmed page content,
-/// grab handle on top.
+/// The Action sheets card art: the sheet's real anatomy in miniature —
+/// leading icon and close button, title over subtitle, and the
+/// cancel/confirm button pair.
 class SheetsCoverArt extends StatelessWidget {
   /// {@macro sheets_cover_art}
   const SheetsCoverArt({super.key});
@@ -18,20 +19,55 @@ class SheetsCoverArt extends StatelessWidget {
           LowframerBox(
             color: palette.background,
             borderColor: palette.fillStrong,
-            height: 62,
+            height: 78,
             radius: 8,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 6,
-              children: [
-                LowframerBox.pill(
-                  color: palette.fillStrong,
-                  width: 20,
-                  height: 3,
-                ),
-                LowframerBox.line(color: palette.fill, width: 60),
-                LowframerBox.pill(color: palette.accent, width: 70),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // The header's leading icon and trailing close button.
+                      LowframerBox(
+                        color: palette.background,
+                        borderColor: palette.fillStrong,
+                        width: 10,
+                        height: 10,
+                        radius: 3,
+                      ),
+                      const Spacer(),
+                      LowframerBox.pill(
+                        color: palette.fill,
+                        width: 10,
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  LowframerBox(color: palette.fillStrong, width: 48, height: 5),
+                  const SizedBox(height: 4),
+                  LowframerBox.line(color: palette.fill, width: 78),
+                  const Spacer(),
+                  Row(
+                    spacing: 5,
+                    children: [
+                      Expanded(
+                        child: LowframerBox.pill(
+                          color: palette.fill,
+                          width: double.infinity,
+                        ),
+                      ),
+                      Expanded(
+                        child: LowframerBox.pill(
+                          color: palette.accent,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
