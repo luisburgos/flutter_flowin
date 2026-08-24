@@ -6,15 +6,15 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// A line of handwriting with no words in it.
 ///
 /// Where [LowframerBox.line] stands in for typeset text, this stands in for
-/// *written* text: wavy pen strokes broken into word-sized runs, with the
-/// pen lifting between them. [height] and [strokeWidth] together read as the
+/// *written* text: one continuous wavy pen stroke running the full line, as
+/// a scribbled sentence. [height] and [strokeWidth] together read as the
 /// writing's size, and [wavelength] is its frequency — tight cycles scrawl,
 /// wide ones read as lazy cursive. [seed] varies the handwriting, so two
 /// lines with the same knobs still read as different sentences. [fontStyle]
 /// mirrors [TextStyle.fontStyle]: italic slants the whole stroke.
 ///
-/// Deterministic on purpose: every irregularity — amplitude, cycle width,
-/// word lengths, gaps — comes from a hash of the segment index and [seed],
+/// Deterministic on purpose: every irregularity — amplitude, cycle width —
+/// comes from a hash of the segment index and [seed],
 /// not from randomness, so the same input always paints the same pixels and
 /// tests stay stable.
 class LowframerScribble extends StatelessWidget {
@@ -119,44 +119,28 @@ class _ScribblePainter extends CustomPainter {
     final halfWave = wavelength / 2;
     final endX = size.width - strokeWidth / 2;
 
-    final path = Path();
+    // One unbroken stroke: the pen never lifts, so the line reads as a
+    // single written sentence rather than separated fragments.
     var x = strokeWidth / 2;
+    final path = Path()..moveTo(x, midY);
     var segment = 0;
     var up = true;
     var done = false;
 
     while (!done) {
-      // A word: a run of half-waves with the pen down.
-      final wordHalfWaves = 4 + (_hash(segment) * 5).floor();
-      path.moveTo(x, midY);
-      var i = 0;
-      while (true) {
-        segment++;
-        final hw = halfWave * (0.7 + 0.6 * _hash(segment));
-        var nextX = x + hw;
-        // The sentence runs the full line: the last curve stretches to the
-        // edge rather than leaving a stub of empty space after it.
-        if (nextX > endX - hw * 0.35) {
-          nextX = endX;
-          done = true;
-        }
-        final amp =
-            baseAmp * (0.45 + 0.55 * _hash(segment + 31)) * (up ? -1 : 1);
-        path.quadraticBezierTo((x + nextX) / 2, midY + amp * 2, nextX, midY);
-        x = nextX;
-        up = !up;
-        i++;
-        if (done) break;
-        // Lift the pen only when a whole next word still fits; otherwise
-        // keep writing this one to the edge, so no fragment is stranded.
-        if (i >= wordHalfWaves) {
-          if (x + wavelength * 1.6 > endX) continue;
-          break;
-        }
-      }
-      // The pen lifts between words.
       segment++;
-      x += wavelength * (0.25 + 0.2 * _hash(segment));
+      final hw = halfWave * (0.7 + 0.6 * _hash(segment));
+      var nextX = x + hw;
+      // The sentence runs the full line: the last curve stretches to the
+      // edge rather than leaving a stub of empty space after it.
+      if (nextX > endX - hw * 0.35) {
+        nextX = endX;
+        done = true;
+      }
+      final amp = baseAmp * (0.45 + 0.55 * _hash(segment + 31)) * (up ? -1 : 1);
+      path.quadraticBezierTo((x + nextX) / 2, midY + amp * 2, nextX, midY);
+      x = nextX;
+      up = !up;
     }
 
     canvas.drawPath(path, paint);
