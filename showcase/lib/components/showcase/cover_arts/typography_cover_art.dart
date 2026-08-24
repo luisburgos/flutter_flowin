@@ -23,11 +23,13 @@ class TypographyCoverArt extends StatelessWidget {
             height: 11,
             strokeWidth: 3,
             wavelength: 16,
+            seed: 1,
           ),
           LowframerScribble(
             color: palette.fillStrong,
             width: 100,
             wavelength: 11,
+            seed: 2,
           ),
           LowframerScribble(
             color: palette.fill,
@@ -35,6 +37,7 @@ class TypographyCoverArt extends StatelessWidget {
             height: 5,
             strokeWidth: 1.5,
             wavelength: 7,
+            seed: 3,
           ),
           LowframerScribble(
             color: palette.fill,
@@ -42,6 +45,7 @@ class TypographyCoverArt extends StatelessWidget {
             height: 5,
             strokeWidth: 1.5,
             wavelength: 7,
+            seed: 4,
           ),
         ],
       ),
