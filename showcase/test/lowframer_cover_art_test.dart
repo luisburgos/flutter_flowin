@@ -1,5 +1,5 @@
 import 'package:flowin_showcase/catalogue.dart';
-import 'package:flowin_showcase/components/lowframer/cover_arts.dart';
+import 'package:flowin_showcase/components/showcase/cover_arts/cover_arts.dart';
 import 'package:flowin_showcase/main.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:flutter_test/flutter_test.dart';

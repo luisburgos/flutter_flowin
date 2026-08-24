@@ -1,4 +1,4 @@
-import 'package:flowin_showcase/components/lowframer/cover_arts.dart';
+import 'package:flowin_showcase/components/showcase/cover_arts/cover_arts.dart';
 import 'package:flowin_showcase/components/showcase/showcase_entry.dart';
 import 'package:flowin_showcase/pages/buttons/buttons_page.dart';
 import 'package:flowin_showcase/pages/buttons/icon_buttons_page.dart';
