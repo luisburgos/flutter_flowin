@@ -1,7 +1,9 @@
 import 'package:flowin_showcase/components/lowframer/lowframer.dart';
+import 'package:flowin_showcase/components/lowframer/lowframer_scribble.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
-/// The Typography card art: the type scale as lines of falling weight.
+/// The Typography card art: the type scale written as scribbles of falling
+/// weight — an accent title, a strong subhead, and quiet body lines.
 class TypographyCoverArt extends StatelessWidget {
   /// {@macro typography_cover_art}
   const TypographyCoverArt({super.key});
@@ -13,12 +15,38 @@ class TypographyCoverArt extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
-        spacing: 6,
+        spacing: 7,
         children: [
-          LowframerBox(color: palette.accent, width: 64, height: 10, radius: 3),
-          LowframerBox(color: palette.fillStrong, width: 88, height: 6),
-          LowframerBox.line(color: palette.fill, width: 110),
-          LowframerBox.line(color: palette.fill, width: 96),
+          LowframerScribble(
+            color: palette.accent,
+            width: 76,
+            height: 11,
+            strokeWidth: 3,
+            wavelength: 16,
+            seed: 1,
+          ),
+          LowframerScribble(
+            color: palette.fillStrong,
+            width: 100,
+            wavelength: 11,
+            seed: 2,
+          ),
+          LowframerScribble(
+            color: palette.fill,
+            width: 118,
+            height: 5,
+            strokeWidth: 1.5,
+            wavelength: 7,
+            seed: 3,
+          ),
+          LowframerScribble(
+            color: palette.fill,
+            width: 92,
+            height: 5,
+            strokeWidth: 1.5,
+            wavelength: 7,
+            seed: 4,
+          ),
         ],
       ),
     );
