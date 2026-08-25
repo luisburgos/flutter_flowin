@@ -21,7 +21,7 @@ dependencies:
       ref: master
   # The playground affordance (preview + inspector + knobs), extracted into a
   # design-system-agnostic package the showcase consumes for every playground.
-  playgrounder: ^0.1.0
+  playgrounder: ^0.2.0
 
 dev_dependencies:
   flutter_test:
