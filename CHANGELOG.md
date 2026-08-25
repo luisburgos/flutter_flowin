@@ -1,3 +1,17 @@
+## [0.3.0](https://github.com/luisburgos/flutter_flowin/compare/0.2.0...0.3.0) (2026-08-25)
+
+### ⚠ BREAKING CHANGES
+
+* **color-picker:** `FlowinColorPickerField` no longer bundles a custom-color picker. To keep the custom-color swatch, pass `onPickCustomColor` with a picker of your choice; see the showcase for an example. Without it the field shows the predefined swatches only.
+
+### Features
+
+* **color-picker:** inject the custom-color picker instead of bundling one ([#66](https://github.com/luisburgos/flutter_flowin/issues/66)) ([15d6f05](https://github.com/luisburgos/flutter_flowin/commit/15d6f05f8751321c8c7c3da4854c702c5aa1eda1))
+
+### Chores
+
+* add .pubignore to keep dev files out of the published archive ([#67](https://github.com/luisburgos/flutter_flowin/issues/67)) ([ae49570](https://github.com/luisburgos/flutter_flowin/commit/ae4957042b052b13e2e1c0db72e6ce833e4e27d2))
+* guard the README version and gate publishing behind approval ([#65](https://github.com/luisburgos/flutter_flowin/issues/65)) ([e6cfdd5](https://github.com/luisburgos/flutter_flowin/commit/e6cfdd5c6e2ba74c15fbf28e7012593ecafeff15))
 ## [0.2.0](https://github.com/luisburgos/flutter_flowin/compare/0.1.1...0.2.0) (2026-08-24)
 
 ### Features
