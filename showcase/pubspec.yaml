@@ -1,7 +1,7 @@
 name: flowin_showcase
 description: "A demo app showcasing the flutter_flowin component library."
 publish_to: none
-version: 0.2.0
+version: 0.3.0
 
 environment:
   sdk: ^3.11.0
