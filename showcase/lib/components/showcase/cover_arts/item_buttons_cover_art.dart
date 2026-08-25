@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Item buttons card art: full-width stacked rows, one accented.
 class ItemButtonsCoverArt extends StatelessWidget {

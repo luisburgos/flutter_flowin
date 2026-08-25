@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Chip groups card art: one chip row running off the frame's edge.
 class ChipGroupsCoverArt extends StatelessWidget {

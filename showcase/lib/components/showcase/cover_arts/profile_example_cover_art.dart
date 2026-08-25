@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Create profile example art: an avatar and fields feeding a submit.
 class ProfileExampleCoverArt extends StatelessWidget {

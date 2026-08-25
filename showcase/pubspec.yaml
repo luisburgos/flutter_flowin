@@ -19,6 +19,10 @@ dependencies:
     git:
       url: https://github.com/luisburgos/ios_color_picker
       ref: master
+  # The low-fidelity wireframe kit the cover arts draw with. Extracted from
+  # this very showcase into its own package; the vendored copy is gone and the
+  # arts now consume the published one.
+  lowframer: ^0.2.0
   # The playground affordance (preview + inspector + knobs), extracted into a
   # design-system-agnostic package the showcase consumes for every playground.
   playgrounder: ^0.2.0

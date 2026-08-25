@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Spacing card art: a staircase of lines, each one step further in.
 class SpacingCoverArt extends StatelessWidget {
