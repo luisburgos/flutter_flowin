@@ -1,4 +1,5 @@
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
+import 'package:flowin_showcase/showcase_custom_color_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
@@ -86,6 +87,7 @@ class _ProfileExamplePageState extends State<ProfileExamplePage> {
                 predefinedColors: _palette,
                 initialColor: _accent,
                 onColorChanged: (c) => setState(() => _accent = c),
+                onPickCustomColor: showcaseCustomColorPicker,
               ),
               SizedBox(height: context.spacing.sm),
               FlowinLabeledTextField(

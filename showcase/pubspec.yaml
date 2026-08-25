@@ -13,6 +13,12 @@ dependencies:
     sdk: flutter
   flutter_flowin:
     path: ..
+  # The picker the showcase injects into FlowinColorPickerField; the package
+  # itself ships none. A git dependency is used here (see CONTRIBUTING).
+  ios_color_picker:
+    git:
+      url: https://github.com/luisburgos/ios_color_picker
+      ref: master
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
-import 'package:flutter_flowin/src/vendor/ios_color_picker/show_ios_color_picker.dart';
 import 'package:flutter_flowin/src/widgets/flowin_color_radial_button.dart';
 import 'package:flutter_flowin/src/widgets/flowin_input_field.dart';
+
+/// Presents a custom-color picker seeded with [current], resolving to the
+/// chosen color or null if the user dismisses without choosing.
+///
+/// Injected into [FlowinColorPickerField] so the design system carries the
+/// swatch-row affordance without binding a particular picker implementation:
+/// the caller supplies any picker they like — native, a pub package, or their
+/// own. See the showcase for a worked example.
+typedef FlowinCustomColorPicker =
+    Future<Color?> Function(
+      BuildContext context,
+      Color? current,
+    );
 
 /// Whether two colors denote the same canonical 32-bit ARGB value.
 ///
@@ -20,8 +32,13 @@ bool _isSameColorValue(Color? a, Color? b) {
 
 /// {@template flowin_color_picker_field}
 /// A [FlowinInputField] whose content is an inline color picker: a scrollable
-/// row of predefined swatches with a custom-color swatch (opening the iOS
-/// color picker) pinned to the trailing edge.
+/// row of predefined swatches with a custom-color swatch pinned to the trailing
+/// edge.
+///
+/// The custom-color swatch opens whatever picker the caller supplies through
+/// [onPickCustomColor]. When that is null the swatch is omitted and the field
+/// offers the predefined swatches alone, so a caller that only needs presets
+/// pays for no picker at all.
 /// {@endtemplate}
 class FlowinColorPickerField extends StatefulWidget {
   /// {@macro flowin_color_picker_field}
@@ -30,6 +47,7 @@ class FlowinColorPickerField extends StatefulWidget {
     this.label = 'Color',
     this.initialColor,
     this.onColorChanged,
+    this.onPickCustomColor,
     super.key,
   });
 
@@ -45,12 +63,20 @@ class FlowinColorPickerField extends StatefulWidget {
   /// Called whenever the selected color changes.
   final ValueChanged<Color>? onColorChanged;
 
+  /// Opens the caller's custom-color picker when the trailing swatch is tapped.
+  ///
+  /// The design system deliberately ships no picker of its own: the caller
+  /// injects one — native, a pub package, or their own — seeded with the
+  /// current selection and resolving to the chosen color, or null if
+  /// dismissed. When null, the custom-color swatch is not shown and the field
+  /// is preset-only.
+  final FlowinCustomColorPicker? onPickCustomColor;
+
   @override
   State<FlowinColorPickerField> createState() => _FlowinColorPickerFieldState();
 }
 
 class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
-  final _colorPicker = VendoredIOSColorPicker();
   Color? _selectedColor;
 
   @override
@@ -73,12 +99,6 @@ class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
     }
   }
 
-  @override
-  void dispose() {
-    _colorPicker.dispose();
-    super.dispose();
-  }
-
   void _setSelectedColor(Color color) {
     if (!mounted) return;
     setState(() {
@@ -87,12 +107,11 @@ class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
     });
   }
 
-  void _openCustomPicker() {
-    _colorPicker.show(
-      startingColor: _selectedColor,
-      onColorChanged: _setSelectedColor,
-      context: context,
-    );
+  Future<void> _openCustomPicker() async {
+    final pick = widget.onPickCustomColor;
+    if (pick == null) return;
+    final picked = await pick(context, _selectedColor);
+    if (picked != null) _setSelectedColor(picked);
   }
 
   @override
@@ -102,7 +121,11 @@ class _FlowinColorPickerFieldState extends State<FlowinColorPickerField> {
       child: FlowinInlineColorPicker(
         selectedColor: _selectedColor,
         predefinedColors: widget.predefinedColors,
-        onCustomColorTap: _openCustomPicker,
+        // Null hides the custom-color swatch: the field is preset-only when
+        // the caller injects no picker.
+        onCustomColorTap: widget.onPickCustomColor == null
+            ? null
+            : _openCustomPicker,
         onPredefinedColorTap: _setSelectedColor,
       ),
     );
@@ -129,8 +152,8 @@ class FlowinInlineColorPicker extends StatelessWidget {
   /// {@macro flowin_inline_color_picker}
   const FlowinInlineColorPicker({
     required this.predefinedColors,
-    required this.onCustomColorTap,
     required this.onPredefinedColorTap,
+    this.onCustomColorTap,
     this.selectedColor,
     super.key,
   });
@@ -139,7 +162,10 @@ class FlowinInlineColorPicker extends StatelessWidget {
   final List<Color> predefinedColors;
 
   /// Called when the custom-color (gradient) swatch is tapped.
-  final VoidCallback onCustomColorTap;
+  ///
+  /// When null, the custom-color swatch is not rendered and the row shows the
+  /// predefined swatches alone.
+  final VoidCallback? onCustomColorTap;
 
   /// Called when a predefined swatch is tapped.
   final ValueChanged<Color> onPredefinedColorTap;
@@ -196,19 +222,22 @@ class FlowinInlineColorPicker extends StatelessWidget {
               },
             ),
           ),
-          Tooltip(
-            message: isGradientSelected
-                ? 'Custom color selected'
-                : 'Pick a custom color',
-            // `color` here is the selection seed, not the rendered fill — the
-            // sweep gradient is what gets painted.
-            child: FlowinColorRadialButton.gradient(
-              key: flowinCustomColorSwatchKey,
-              selected: isGradientSelected,
-              color: selectedColor ?? Colors.transparent,
-              onTap: onCustomColorTap,
+          // Only when a custom-color picker is wired: without it the field is
+          // preset-only and the trailing gradient swatch would open nothing.
+          if (onCustomColorTap != null)
+            Tooltip(
+              message: isGradientSelected
+                  ? 'Custom color selected'
+                  : 'Pick a custom color',
+              // `color` here is the selection seed, not the rendered fill — the
+              // sweep gradient is what gets painted.
+              child: FlowinColorRadialButton.gradient(
+                key: flowinCustomColorSwatchKey,
+                selected: isGradientSelected,
+                color: selectedColor ?? Colors.transparent,
+                onTap: onCustomColorTap,
+              ),
             ),
-          ),
         ],
       ),
     );
