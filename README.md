@@ -22,7 +22,7 @@ Or add it to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_flowin: ^0.1.0
+  flutter_flowin: ^0.2.0
 ```
 
 Then hand the theme to your `MaterialApp` — that is the whole setup:

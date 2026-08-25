@@ -55,6 +55,29 @@ void main() {
       expect(versionIn('pubspec.yaml'), versionIn('../pubspec.yaml'));
     });
 
+    test('the README install snippet names the same version', () {
+      // The README's `flutter_flowin: ^X.Y.Z` is the fifth version spot, and
+      // the one every release forgot until this test existed: nothing in the
+      // tooling reads it, so only an assertion keeps it honest.
+      final readme = File('../README.md').readAsStringSync();
+      final snippet = RegExp(
+        r'flutter_flowin:\s*\^(\S+)',
+      ).firstMatch(readme)?.group(1);
+
+      expect(
+        snippet,
+        isNotNull,
+        reason: 'no `flutter_flowin: ^X.Y.Z` snippet found in README.md',
+      );
+      expect(
+        snippet,
+        versionIn('../pubspec.yaml'),
+        reason:
+            'README.md is stale: the install snippet says ^$snippet but the '
+            'package declares ${versionIn('../pubspec.yaml')}.',
+      );
+    });
+
     test('package.json declares the same version as the package', () {
       // conventional-changelog reads the version from package.json, not the
       // pubspec, and writes a section for whatever it finds. Left behind at a
