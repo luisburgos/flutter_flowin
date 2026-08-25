@@ -31,8 +31,8 @@ pre-push:
       # `fvm flutter test` (no coverage gate) if very_good_cli isn't installed —
       # CI remains the authoritative 100%-coverage gate.
       priority: 3
-      run: 'if command -v very_good >/dev/null 2>&1; then fvm exec very_good test --coverage --min-coverage 100 --exclude-coverage "lib/src/vendor/**"; else echo "very_good_cli not found; running tests without the coverage gate (CI still enforces 100%). Install: dart pub global activate very_good_cli"; fvm flutter test; fi'
-      fail_text: "❌ tests or 100% coverage failed. Run: fvm exec very_good test --coverage --min-coverage 100 --exclude-coverage \"lib/src/vendor/**\""
+      run: 'if command -v very_good >/dev/null 2>&1; then fvm exec very_good test --coverage --min-coverage 100; else echo "very_good_cli not found; running tests without the coverage gate (CI still enforces 100%). Install: dart pub global activate very_good_cli"; fvm flutter test; fi'
+      fail_text: "❌ tests or 100% coverage failed. Run: fvm exec very_good test --coverage --min-coverage 100"
     spell-check:
       # Mirrors the CI spell-check gate (cspell over **/*.md, .github/cspell.json).
       # Prefers a local/global cspell, falls back to npx; if neither Node tool

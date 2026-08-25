@@ -17,7 +17,6 @@ Four directories are easy to confuse:
 | `lib/` | the package itself — the only code that ships to consumers |
 | `showcase/` | a companion app cataloguing every component, published to [GitHub Pages](https://luisburgos.github.io/flutter_flowin/) |
 | `example/` | one small app that pub.dev renders on the package's Example tab |
-| `lib/src/vendor/` | third-party source vendored verbatim — see below before touching it |
 
 The package has **two entry points**, and which one exports a widget is a
 design decision, not a convenience:
@@ -83,10 +82,14 @@ made, which the diff cannot carry.
 Component and token work belongs in `lib/`, with the showcase updated in the
 same change so the catalogue never lags the library.
 
-`lib/src/vendor/` is third-party source, vendored verbatim under its own
-license. It is deliberately excluded from analysis and coverage so it stays
-diffable against upstream. **Do not reformat it to match house style** — see
-the README in that directory for what was taken and why.
+The design system ships **no color picker** of its own (see ADR 0001):
+`FlowinColorPickerField` takes an injected `onPickCustomColor` callback and the
+caller supplies the picker. The showcase demonstrates this by depending on the
+[`ios_color_picker`](https://github.com/luisburgos/ios_color_picker) fork as a
+`git` dependency and adapting it in `showcase/lib/showcase_custom_color_picker.dart`.
+A `git` dependency is fine there because the showcase is `publish_to: none`; the
+pub.dev rule that rejects `git`/`path` deps applies only to the published
+package, which is exactly why the picker cannot live in `lib/`.
 
 ---
 
@@ -121,7 +124,7 @@ Four gates guard every change, and they run in two places.
 |---|---|
 | Format | `fvm dart format .` |
 | Analyze | `fvm flutter analyze` |
-| Test, with 100% coverage | `fvm exec very_good test --coverage --min-coverage 100 --exclude-coverage "lib/src/vendor/**"` |
+| Test, with 100% coverage | `fvm exec very_good test --coverage --min-coverage 100` |
 | Spell-check (Markdown) | `npx cspell --config .github/cspell.json "**/*.md" --exclude CHANGELOG.md` |
 
 A **pre-push hook** ([lefthook][lefthook_link]) runs all four and blocks the
@@ -137,13 +140,15 @@ CI runs the same gates on every pull request, via
 `sub_packages` job analyzes and tests each of them too — without it they break
 silently whenever the library's API changes.
 
-Two exclusions are deliberate, and both are mirrored in CI and the hook so they
-cannot drift:
+One exclusion is deliberate, and it is mirrored in CI and the hook so it cannot
+drift:
 
-- **`lib/src/vendor/` is excluded from coverage.** The 100% gate should measure
-  the code we wrote, not vendored third-party UI.
 - **`CHANGELOG.md` is excluded from spell-check.** It holds verbatim commit
   subjects, so a historical typo would fail the build on a word nobody can edit.
+
+The color picker no longer lives in the package, so the package's 100% coverage
+gate has no exclusions and the showcase carries no vendored third-party source
+to exempt from analysis or formatting.
 
 Install [very_good_cli][very_good_cli_link] once for the coverage gate:
 

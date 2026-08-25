@@ -13,6 +13,17 @@ dependencies:
     sdk: flutter
   flutter_flowin:
     path: ..
+  # The iOS-style color picker the showcase wires into FlowinColorPickerField,
+  # to demonstrate injecting a custom-color picker. It lives here, not in the
+  # design system package: the package ships no picker, so consumers do not
+  # inherit this dependency (or its own shared_preferences / super_tooltip /
+  # smooth_page_indicator). A git dependency is fine here because the showcase
+  # is publish_to: none — the pub.dev rule that rejects git deps applies only to
+  # published packages. The fork fixes the upstream web-plugin path bug.
+  ios_color_picker:
+    git:
+      url: https://github.com/luisburgos/ios_color_picker
+      ref: master
 
 dev_dependencies:
   flutter_test:

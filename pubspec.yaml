@@ -22,9 +22,6 @@ dependencies:
     sdk: flutter
   lucide_icons_flutter: ^3.1.15
   meta: ^1.17.0
-  shared_preferences: ^2.5.5
-  smooth_page_indicator: ^2.0.1
-  super_tooltip: ^2.1.1
 
 dev_dependencies:
   flutter_test:

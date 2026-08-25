@@ -4,6 +4,7 @@ import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/fields/swatch_config.dart';
 import 'package:flowin_showcase/pages/fields/swatch_knobs.dart';
 import 'package:flowin_showcase/pages/fields/swatch_preview.dart';
+import 'package:flowin_showcase/showcase_custom_color_picker.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The width the picker field is previewed at.
@@ -72,6 +73,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
             label: 'Accent',
             predefinedColors: swatchPalette,
             initialColor: swatchPalette.first,
+            onPickCustomColor: showcaseCustomColorPicker,
           ),
         },
         knobsBuilder: (context, config, onChanged) =>

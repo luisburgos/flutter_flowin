@@ -14,6 +14,20 @@ void main() {
     Colors.orange,
   ];
 
+  /// A stand-in for a caller-injected custom-color picker: records that it was
+  /// asked and resolves to [result] without presenting any UI.
+  ({FlowinCustomColorPicker picker, List<Color?> seeds}) fakePicker([
+    Color? result,
+  ]) {
+    final seeds = <Color?>[];
+    Future<Color?> picker(BuildContext context, Color? current) async {
+      seeds.add(current);
+      return result;
+    }
+
+    return (picker: picker, seeds: seeds);
+  }
+
   group('FlowinColorPickerField', () {
     testWidgets('renders inside a FlowinInputField with its label', (
       tester,
@@ -29,18 +43,40 @@ void main() {
       expect(find.text('My Color'), findsOneWidget);
     });
 
-    testWidgets('renders the predefined swatches', (tester) async {
+    testWidgets(
+      'renders the predefined swatches plus the custom swatch when a picker '
+      'is injected',
+      (tester) async {
+        await tester.pumpApp(
+          FlowinColorPickerField(
+            predefinedColors: predefinedColors,
+            onPickCustomColor: fakePicker().picker,
+          ),
+        );
+
+        // One gradient swatch plus one per predefined color.
+        expect(
+          find.byType(FlowinColorRadialButton),
+          findsNWidgets(predefinedColors.length + 1),
+        );
+      },
+    );
+
+    testWidgets('omits the custom swatch when no picker is injected', (
+      tester,
+    ) async {
       await tester.pumpApp(
         FlowinColorPickerField(
           predefinedColors: predefinedColors,
         ),
       );
 
-      // One gradient swatch plus one per predefined color.
+      // Preset-only: one swatch per predefined color, no gradient swatch.
       expect(
         find.byType(FlowinColorRadialButton),
-        findsNWidgets(predefinedColors.length + 1),
+        findsNWidgets(predefinedColors.length),
       );
+      expect(find.byKey(flowinCustomColorSwatchKey), findsNothing);
     });
 
     testWidgets('initialColor marks its swatch as selected', (tester) async {
@@ -92,16 +128,17 @@ void main() {
     );
 
     testWidgets(
-      'tapping the gradient swatch opens the custom color picker',
+      'tapping the gradient swatch invokes the injected picker, seeded with '
+      'the current selection, and applies its result',
       (tester) async {
-        // The third-party custom picker needs a tall surface to lay out.
-        tester.view.physicalSize = const Size(1200, 2400);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-
+        final fake = fakePicker(Colors.purple);
+        Color? changed;
         await tester.pumpApp(
           FlowinColorPickerField(
             predefinedColors: predefinedColors,
+            initialColor: Colors.blue,
+            onPickCustomColor: fake.picker,
+            onColorChanged: (color) => changed = color,
           ),
         );
 
@@ -110,11 +147,39 @@ void main() {
         );
 
         await tester.tap(gradientSwatch);
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpAndSettle();
 
-        // The custom picker is presented as a modal bottom sheet.
-        expect(find.byType(BottomSheet), findsOneWidget);
+        // The picker was asked once, seeded with the current selection...
+        expect(fake.seeds, [Colors.blue]);
+        // ...and its result became the new selection.
+        expect(changed, Colors.purple);
+      },
+    );
+
+    testWidgets(
+      'a picker dismissed without a choice leaves the selection unchanged',
+      (tester) async {
+        // A null result models the user dismissing the picker.
+        final fake = fakePicker();
+        var changedCalled = false;
+        await tester.pumpApp(
+          FlowinColorPickerField(
+            predefinedColors: predefinedColors,
+            initialColor: Colors.blue,
+            onPickCustomColor: fake.picker,
+            onColorChanged: (_) => changedCalled = true,
+          ),
+        );
+
+        await tester.tap(
+          find.byWidgetPredicate(
+            (widget) => widget is FlowinColorRadialButton && widget.isGradient,
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(fake.seeds, [Colors.blue]);
+        expect(changedCalled, isFalse);
       },
     );
 
@@ -347,6 +412,7 @@ void main() {
         FlowinColorPickerField(
           initialColor: Colors.red,
           predefinedColors: predefinedColors,
+          onPickCustomColor: fakePicker().picker,
         ),
       );
 
