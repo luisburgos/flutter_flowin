@@ -87,9 +87,9 @@ The design system ships **no color picker** of its own (see ADR 0001):
 caller supplies the picker. The showcase demonstrates this by depending on the
 [`ios_color_picker`](https://github.com/luisburgos/ios_color_picker) fork as a
 `git` dependency and adapting it in `showcase/lib/showcase_custom_color_picker.dart`.
-A `git` dependency is fine there because the showcase is `publish_to: none`; the
-pub.dev rule that rejects `git`/`path` deps applies only to the published
-package, which is exactly why the picker cannot live in `lib/`.
+That `git` dependency is only viable because the showcase is `publish_to: none`;
+pub.dev rejects `git`/`path` deps on the published package, which is why the
+picker cannot live in `lib/`.
 
 ---
 
