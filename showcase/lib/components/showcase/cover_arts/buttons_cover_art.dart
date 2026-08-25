@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Buttons card art: a stack of pill silhouettes, one accented.
 class ButtonsCoverArt extends StatelessWidget {

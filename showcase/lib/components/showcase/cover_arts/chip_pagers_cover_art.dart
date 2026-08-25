@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Chip view pagers card art: a chip row over a page with dots below.
 class ChipPagersCoverArt extends StatelessWidget {

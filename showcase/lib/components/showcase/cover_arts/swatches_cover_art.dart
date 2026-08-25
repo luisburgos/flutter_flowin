@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Colour swatches card art: a grid of colour circles, the selected one
 /// ringed with a gap around its inner disc — the radial button's silhouette.

@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Icon buttons card art: a row of circles, one accented.
 class IconButtonsCoverArt extends StatelessWidget {

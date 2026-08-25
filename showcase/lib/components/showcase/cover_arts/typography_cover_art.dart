@@ -1,6 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
-import 'package:flowin_showcase/components/lowframer/lowframer_scribble.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Typography card art: the type scale written as scribbles of falling
 /// weight — an accent title, a strong subhead, and quiet body lines.

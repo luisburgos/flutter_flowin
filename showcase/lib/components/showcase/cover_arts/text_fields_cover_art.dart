@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Text fields card art: label lines over field boxes, one focused.
 class TextFieldsCoverArt extends StatelessWidget {

@@ -1,5 +1,5 @@
-import 'package:flowin_showcase/components/lowframer/lowframer.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:lowframer/lowframer.dart';
 
 /// The Colors card art: large role tiles, one accented, one outlined.
 class ColorsCoverArt extends StatelessWidget {
