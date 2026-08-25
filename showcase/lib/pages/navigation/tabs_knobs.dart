@@ -1,7 +1,6 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/navigation/tabs_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// Display text for each count choice.
 String _countLabel(TabCount count) => switch (count) {
@@ -26,31 +25,32 @@ class TabsKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Layout',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Scrollable',
               value: config.isScrollable,
               onChanged: (v) => onChanged(config.copyWith(isScrollable: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Tabs',
           children: [
-            FlowinShowcaseDropdown<TabCount>(
+            DropdownKnob<TabCount>(
+              label: 'Count',
               value: config.count,
               values: TabCount.values,
               labelOf: _countLabel,
               onChanged: (v) => onChanged(config.copyWith(count: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show icons',
               value: config.hasIcons,
               onChanged: (v) => onChanged(config.copyWith(hasIcons: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'One long label',
               value: config.longLabel,
               onChanged: (v) => onChanged(config.copyWith(longLabel: v)),

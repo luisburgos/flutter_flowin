@@ -1,8 +1,7 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
+import 'package:flowin_showcase/components/flowin_spacing_knob.dart';
 import 'package:flowin_showcase/pages/chips/chip_pager_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The inspector's controls for a [ChipPagerConfig].
 class ChipPagerKnobs extends StatelessWidget {
@@ -25,10 +24,11 @@ class ChipPagerKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Chips',
           children: [
-            FlowinShowcaseDropdown<FlowinChipVariant>(
+            DropdownKnob<FlowinChipVariant>(
+              label: 'Unselected variant',
               value: config.unselectedVariant,
               // Selected is what the pager applies to the active chip, so
               // offering it here would mean every chip looks selected.
@@ -40,32 +40,32 @@ class ChipPagerKnobs extends StatelessWidget {
               onChanged: (v) =>
                   onChanged(config.copyWith(unselectedVariant: v)),
             ),
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Row padding',
               value: config.chipsPadding,
               onChanged: (v) => onChanged(config.copyWith(chipsPadding: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Layout',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Scrollable chips',
               value: config.isScrollable,
               onChanged: (v) => onChanged(config.copyWith(isScrollable: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Divider',
               value: config.showDivider,
               onChanged: (v) => onChanged(config.copyWith(showDivider: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Behaviour',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Keep page state alive',
               value: config.keepPagesAlive,
               onChanged: (v) => onChanged(config.copyWith(keepPagesAlive: v)),

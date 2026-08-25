@@ -1,8 +1,7 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
+import 'package:flowin_showcase/components/flowin_spacing_knob.dart';
 import 'package:flowin_showcase/pages/chips/chip_group_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The inspector's controls for a [ChipGroupConfig].
 class ChipGroupKnobs extends StatelessWidget {
@@ -21,7 +20,7 @@ class ChipGroupKnobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasWrappedRows = FlowinKnobRelevance.when(
+    final hasWrappedRows = KnobRelevance.when(
       isRelevant: !config.isScrollable,
       reason:
           'a scrollable row is a single line, so there are no wrapped rows '
@@ -32,52 +31,47 @@ class ChipGroupKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
-          title: 'Unselected variant',
-          children: [
-            FlowinShowcaseDropdown<FlowinChipVariant>(
-              value: config.unselectedVariant,
-              // Selected is what the group applies to the active chip, so
-              // offering it here would mean every chip looks selected.
-              values: const [
-                FlowinChipVariant.unselected,
-                FlowinChipVariant.unselectedDimmed,
-              ],
-              labelOf: (v) => v.name,
-              onChanged: (v) =>
-                  onChanged(config.copyWith(unselectedVariant: v)),
-            ),
+        DropdownKnob<FlowinChipVariant>(
+          label: 'Unselected variant',
+          value: config.unselectedVariant,
+          // Selected is what the group applies to the active chip, so
+          // offering it here would mean every chip looks selected.
+          values: const [
+            FlowinChipVariant.unselected,
+            FlowinChipVariant.unselectedDimmed,
           ],
+          labelOf: (v) => v.name,
+          onChanged: (v) => onChanged(config.copyWith(unselectedVariant: v)),
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Layout',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Scrollable',
               value: config.isScrollable,
               onChanged: (v) => onChanged(config.copyWith(isScrollable: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Many labels',
               value: config.manyLabels,
               onChanged: (v) => onChanged(config.copyWith(manyLabels: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Spacing',
           children: [
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Padding',
               value: config.padding,
               onChanged: (v) => onChanged(config.copyWith(padding: v)),
             ),
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Chip spacing',
               value: config.chipSpacing,
               onChanged: (v) => onChanged(config.copyWith(chipSpacing: v)),
             ),
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Run spacing',
               value: config.runSpacing,
               relevantWhen: hasWrappedRows,
@@ -85,17 +79,13 @@ class ChipGroupKnobs extends StatelessWidget {
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
-          title: 'Wrap alignment',
+        DropdownKnob<WrapAlignment>(
+          label: 'Wrap alignment',
           relevantWhen: hasWrappedRows,
-          children: [
-            FlowinShowcaseDropdown<WrapAlignment>(
-              value: config.wrapAlignment,
-              values: WrapAlignment.values,
-              labelOf: (v) => v.name,
-              onChanged: (v) => onChanged(config.copyWith(wrapAlignment: v)),
-            ),
-          ],
+          value: config.wrapAlignment,
+          values: WrapAlignment.values,
+          labelOf: (v) => v.name,
+          onChanged: (v) => onChanged(config.copyWith(wrapAlignment: v)),
         ),
       ],
     );

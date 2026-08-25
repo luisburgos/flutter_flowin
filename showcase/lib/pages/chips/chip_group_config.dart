@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
+import 'package:flowin_showcase/components/flowin_spacing_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 
 /// The state of the [FlowinChipGroup] preview.

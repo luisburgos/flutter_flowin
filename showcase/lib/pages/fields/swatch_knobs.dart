@@ -1,8 +1,6 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flowin_showcase/pages/fields/swatch_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// Display text for each subject choice.
 String _subjectLabel(SwatchSubject subject) => switch (subject) {
@@ -25,17 +23,17 @@ class SwatchKnobs extends StatelessWidget {
   Widget build(BuildContext context) {
     final isPrimitive = config.subject == SwatchSubject.swatches;
 
-    final ownsItsSelection = FlowinKnobRelevance.when(
+    final ownsItsSelection = KnobRelevance.when(
       isRelevant: isPrimitive,
       reason:
           'the picker field owns its selection and always pins a '
           'gradient swatch',
     );
-    final exposesNoSize = FlowinKnobRelevance.when(
+    final exposesNoSize = KnobRelevance.when(
       isRelevant: isPrimitive,
       reason: 'the picker field exposes no swatch size',
     );
-    final ringExists = FlowinKnobRelevance.when(
+    final ringExists = KnobRelevance.when(
       isRelevant: isPrimitive && config.selected,
       reason:
           'an unselected swatch is a full disc — there is no ring or gap to '
@@ -46,34 +44,30 @@ class SwatchKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
-          title: 'Subject',
-          children: [
-            FlowinShowcaseDropdown<SwatchSubject>(
-              value: config.subject,
-              values: SwatchSubject.values,
-              labelOf: _subjectLabel,
-              onChanged: (v) => onChanged(config.copyWith(subject: v)),
-            ),
-          ],
+        DropdownKnob<SwatchSubject>(
+          label: 'Subject',
+          value: config.subject,
+          values: SwatchSubject.values,
+          labelOf: _subjectLabel,
+          onChanged: (v) => onChanged(config.copyWith(subject: v)),
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'State',
           relevantWhen: ownsItsSelection,
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Selected',
               value: config.selected,
               onChanged: (v) => onChanged(config.copyWith(selected: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show gradient swatch',
               value: config.showGradient,
               onChanged: (v) => onChanged(config.copyWith(showGradient: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Size',
           relevantWhen: exposesNoSize,
           children: [
@@ -81,7 +75,7 @@ class SwatchKnobs extends StatelessWidget {
             // that do not scale with the swatch, so sweeping the diameter is
             // how a reader watches the selection ring go from dominant to
             // hairline. Two hardcoded sizes showed only the endpoints.
-            FlowinPlaygroundStepKnob<SwatchSize>(
+            StepKnob<SwatchSize>(
               label: 'Diameter',
               value: config.size,
               values: SwatchSize.values,
@@ -94,18 +88,18 @@ class SwatchKnobs extends StatelessWidget {
         // with the swatch — which is why the diameter slider reads differently
         // at every step, and why sweeping these is the other half of that
         // demonstration.
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Selection ring',
           relevantWhen: ringExists,
           children: [
-            FlowinPlaygroundStepKnob<BorderStep>(
+            StepKnob<BorderStep>(
               label: 'Ring width',
               value: config.ringWidth,
               values: BorderStep.values,
               labelOf: (v) => '${v.name} — ${v.value.toInt()}px',
               onChanged: (v) => onChanged(config.copyWith(ringWidth: v)),
             ),
-            FlowinPlaygroundStepKnob<BorderStep>(
+            StepKnob<BorderStep>(
               label: 'Gap width',
               value: config.gapWidth,
               values: BorderStep.values,

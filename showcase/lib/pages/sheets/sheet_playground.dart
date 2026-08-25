@@ -1,10 +1,9 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_actions.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_config.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_knobs.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_presets.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_preview.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the modal clamps itself to on wide viewports.
 ///
@@ -12,7 +11,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// width the sheet can actually reach.
 const _sheetMaxWidth = 480.0;
 
-/// Wires [FlowinActionSheet] into a [FlowinPlayground].
+/// Wires [FlowinActionSheet] into a [Playground].
 ///
 /// Holds the only two things that need state: the current configuration, and
 /// the modal presentation, which needs a context to push a route from.
@@ -49,7 +48,7 @@ class _SheetPlaygroundState extends State<SheetPlayground> {
 
   @override
   Widget build(BuildContext context) {
-    return FlowinPlayground<SheetConfig>(
+    return Playground<SheetConfig>(
       config: _config,
       onChanged: (c) => setState(() => _config = c),
       presets: sheetPresets,
@@ -58,7 +57,7 @@ class _SheetPlaygroundState extends State<SheetPlayground> {
       knobsBuilder: (context, config, onChanged) =>
           SheetKnobs(config: config, onChanged: onChanged),
       actions: [
-        FlowinPlaygroundAction(
+        PlaygroundAction(
           label: 'Open as modal',
           icon: FDIcons.more.toIcon(size: FlowinDesignIconSize.sm),
           onPressed: _openAsModal,

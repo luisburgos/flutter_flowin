@@ -1,9 +1,7 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
+import 'package:flowin_showcase/components/flowin_spacing_knob.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// Display text for each radius choice.
 String _radiusLabel(CardRadius radius) => switch (radius) {
@@ -41,31 +39,31 @@ class CardKnobs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvesAgainstFill = FlowinKnobRelevance.when(
+    final resolvesAgainstFill = KnobRelevance.when(
       isRelevant: config.fill != CardFill.transparent,
       reason:
           'a transparent fill is whatever sits behind the card, which the '
           'card cannot see, so it is never resolved against',
     );
-    final seedsTheResolver = FlowinKnobRelevance.when(
+    final seedsTheResolver = KnobRelevance.when(
       isRelevant: config.resolveForeground || config.compareContrast,
       reason:
           'the preference is what the resolver starts from, and nothing '
           'is being resolved',
     );
-    final resolverIsChosen = FlowinKnobRelevance.when(
+    final resolverIsChosen = KnobRelevance.when(
       isRelevant: !config.compareContrast,
       reason:
           'the comparison shows both settings at once, so it drives this '
           'rather than the knob',
     );
-    final contentIsInset = FlowinKnobRelevance.when(
+    final contentIsInset = KnobRelevance.when(
       isRelevant: !config.clipChild,
       reason:
           'a clipped child is meant to reach the corners it is clipped to, '
           'so it takes no inset',
     );
-    final heightIsPinned = FlowinKnobRelevance.when(
+    final heightIsPinned = KnobRelevance.when(
       isRelevant: !config.intrinsicHeight,
       reason: 'the content is deciding the height, so there is none to pin',
     );
@@ -74,37 +72,29 @@ class CardKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
-          title: 'Shape',
-          children: [
-            FlowinShowcaseDropdown<CardRadius>(
-              value: config.radius,
-              values: CardRadius.values,
-              labelOf: _radiusLabel,
-              onChanged: (v) => onChanged(config.copyWith(radius: v)),
-            ),
-          ],
+        DropdownKnob<CardRadius>(
+          label: 'Shape',
+          value: config.radius,
+          values: CardRadius.values,
+          labelOf: _radiusLabel,
+          onChanged: (v) => onChanged(config.copyWith(radius: v)),
         ),
-        FlowinPlaygroundKnobGroup(
-          title: 'Fill',
-          children: [
-            FlowinShowcaseDropdown<CardFill>(
-              value: config.fill,
-              values: CardFill.values,
-              labelOf: _fillLabel,
-              onChanged: (v) => onChanged(config.copyWith(fill: v)),
-            ),
-          ],
+        DropdownKnob<CardFill>(
+          label: 'Fill',
+          value: config.fill,
+          values: CardFill.values,
+          labelOf: _fillLabel,
+          onChanged: (v) => onChanged(config.copyWith(fill: v)),
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Height',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Size to content',
               value: config.intrinsicHeight,
               onChanged: (v) => onChanged(config.copyWith(intrinsicHeight: v)),
             ),
-            FlowinPlaygroundStepKnob<CardHeight>(
+            StepKnob<CardHeight>(
               label: 'Pinned to',
               value: config.height,
               values: CardHeight.values,
@@ -117,59 +107,59 @@ class CardKnobs extends StatelessWidget {
         // Padding and margin together: they are the same scale applied on
         // either side of the card's edge, and reading them side by side is
         // what makes the difference obvious.
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Spacing',
           children: [
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Padding',
               value: config.padding,
               relevantWhen: contentIsInset,
               onChanged: (v) => onChanged(config.copyWith(padding: v)),
             ),
-            FlowinPlaygroundSpacingKnob(
+            FlowinSpacingKnob(
               label: 'Margin',
               value: config.margin,
               onChanged: (v) => onChanged(config.copyWith(margin: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Surface',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Bordered',
               value: config.bordered,
               onChanged: (v) => onChanged(config.copyWith(bordered: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Elevated',
               value: config.elevated,
               onChanged: (v) => onChanged(config.copyWith(elevated: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Clip child',
               value: config.clipChild,
               onChanged: (v) => onChanged(config.copyWith(clipChild: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Content colour',
           relevantWhen: resolvesAgainstFill,
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Compare with inherited',
               value: config.compareContrast,
               onChanged: (v) => onChanged(config.copyWith(compareContrast: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Resolve against fill',
               value: config.resolveForeground,
               relevantWhen: resolverIsChosen,
               onChanged: (v) =>
                   onChanged(config.copyWith(resolveForeground: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Prefer cream',
               value: config.preferCream,
               relevantWhen: seedsTheResolver,

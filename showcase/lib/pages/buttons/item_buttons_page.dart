@@ -1,9 +1,8 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/buttons/item_button_config.dart';
 import 'package:flowin_showcase/pages/buttons/item_button_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width a list row is previewed at.
 ///
@@ -12,23 +11,23 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _rowMaxWidth = 420.0;
 
 /// One preset per variant.
-const _presets = <FlowinPlaygroundPreset<ItemButtonConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<ItemButtonConfig>>[
+  PlaygroundPreset(
     label: 'Tonal',
     summary: 'The default — a menu or settings row.',
     config: ItemButtonConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Filled',
     summary: 'Solid, for the row that is the point of the list.',
     config: ItemButtonConfig(variant: FlowinItemButtonVariant.filled),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Outline',
     summary: 'Bordered, medium emphasis.',
     config: ItemButtonConfig(variant: FlowinItemButtonVariant.outline),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Text',
     summary: 'Unfilled — a row in a dense list.',
     config: ItemButtonConfig(variant: FlowinItemButtonVariant.text),
@@ -52,7 +51,7 @@ class _ItemButtonsPageState extends State<ItemButtonsPage> {
     return ShowcaseScaffold(
       title: 'Item buttons',
       dividedAppBar: true,
-      body: FlowinPlayground<ItemButtonConfig>(
+      body: Playground<ItemButtonConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

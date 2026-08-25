@@ -19,6 +19,9 @@ dependencies:
     git:
       url: https://github.com/luisburgos/ios_color_picker
       ref: master
+  # The playground affordance (preview + inspector + knobs), extracted into a
+  # design-system-agnostic package the showcase consumes for every playground.
+  playgrounder: ^0.1.0
 
 dev_dependencies:
   flutter_test:

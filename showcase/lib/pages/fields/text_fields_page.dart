@@ -1,9 +1,8 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/fields/text_field_config.dart';
 import 'package:flowin_showcase/pages/fields/text_field_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the field is previewed at.
 ///
@@ -18,23 +17,23 @@ const _multilineRows = 4;
 ///
 /// The first three build a [FlowinLabeledTextField]; the last drops the label
 /// and so builds a bare [FlowinTextField].
-const _presets = <FlowinPlaygroundPreset<TextFieldConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<TextFieldConfig>>[
+  PlaygroundPreset(
     label: 'Editing a value',
     summary: 'A form field the user is changing rather than filling in fresh.',
     config: TextFieldConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Empty with a hint',
     summary: 'When the expected format needs showing — a phone, a code.',
     config: TextFieldConfig(hasInitialValue: false, hasHint: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Notes',
     summary: 'Prose the user writes at length, so the field grows to fit.',
     config: TextFieldConfig(multiline: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Read only',
     summary: 'A value shown in place rather than moved to a separate view.',
     config: TextFieldConfig(enabled: false),
@@ -59,7 +58,7 @@ class _TextFieldsPageState extends State<TextFieldsPage> {
     return ShowcaseScaffold(
       title: 'Text fields',
       dividedAppBar: true,
-      body: FlowinPlayground<TextFieldConfig>(
+      body: Playground<TextFieldConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

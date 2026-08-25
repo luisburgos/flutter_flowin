@@ -1,33 +1,32 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/buttons/button_config.dart';
 import 'package:flowin_showcase/pages/buttons/button_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// One preset per variant: the axis a reader picks along first.
-const _presets = <FlowinPlaygroundPreset<ButtonConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<ButtonConfig>>[
+  PlaygroundPreset(
     label: 'Filled',
     summary: 'Solid, high emphasis — the primary action.',
     config: ButtonConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Tonal',
     summary: 'Medium emphasis — the secondary action.',
     config: ButtonConfig(variant: FlowinButtonVariant.tonal),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Outline',
     summary: 'Medium emphasis with a border.',
     config: ButtonConfig(variant: FlowinButtonVariant.outline),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Text',
     summary: 'Label only, lowest emphasis.',
     config: ButtonConfig(variant: FlowinButtonVariant.text),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Destructive',
     summary: 'For an action that removes something.',
     config: ButtonConfig(variant: FlowinButtonVariant.destructive),
@@ -51,7 +50,7 @@ class _ButtonsPageState extends State<ButtonsPage> {
     return ShowcaseScaffold(
       title: 'Buttons',
       dividedAppBar: true,
-      body: FlowinPlayground<ButtonConfig>(
+      body: Playground<ButtonConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

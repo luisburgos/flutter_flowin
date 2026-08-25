@@ -1,11 +1,10 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_spacing_knob.dart';
+import 'package:flowin_showcase/components/flowin_spacing_knob.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/cards/card_config.dart';
 import 'package:flowin_showcase/pages/cards/card_knobs.dart';
 import 'package:flowin_showcase/pages/cards/card_preview.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the card is previewed at.
 ///
@@ -15,28 +14,28 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _cardMaxWidth = 420.0;
 
 /// One preset per job a card is actually doing.
-const _presets = <FlowinPlaygroundPreset<CardConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<CardConfig>>[
+  PlaygroundPreset(
     label: 'Grouping content',
     summary: 'The default surface, when a block needs to read as one thing.',
     config: CardConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Outlined',
     summary: 'A boundary without a fill, when the page already sets the tone.',
     config: CardConfig(fill: CardFill.transparent, bordered: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Raised',
     summary: 'Lifted off the page, for something overlaying what is behind.',
     config: CardConfig(elevated: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Filled from data',
     summary: 'A colour the theme cannot see, kept readable by the card.',
     config: CardConfig(fill: CardFill.dataDark, bordered: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Contrast',
     summary: 'What the resolver buys: the same fill, resolved and inherited.',
     config: CardConfig(
@@ -45,22 +44,22 @@ const _presets = <FlowinPlaygroundPreset<CardConfig>>[
       compareContrast: true,
     ),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Dense',
     summary: 'A tight inset, for a card repeated down a list.',
     config: CardConfig(padding: SpacingStep.xs),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Inset in a list',
     summary: 'Held off its neighbours, for a card among other cards.',
     config: CardConfig(margin: SpacingStep.md),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Sized to content',
     summary: 'No pinned height, which is how most callers use a card.',
     config: CardConfig(intrinsicHeight: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Media',
     summary: 'Content painted to the edges, held inside the smooth corners.',
     config: CardConfig(radius: CardRadius.large, clipChild: true),
@@ -84,7 +83,7 @@ class _CardsPageState extends State<CardsPage> {
     return ShowcaseScaffold(
       title: 'Cards & surfaces',
       dividedAppBar: true,
-      body: FlowinPlayground<CardConfig>(
+      body: Playground<CardConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

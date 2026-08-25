@@ -1,7 +1,6 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The inspector's controls for a [SheetConfig].
 ///
@@ -27,47 +26,39 @@ class SheetKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Visibility',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show icon',
               value: config.hasIcon,
               onChanged: (v) => onChanged(config.copyWith(hasIcon: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show subtitle',
               value: config.hasSubtitle,
               onChanged: (v) => onChanged(config.copyWith(hasSubtitle: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show close',
               value: config.hasClose,
               onChanged: (v) => onChanged(config.copyWith(hasClose: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
-          title: 'Body',
-          children: [
-            FlowinShowcaseDropdown<BodyChoice>(
-              value: config.body,
-              values: BodyChoice.values,
-              labelOf: (v) => v.label,
-              onChanged: (v) => onChanged(config.copyWith(body: v)),
-            ),
-          ],
+        DropdownKnob<BodyChoice>(
+          label: 'Body',
+          value: config.body,
+          values: BodyChoice.values,
+          labelOf: (v) => v.label,
+          onChanged: (v) => onChanged(config.copyWith(body: v)),
         ),
-        FlowinPlaygroundKnobGroup(
-          title: 'Footer',
-          children: [
-            FlowinShowcaseDropdown<FooterChoice>(
-              value: config.footer,
-              values: FooterChoice.values,
-              labelOf: (v) => v.label,
-              onChanged: (v) => onChanged(config.copyWith(footer: v)),
-            ),
-          ],
+        DropdownKnob<FooterChoice>(
+          label: 'Footer',
+          value: config.footer,
+          values: FooterChoice.values,
+          labelOf: (v) => v.label,
+          onChanged: (v) => onChanged(config.copyWith(footer: v)),
         ),
       ],
     );

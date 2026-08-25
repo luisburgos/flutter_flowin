@@ -1,6 +1,5 @@
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_step_knob.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// A step of the Flowin spacing scale, as a knob picks it.
 ///
@@ -55,17 +54,18 @@ enum SpacingStep {
 
 /// A knob that steps along the Flowin spacing scale.
 ///
-/// A thin wrapper over [FlowinPlaygroundStepKnob]: the slider mechanics are
-/// the same for any ordered scale, and only the readout is spacing-specific.
-/// The steps resolve against the theme rather than quoting constants, so a
-/// demo cannot go stale if the scale moves.
-class FlowinPlaygroundSpacingKnob extends StatelessWidget {
-  /// {@macro flowin_playground_spacing_knob}
-  const FlowinPlaygroundSpacingKnob({
+/// A thin wrapper over playgrounder's [ScaleKnob]. The Flowin spacing scale is
+/// domain data — [SpacingStep] resolving against the theme — so this builds the
+/// scale's [ScaleStep] list here, where the theme is in scope, and hands it to
+/// the design-system-agnostic knob. That keeps the "a demo cannot quote a stale
+/// pixel" property while the knob mechanics live in playgrounder.
+class FlowinSpacingKnob extends StatelessWidget {
+  /// Creates a spacing knob.
+  const FlowinSpacingKnob({
     required this.label,
     required this.value,
     required this.onChanged,
-    this.relevantWhen = const FlowinKnobRelevance.always(),
+    this.relevantWhen = const KnobRelevance.always(),
     super.key,
   });
 
@@ -79,19 +79,26 @@ class FlowinPlaygroundSpacingKnob extends StatelessWidget {
   final ValueChanged<SpacingStep> onChanged;
 
   /// When this knob applies at all.
-  final FlowinKnobRelevance relevantWhen;
+  final KnobRelevance relevantWhen;
 
   @override
   Widget build(BuildContext context) {
-    return FlowinPlaygroundStepKnob<SpacingStep>(
+    // Resolve each step against the theme, so the readout quotes live pixels.
+    final steps = [
+      for (final step in SpacingStep.values)
+        ScaleStep(step.name, step.resolve(context)),
+    ];
+    final selected = steps[value.index];
+
+    return ScaleKnob(
       label: label,
-      value: value,
-      values: SpacingStep.values,
-      // Resolved here rather than in the generic knob: only a spacing step
-      // knows it has a themed value to look up.
-      labelOf: (step) => '${step.name} — ${step.resolve(context).toInt()}px',
+      value: selected,
+      values: steps,
       relevantWhen: relevantWhen,
-      onChanged: onChanged,
+      // Map the picked ScaleStep back to its SpacingStep by position: the two
+      // lists are index-aligned because steps is built from SpacingStep.values.
+      onChanged: (picked) =>
+          onChanged(SpacingStep.values[steps.indexOf(picked)]),
     );
   }
 }
