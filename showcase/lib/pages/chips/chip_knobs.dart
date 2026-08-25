@@ -1,7 +1,6 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/chips/chip_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The inspector's controls for a [ChipConfig].
 class ChipKnobs extends StatelessWidget {
@@ -20,26 +19,22 @@ class ChipKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
-          title: 'Variant',
-          children: [
-            FlowinShowcaseDropdown<FlowinChipVariant>(
-              value: config.variant,
-              values: FlowinChipVariant.values,
-              labelOf: (v) => v.name,
-              onChanged: (v) => onChanged(config.copyWith(variant: v)),
-            ),
-          ],
+        DropdownKnob<FlowinChipVariant>(
+          label: 'Variant',
+          value: config.variant,
+          values: FlowinChipVariant.values,
+          labelOf: (v) => v.name,
+          onChanged: (v) => onChanged(config.copyWith(variant: v)),
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'State',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show leading',
               value: config.hasLeading,
               onChanged: (v) => onChanged(config.copyWith(hasLeading: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Enabled',
               value: config.enabled,
               onChanged: (v) => onChanged(config.copyWith(enabled: v)),

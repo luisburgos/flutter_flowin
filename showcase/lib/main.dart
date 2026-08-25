@@ -1,10 +1,12 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
+import 'package:flowin_showcase/components/flowin_style.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
 import 'package:flowin_showcase/components/showcase/showcase_entry_list.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 void main() => runApp(const ShowcaseApp());
 
@@ -43,6 +45,13 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
           theme: FlowinTheme.light,
           darkTheme: FlowinTheme.dark,
           themeMode: _themeMode.value,
+          // Every playground below dresses in Flowin chrome through one scope,
+          // rather than each page wiring the style itself. builder runs for
+          // pushed routes too, so it wraps the whole navigator.
+          builder: (context, child) => PlaygroundStyleScope(
+            style: const FlowinStyle(),
+            child: child!,
+          ),
           home: const HomePage(),
         ),
       ),

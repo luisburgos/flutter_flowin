@@ -1,10 +1,9 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/fields/input_field_child.dart';
 import 'package:flowin_showcase/pages/fields/input_field_config.dart';
 import 'package:flowin_showcase/pages/fields/input_field_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the field is previewed at.
 ///
@@ -14,23 +13,23 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _fieldMaxWidth = 380.0;
 
 /// One preset per arrangement the field is actually used in.
-const _presets = <FlowinPlaygroundPreset<InputFieldConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<InputFieldConfig>>[
+  PlaygroundPreset(
     label: 'Labelled',
     summary: 'Naming a value the user did not type — a picked date, a state.',
     config: InputFieldConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Wrapping a control',
     summary: 'Giving an interactive child the same chrome as a text input.',
     config: InputFieldConfig(child: InputFieldChild.chipGroup),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Bare',
     summary: 'When the surrounding layout already says what the field is.',
     config: InputFieldConfig(child: InputFieldChild.text, hasLabel: false),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Label only',
     summary: 'When the child draws its own border and a second would double.',
     config: InputFieldConfig(child: InputFieldChild.text, surface: false),
@@ -54,7 +53,7 @@ class _InputFieldsPageState extends State<InputFieldsPage> {
     return ShowcaseScaffold(
       title: 'Input fields',
       dividedAppBar: true,
-      body: FlowinPlayground<InputFieldConfig>(
+      body: Playground<InputFieldConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

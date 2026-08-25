@@ -1,23 +1,22 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/chips/chip_config.dart';
 import 'package:flowin_showcase/pages/chips/chip_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// One preset per variant: the axis a reader picks along first.
-const _presets = <FlowinPlaygroundPreset<ChipConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<ChipConfig>>[
+  PlaygroundPreset(
     label: 'Unselected',
     summary: 'The resting state of a filter.',
     config: ChipConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Selected',
     summary: 'The active filter in a group.',
     config: ChipConfig(variant: FlowinChipVariant.selected),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Dimmed',
     summary: 'Unselected but de-emphasised, when a group is inactive.',
     config: ChipConfig(variant: FlowinChipVariant.unselectedDimmed),
@@ -41,7 +40,7 @@ class _ChipsPageState extends State<ChipsPage> {
     return ShowcaseScaffold(
       title: 'Chips',
       dividedAppBar: true,
-      body: FlowinPlayground<ChipConfig>(
+      body: Playground<ChipConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

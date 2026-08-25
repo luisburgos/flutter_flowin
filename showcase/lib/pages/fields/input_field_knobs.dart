@@ -1,7 +1,6 @@
-import 'package:flowin_showcase/components/flowin_showcase_dropdown.dart';
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/fields/input_field_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// Display text for each child choice.
 String _childLabel(InputFieldChild child) => switch (child) {
@@ -31,26 +30,22 @@ class InputFieldKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
-          title: 'Child',
-          children: [
-            FlowinShowcaseDropdown<InputFieldChild>(
-              value: config.child,
-              values: InputFieldChild.values,
-              labelOf: _childLabel,
-              onChanged: (v) => onChanged(config.copyWith(child: v)),
-            ),
-          ],
+        DropdownKnob<InputFieldChild>(
+          label: 'Child',
+          value: config.child,
+          values: InputFieldChild.values,
+          labelOf: _childLabel,
+          onChanged: (v) => onChanged(config.copyWith(child: v)),
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Chrome',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show label',
               value: config.hasLabel,
               onChanged: (v) => onChanged(config.copyWith(hasLabel: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Bordered surface',
               value: config.surface,
               onChanged: (v) => onChanged(config.copyWith(surface: v)),

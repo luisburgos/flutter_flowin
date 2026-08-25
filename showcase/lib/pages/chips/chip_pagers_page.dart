@@ -1,9 +1,8 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/chips/chip_pager_config.dart';
 import 'package:flowin_showcase/pages/chips/chip_pager_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The box the pager is previewed in.
 ///
@@ -13,18 +12,18 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _pagerHeight = 320.0;
 const _pagerMaxWidth = 420.0;
 
-const _presets = <FlowinPlaygroundPreset<ChipPagerConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<ChipPagerConfig>>[
+  PlaygroundPreset(
     label: 'Wrapped',
     summary: 'Every chip visible — the showcase index uses this.',
     config: ChipPagerConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Scrollable',
     summary: 'One line that scrolls, for more sections than fit.',
     config: ChipPagerConfig(isScrollable: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'No divider',
     summary: 'When the chips already sit against a boundary.',
     config: ChipPagerConfig(showDivider: false),
@@ -48,7 +47,7 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
     return ShowcaseScaffold(
       title: 'Chip view pagers',
       dividedAppBar: true,
-      body: FlowinPlayground<ChipPagerConfig>(
+      body: Playground<ChipPagerConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

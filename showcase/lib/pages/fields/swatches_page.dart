@@ -1,11 +1,10 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/fields/swatch_config.dart';
 import 'package:flowin_showcase/pages/fields/swatch_knobs.dart';
 import 'package:flowin_showcase/pages/fields/swatch_preview.dart';
 import 'package:flowin_showcase/showcase_custom_color_picker.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the picker field is previewed at.
 ///
@@ -14,23 +13,23 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _fieldMaxWidth = 380.0;
 
 /// One preset per way the swatch is reached.
-const _presets = <FlowinPlaygroundPreset<SwatchConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<SwatchConfig>>[
+  PlaygroundPreset(
     label: 'Picking a colour',
     summary: 'A row of choices where one is currently held.',
     config: SwatchConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Nothing picked',
     summary: 'Before a choice is made, so no swatch carries the ring.',
     config: SwatchConfig(selected: false),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Presets only',
     summary: 'When the palette is fixed and a custom colour is not offered.',
     config: SwatchConfig(showGradient: false),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'In a form',
     summary: 'The composed field, when a colour is one value among several.',
     config: SwatchConfig(subject: SwatchSubject.pickerField),
@@ -55,7 +54,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
     return ShowcaseScaffold(
       title: 'Colour swatches',
       dividedAppBar: true,
-      body: FlowinPlayground<SwatchConfig>(
+      body: Playground<SwatchConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

@@ -1,9 +1,8 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/chips/chip_group_config.dart';
 import 'package:flowin_showcase/pages/chips/chip_group_knobs.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width a chip row is previewed at.
 ///
@@ -15,18 +14,18 @@ const _fewLabels = ['All', 'Active', 'Paused'];
 const _many = ['All', 'Active', 'Paused', 'Archived', 'Draft', 'Shared'];
 
 /// The two layouts, which is what a reader is choosing between.
-const _presets = <FlowinPlaygroundPreset<ChipGroupConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<ChipGroupConfig>>[
+  PlaygroundPreset(
     label: 'Scrollable',
     summary: 'One line that scrolls — a filter bar above a list.',
     config: ChipGroupConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Wrapped',
     summary: 'Every chip stays visible, on as many lines as it takes.',
     config: ChipGroupConfig(isScrollable: false),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Dimmed',
     summary: 'Unselected chips de-emphasised against the active one.',
     config: ChipGroupConfig(
@@ -52,7 +51,7 @@ class _ChipGroupsPageState extends State<ChipGroupsPage> {
     return ShowcaseScaffold(
       title: 'Chip groups',
       dividedAppBar: true,
-      body: FlowinPlayground<ChipGroupConfig>(
+      body: Playground<ChipGroupConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

@@ -1,10 +1,9 @@
-import 'package:flowin_showcase/components/playground/flowin_playground.dart';
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/components/showcase/showcase_scaffold.dart';
 import 'package:flowin_showcase/pages/navigation/tabs_config.dart';
 import 'package:flowin_showcase/pages/navigation/tabs_knobs.dart';
 import 'package:flowin_showcase/pages/navigation/tabs_preview.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The width the bar is previewed at.
 ///
@@ -14,23 +13,23 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 const _tabsMaxWidth = 420.0;
 
 /// One preset per layout decision a caller is actually making.
-const _presets = <FlowinPlaygroundPreset<TabsConfig>>[
-  FlowinPlaygroundPreset(
+const _presets = <PlaygroundPreset<TabsConfig>>[
+  PlaygroundPreset(
     label: 'Fixed',
     summary: 'A handful of peers, each given an equal share of the width.',
     config: TabsConfig(),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Scrollable',
     summary: 'More sections than fit, each keeping its natural width.',
     config: TabsConfig(count: TabCount.many, isScrollable: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Labels only',
     summary: 'When the labels are clear enough that glyphs add nothing.',
     config: TabsConfig(hasIcons: false),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Crowded',
     summary: 'A long label on a fixed bar, where it has to ellipsize.',
     config: TabsConfig(longLabel: true, hasIcons: false),
@@ -57,7 +56,7 @@ class _TabsPageState extends State<TabsPage> {
     return ShowcaseScaffold(
       title: 'Tabs',
       dividedAppBar: true,
-      body: FlowinPlayground<TabsConfig>(
+      body: Playground<TabsConfig>(
         config: _config,
         onChanged: (c) => setState(() => _config = c),
         presets: _presets,

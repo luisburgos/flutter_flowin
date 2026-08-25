@@ -1,18 +1,18 @@
-import 'package:flowin_showcase/components/playground/flowin_playground_preset.dart';
 import 'package:flowin_showcase/pages/sheets/sheet_config.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The five shapes from the design reference.
 ///
 /// Each was a separate demo trigger before. As presets they do the same
 /// teaching, but the settings that produce a shape are visible and can be
 /// mutated from, which a fixed example cannot offer.
-const sheetPresets = <FlowinPlaygroundPreset<SheetConfig>>[
-  FlowinPlaygroundPreset(
+const sheetPresets = <PlaygroundPreset<SheetConfig>>[
+  PlaygroundPreset(
     label: 'Simple',
     summary: 'Title, subtitle, close.',
     config: SheetConfig(hasSubtitle: true),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Confirmation',
     summary: 'Icon and two actions.',
     config: SheetConfig(
@@ -21,7 +21,7 @@ const sheetPresets = <FlowinPlaygroundPreset<SheetConfig>>[
       footer: FooterChoice.pair,
     ),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Form',
     summary: 'A text field and a single action.',
     config: SheetConfig(
@@ -30,12 +30,12 @@ const sheetPresets = <FlowinPlaygroundPreset<SheetConfig>>[
       footer: FooterChoice.single,
     ),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Action menu',
     summary: 'Item buttons, no footer.',
     config: SheetConfig(body: BodyChoice.list),
   ),
-  FlowinPlaygroundPreset(
+  PlaygroundPreset(
     label: 'Share',
     summary: 'A full-bleed panel and one action.',
     config: SheetConfig(

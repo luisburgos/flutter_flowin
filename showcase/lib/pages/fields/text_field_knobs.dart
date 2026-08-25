@@ -1,6 +1,6 @@
-import 'package:flowin_showcase/components/playground/inspector/flowin_playground_knobs.dart';
 import 'package:flowin_showcase/pages/fields/text_field_config.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
+import 'package:playgrounder/playgrounder.dart';
 
 /// The inspector's controls for a [TextFieldConfig].
 class TextFieldKnobs extends StatelessWidget {
@@ -23,40 +23,40 @@ class TextFieldKnobs extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: FlowinDesignSpace.space600,
       children: [
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Label',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Show label',
               value: config.hasLabel,
               onChanged: (v) => onChanged(config.copyWith(hasLabel: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'Content',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Initial value',
               value: config.hasInitialValue,
               onChanged: (v) => onChanged(config.copyWith(hasInitialValue: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Hint text',
               value: config.hasHint,
               onChanged: (v) => onChanged(config.copyWith(hasHint: v)),
             ),
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Multiline',
               value: config.multiline,
               onChanged: (v) => onChanged(config.copyWith(multiline: v)),
             ),
           ],
         ),
-        FlowinPlaygroundKnobGroup(
+        KnobGroup(
           title: 'State',
           children: [
-            FlowinPlaygroundSwitchKnob(
+            SwitchKnob(
               label: 'Enabled',
               value: config.enabled,
               onChanged: (v) => onChanged(config.copyWith(enabled: v)),
