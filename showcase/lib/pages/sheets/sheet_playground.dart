@@ -56,13 +56,15 @@ class _SheetPlaygroundState extends State<SheetPlayground> {
       previewBuilder: (context, config) => SheetPreview.inline(config),
       knobsBuilder: (context, config, onChanged) =>
           SheetKnobs(config: config, onChanged: onChanged),
-      actions: [
-        PlaygroundAction(
-          label: 'Open as modal',
-          icon: FDIcons.more.toIcon(size: FlowinDesignIconSize.sm),
-          onPressed: _openAsModal,
-        ),
-      ],
+      footer: PlaygroundActions(
+        actions: [
+          PlaygroundAction(
+            label: 'Open as modal',
+            icon: FDIcons.more.toIcon(size: FlowinDesignIconSize.sm),
+            onPressed: _openAsModal,
+          ),
+        ],
+      ),
     );
   }
 }
