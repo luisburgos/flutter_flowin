@@ -1,0 +1,52 @@
+# Files kept out of the published pub.dev archive.
+#
+# .pubignore REPLACES .gitignore for `dart pub publish` (it does not merge with
+# it): once this file exists, only its patterns are consulted, so everything not
+# listed here still ships. Keep it tight — exclude developer-only artifacts, not
+# the package itself.
+#
+# What must still ship (do NOT add these): lib/, example/ (pub.dev's Example
+# tab), assets/, README.md, CHANGELOG.md, LICENSE, pubspec.yaml,
+# analysis_options.yaml.
+
+# The showcase app. It is a separate publish_to: none package that catalogues
+# the components; consumers of the library have no use for its source, and it is
+# the bulk of the archive.
+showcase/
+
+# The package's own test suite. Useful in the repo, dead weight in a consumer's
+# pub cache.
+test/
+
+# Node tooling for changelog generation (conventional-changelog reads these).
+# Meaningless to a Dart consumer.
+package.json
+package-lock.json
+node_modules/
+
+# Developer and CI tooling, not consumer-facing.
+lefthook.yml
+.changelogrc.js
+coverage_badge.svg
+coverage/
+
+# Agent and contributor process docs. The package's public story is README.md;
+# these are for people working IN the repo, not consuming it.
+CLAUDE.md
+CONTRIBUTING.md
+
+# Build output and tool caches. CRITICAL: .pubignore REPLACES .gitignore for
+# publishing, so the build artifacts .gitignore normally hides would otherwise
+# ship (an 18 MB archive with build/ in it). Re-list them here.
+build/
+.dart_tool/
+.fvm/
+.idea/
+.vscode/
+coverage
+migrate_working_dir/
+.flutter-plugins
+.flutter-plugins-dependencies
+.DS_Store
+*.iml
+*.log
