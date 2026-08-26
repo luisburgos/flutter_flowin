@@ -47,12 +47,14 @@ class ShowcaseEntryList extends StatelessWidget {
 
     // Tighter on top: whatever sits above the list — a chip row on Library,
     // the tab bar on Examples — already supplies its own gap, so a full step
-    // here would double it.
+    // here would double it. Looser on the bottom: the version label is a fixed
+    // footer below the scroll area, so the list must scroll its last row clear
+    // of that band — a plain step leaves the final tile butting against it.
     final padding = EdgeInsets.fromLTRB(
       context.spacing.md,
       context.spacing.xs,
       context.spacing.md,
-      context.spacing.md,
+      context.spacing.xxl,
     );
 
     return LayoutBuilder(
