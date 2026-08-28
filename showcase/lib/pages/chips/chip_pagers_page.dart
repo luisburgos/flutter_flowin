@@ -54,6 +54,11 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
         previewMaxWidth: _pagerMaxWidth,
         previewBuilder: (context, config) => FlowinCard(
           clipChild: true,
+          // The card's default fill is secondaryContainer, which is exactly
+          // the selected chip's colour — so a selected chip vanishes into the
+          // card it sits on. Surface breaks the tie, the way the swatches page
+          // moves its stage off the selection colour.
+          backgroundColor: context.colorScheme.surface,
           size: const Size(_pagerMaxWidth, _pagerHeight),
           child: FlowinChipGroupViewPager(
             // keepPagesAlive is in the key so toggling it rebuilds the pager
@@ -67,10 +72,15 @@ class _ChipPagersPageState extends State<ChipPagersPage> {
             showDivider: config.showDivider,
             unselectedVariant: config.unselectedVariant,
             keepPagesAlive: config.keepPagesAlive,
-            // Horizontal only: the pager keeps the row shape a real caller
-            // gives it. The all-sides case lives on the Chip groups page.
-            chipsPadding: EdgeInsets.symmetric(
-              horizontal: config.chipsPadding.resolve(context),
+            // The knob drives the horizontal inset; the row shape is what a
+            // real caller controls, and the all-sides case lives on the Chip
+            // groups page. A fixed top pad keeps the chips off the card's
+            // clipped edge — top only, since the pager's own column already
+            // spaces the row from the divider below it.
+            chipsPadding: EdgeInsets.only(
+              left: config.chipsPadding.resolve(context),
+              right: config.chipsPadding.resolve(context),
+              top: FlowinDesignSpace.space300,
             ),
             items: [
               for (final page in const ['Board', 'Timeline', 'Settings'])
