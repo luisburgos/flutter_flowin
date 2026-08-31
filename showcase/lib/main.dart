@@ -1,12 +1,13 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
+import 'package:flowin_showcase/components/flowin_showcase_style.dart';
 import 'package:flowin_showcase/components/flowin_style.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
-import 'package:flowin_showcase/components/showcase/showcase_entry_list.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:playgrounder/playgrounder.dart';
+import 'package:showcaser/showcaser.dart';
 
 void main() => runApp(const ShowcaseApp());
 
@@ -50,10 +51,47 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
           // pushed routes too, so it wraps the whole navigator.
           builder: (context, child) => PlaygroundStyleScope(
             style: const FlowinStyle(),
-            child: child!,
+            child: ShowcaseStyleScope(
+              style: const FlowinShowcaseStyle(),
+              child: child!,
+            ),
           ),
           home: const HomePage(),
         ),
+      ),
+    );
+  }
+}
+
+/// The catalogue index, laid out with the showcase's own spacing.
+///
+/// showcaser takes explicit gaps and padding rather than reading a design
+/// system's tokens, which is what keeps it design-system-agnostic. This wraps
+/// it once with Flowin's steps so the three call sites below stay identical
+/// instead of each restating the geometry.
+///
+/// Tighter on top: whatever sits above the list — a chip row on Library, the
+/// tab bar on Examples — already supplies its own gap, so a full step here
+/// would double it. Looser on the bottom: the version label is a fixed footer
+/// below the scroll area, so the list must scroll its last row clear of that
+/// band.
+class CatalogueList extends StatelessWidget {
+  /// {@macro catalogue_list}
+  const CatalogueList({required this.entries, super.key});
+
+  /// The entries to list, in order.
+  final List<ShowcaseEntry> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShowcaseEntryList(
+      entries: entries,
+      gap: context.spacing.xs,
+      padding: EdgeInsets.fromLTRB(
+        context.spacing.md,
+        context.spacing.xs,
+        context.spacing.md,
+        context.spacing.xxl,
       ),
     );
   }
@@ -118,7 +156,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   controller: _tabs,
                   children: [
                     const _LibraryTab(),
-                    ShowcaseEntryList(entries: exampleEntries),
+                    CatalogueList(entries: exampleEntries),
                   ],
                 ),
               ),
@@ -165,11 +203,11 @@ class _LibraryTab extends StatelessWidget {
       items: [
         FlowinChipGroupViewPage.child(
           label: 'Components',
-          child: ShowcaseEntryList(entries: componentEntries),
+          child: CatalogueList(entries: componentEntries),
         ),
         FlowinChipGroupViewPage.child(
           label: 'Foundations',
-          child: ShowcaseEntryList(entries: foundationEntries),
+          child: CatalogueList(entries: foundationEntries),
         ),
       ],
     );
