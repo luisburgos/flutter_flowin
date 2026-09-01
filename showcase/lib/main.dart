@@ -1,12 +1,13 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
 import 'package:flowin_showcase/components/flowin_style.dart';
+import 'package:flowin_showcase/components/flowin_tile_builder.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
-import 'package:flowin_showcase/components/showcase/showcase_entry_list.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
 import 'package:flutter_flowin/flutter_flowin.dart';
 import 'package:playgrounder/playgrounder.dart';
+import 'package:showcaser/showcaser.dart';
 
 void main() => runApp(const ShowcaseApp());
 
@@ -50,7 +51,27 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
           // pushed routes too, so it wraps the whole navigator.
           builder: (context, child) => PlaygroundStyleScope(
             style: const FlowinStyle(),
-            child: child!,
+            // The gallery's chrome and its spacing, stated once here rather
+            // than at each list — a design system's steps are a fact about the
+            // system, not about any one catalogue.
+            child: ShowcaseTheme(
+              data: ShowcaseThemeData(
+                tileBuilder: const FlowinTileBuilder(),
+                gap: context.spacing.xs,
+                // Tighter on top: whatever sits above a list — a chip row on
+                // Library, the tab bar on Examples — already supplies its own
+                // gap. Looser on the bottom: the version label is a fixed
+                // footer below the scroll area, so the last row must scroll
+                // clear of that band.
+                padding: EdgeInsets.fromLTRB(
+                  context.spacing.md,
+                  context.spacing.xs,
+                  context.spacing.md,
+                  context.spacing.xxl,
+                ),
+              ),
+              child: child!,
+            ),
           ),
           home: const HomePage(),
         ),
