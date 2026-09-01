@@ -1,6 +1,6 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
-import 'package:flowin_showcase/components/flowin_playground_chrome.dart';
+import 'package:flowin_showcase/components/flowin_playground_builders.dart';
 import 'package:flowin_showcase/components/flowin_tile_builder.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
