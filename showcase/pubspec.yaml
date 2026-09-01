@@ -27,13 +27,8 @@ dependencies:
   # design-system-agnostic package the showcase consumes for every playground.
   playgrounder: ^0.2.0
   # The gallery shell the catalogue index is laid out by. Extracted from this
-  # very showcase so a second showcase could reuse it. Pinned to a tag rather
-  # than a branch: `ref: main` is a moving target that a `pub upgrade` would
-  # follow. Swaps to the pub version once showcaser is published.
-  showcaser:
-    git:
-      url: https://github.com/luisburgos/showcaser
-      ref: "0.1.0"
+  # very showcase so a second showcase could reuse it.
+  showcaser: ^0.1.0
 
 dev_dependencies:
   flutter_test:
