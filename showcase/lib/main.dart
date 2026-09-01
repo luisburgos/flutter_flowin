@@ -1,6 +1,6 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
-import 'package:flowin_showcase/components/flowin_style.dart';
+import 'package:flowin_showcase/components/flowin_playground_chrome.dart';
 import 'package:flowin_showcase/components/flowin_tile_builder.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
@@ -46,11 +46,17 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
           theme: FlowinTheme.light,
           darkTheme: FlowinTheme.dark,
           themeMode: _themeMode.value,
-          // Every playground below dresses in Flowin chrome through one scope,
-          // rather than each page wiring the style itself. builder runs for
-          // pushed routes too, so it wraps the whole navigator.
-          builder: (context, child) => PlaygroundStyleScope(
-            style: const FlowinStyle(),
+          // Every playground and gallery below dresses in Flowin chrome
+          // through one theme each, rather than each page wiring it itself.
+          // builder runs for pushed routes too, so it wraps the whole
+          // navigator.
+          builder: (context, child) => PlaygroundTheme(
+            data: PlaygroundThemeData(
+              tabsBuilder: flowinPlaygroundTabs,
+              presetRowBuilder: flowinPlaygroundPresetRow,
+              actionButtonBuilder: flowinPlaygroundActionButton,
+              stageBackground: flowinPlaygroundStage(context),
+            ),
             // The gallery's chrome and its spacing, stated once here rather
             // than at each list — a design system's steps are a fact about the
             // system, not about any one catalogue.

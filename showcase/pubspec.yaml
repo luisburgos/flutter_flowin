@@ -25,7 +25,7 @@ dependencies:
   lowframer: ^0.2.0
   # The playground affordance (preview + inspector + knobs), extracted into a
   # design-system-agnostic package the showcase consumes for every playground.
-  playgrounder: ^0.2.0
+  playgrounder: ^0.3.0
   # The gallery shell the catalogue index is laid out by. Extracted from this
   # very showcase so a second showcase could reuse it.
   showcaser: ^0.1.0
