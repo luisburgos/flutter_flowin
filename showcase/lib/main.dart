@@ -1,7 +1,7 @@
 import 'package:flowin_showcase/app_info/app_version_label.dart';
 import 'package:flowin_showcase/catalogue.dart';
-import 'package:flowin_showcase/components/flowin_showcase_style.dart';
 import 'package:flowin_showcase/components/flowin_style.dart';
+import 'package:flowin_showcase/components/flowin_tile_builder.dart';
 import 'package:flowin_showcase/components/showcase/fade_tab_view.dart';
 import 'package:flowin_showcase/components/showcase/showcase_app_bar.dart';
 import 'package:flowin_showcase/theme_mode_scope.dart';
@@ -51,47 +51,30 @@ class _ShowcaseAppState extends State<ShowcaseApp> {
           // pushed routes too, so it wraps the whole navigator.
           builder: (context, child) => PlaygroundStyleScope(
             style: const FlowinStyle(),
-            child: ShowcaseStyleScope(
-              style: const FlowinShowcaseStyle(),
+            // The gallery's chrome and its spacing, stated once here rather
+            // than at each list — a design system's steps are a fact about the
+            // system, not about any one catalogue.
+            child: ShowcaseTheme(
+              data: ShowcaseThemeData(
+                tileBuilder: const FlowinTileBuilder(),
+                gap: context.spacing.xs,
+                // Tighter on top: whatever sits above a list — a chip row on
+                // Library, the tab bar on Examples — already supplies its own
+                // gap. Looser on the bottom: the version label is a fixed
+                // footer below the scroll area, so the last row must scroll
+                // clear of that band.
+                padding: EdgeInsets.fromLTRB(
+                  context.spacing.md,
+                  context.spacing.xs,
+                  context.spacing.md,
+                  context.spacing.xxl,
+                ),
+              ),
               child: child!,
             ),
           ),
           home: const HomePage(),
         ),
-      ),
-    );
-  }
-}
-
-/// The catalogue index, laid out with the showcase's own spacing.
-///
-/// showcaser takes explicit gaps and padding rather than reading a design
-/// system's tokens, which is what keeps it design-system-agnostic. This wraps
-/// it once with Flowin's steps so the three call sites below stay identical
-/// instead of each restating the geometry.
-///
-/// Tighter on top: whatever sits above the list — a chip row on Library, the
-/// tab bar on Examples — already supplies its own gap, so a full step here
-/// would double it. Looser on the bottom: the version label is a fixed footer
-/// below the scroll area, so the list must scroll its last row clear of that
-/// band.
-class CatalogueList extends StatelessWidget {
-  /// {@macro catalogue_list}
-  const CatalogueList({required this.entries, super.key});
-
-  /// The entries to list, in order.
-  final List<ShowcaseEntry> entries;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShowcaseEntryList(
-      entries: entries,
-      gap: context.spacing.xs,
-      padding: EdgeInsets.fromLTRB(
-        context.spacing.md,
-        context.spacing.xs,
-        context.spacing.md,
-        context.spacing.xxl,
       ),
     );
   }
@@ -156,7 +139,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   controller: _tabs,
                   children: [
                     const _LibraryTab(),
-                    CatalogueList(entries: exampleEntries),
+                    ShowcaseEntryList(entries: exampleEntries),
                   ],
                 ),
               ),
@@ -203,11 +186,11 @@ class _LibraryTab extends StatelessWidget {
       items: [
         FlowinChipGroupViewPage.child(
           label: 'Components',
-          child: CatalogueList(entries: componentEntries),
+          child: ShowcaseEntryList(entries: componentEntries),
         ),
         FlowinChipGroupViewPage.child(
           label: 'Foundations',
-          child: CatalogueList(entries: foundationEntries),
+          child: ShowcaseEntryList(entries: foundationEntries),
         ),
       ],
     );
