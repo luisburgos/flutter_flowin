@@ -8,3 +8,4 @@ analyzer:
     # Same for the example app: its own analysis_options.yaml governs it, and
     # CI analyzes it as its own package (see sub_packages in main.yaml).
     - "example/**"
+    - build/**

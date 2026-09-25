@@ -96,7 +96,7 @@ picker cannot live in `lib/`.
 ## Setup
 
 This project pins its Flutter SDK with [FVM][fvm_link] (`.fvmrc` → Flutter
-`3.44.0`). **Run every Flutter and Dart command through `fvm`** — for example
+`3.47.5`). **Run every Flutter and Dart command through `fvm`** — for example
 `fvm flutter test` — so you use the pinned SDK rather than whatever is first on
 your `PATH`.
 
