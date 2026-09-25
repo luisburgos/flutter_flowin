@@ -9,7 +9,7 @@ import 'package:flutter_flowin/flutter_flowin.dart';
 /// Starts at [ThemeMode.system]; the first toggle makes the mode explicit.
 class ThemeModeController extends ValueNotifier<ThemeMode> {
   /// {@macro theme_mode_controller}
-  ThemeModeController([super.initial = ThemeMode.system]);
+  ThemeModeController([super._value = ThemeMode.system]);
 
   /// Whether the dark theme is rendering.
   ///
