@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_flowin/src/foundations/foundations.dart';
 import 'package:flutter_flowin/src/widgets/flowin_chip.dart';
@@ -181,12 +179,10 @@ class _FlowinChipGroupViewPagerState extends State<FlowinChipGroupViewPager> {
   }
 
   void _goToPage(int index) {
-    unawaited(
-      _pageController.animateToPage(
-        index,
-        duration: widget.animateDuration,
-        curve: widget.animateCurve,
-      ),
+    _pageController.animateToPage(
+      index,
+      duration: widget.animateDuration,
+      curve: widget.animateCurve,
     );
   }
 
